@@ -62,7 +62,7 @@ bool EditorScene::Update(double dt)
 	ImGui::Separator();
 	if (ImGui::Button("Add Model")) {
 		Model* new_model = new Model();
-		new_model->SetData(LoadModelToLevel("test.obj"));
+		new_model->SetData(LoadModelToLevel("shaders/test.obj"));
 		new_model->Create();
 		GameObjectManager::AddObject(new_model);
 		allActiveModels.push_back(new_model);
