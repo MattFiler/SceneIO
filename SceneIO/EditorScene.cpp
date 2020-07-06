@@ -10,7 +10,7 @@ EditorScene::EditorScene()
 /* Init the objects in the scene */
 void EditorScene::Init()
 {
-	selectedEditModel = 0;
+	selectedEditModel = -1;
 	dxshared::mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
 
 	//Setup cam & light source
@@ -60,9 +60,19 @@ bool EditorScene::Update(double dt)
 	ImGui::SliderFloat("Ambient B", &dxshared::ambientLightColour.z, 0.0f, 1.0f);
 
 	ImGui::Separator();
-	if (ImGui::Button("Add Model")) {
+	if (ImGui::Button("Add Suzanne Model")) {
 		Model* new_model = new Model();
 		new_model->SetData(LoadModelToLevel("shaders/test.obj"));
+		new_model->Create();
+		GameObjectManager::AddObject(new_model);
+		allActiveModels.push_back(new_model);
+
+		selectedEditModel = allActiveModels.size() - 1;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Add Grid Model")) {
+		Model* new_model = new Model();
+		new_model->SetData(LoadModelToLevel("shaders/test_grid.obj"));
 		new_model->Create();
 		GameObjectManager::AddObject(new_model);
 		allActiveModels.push_back(new_model);
@@ -76,7 +86,7 @@ bool EditorScene::Update(double dt)
 	GameObjectManager::Update(dt);
 
 	//Only continue if our requested edit object is valid
-	if (true) return true;
+	if (selectedEditModel == -1) return true;
 
 	//Get the GameObject we're editing
 	GameObject* objectToEdit = allActiveModels.at(selectedEditModel);

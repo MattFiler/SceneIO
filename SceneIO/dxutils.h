@@ -531,6 +531,24 @@ public:
 		dst.close();
 	}
 
+	/* Allows the user to select a file from a file picker window */
+	std::string OpenFile(std::string filter = "All Files (*.*)\0*.*\0", HWND owner = NULL) {
+		OPENFILENAME ofn;
+		char fileName[MAX_PATH] = "";
+		ZeroMemory(&ofn, sizeof(ofn));
+		ofn.lStructSize = sizeof(OPENFILENAME);
+		ofn.hwndOwner = owner;
+		ofn.lpstrFilter = filter.c_str();
+		ofn.lpstrFile = fileName;
+		ofn.nMaxFile = MAX_PATH;
+		ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+		ofn.lpstrDefExt = "";
+		std::string fileNameStr;
+		if (GetOpenFileName(&ofn))
+			fileNameStr = fileName;
+		return fileNameStr;
+	}
+
 	/* Transform a loadedmodel by a world matrix, and push it to another loadedmodel */
 	void TransformAndPush(XMMATRIX world, LoadedModel& model, LoadedModel& push_to) {
 		XMFLOAT3 transformedVert = XMFLOAT3(0.0f, 0.0f, 0.0f);

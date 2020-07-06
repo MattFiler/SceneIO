@@ -21,7 +21,7 @@ private:
 	std::vector<SharedModelBuffers*> loadedModels = std::vector<SharedModelBuffers*>();
 	std::vector<Model*> allActiveModels = std::vector<Model*>(); 
 
-	int selectedEditModel = 0;
+	int selectedEditModel = -1;
 
 	Utilities dxutils = Utilities();
 
