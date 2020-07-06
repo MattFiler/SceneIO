@@ -76,8 +76,8 @@ void Camera::Update(float dt)
 					SetPosition(XMFLOAT3(GetPosition().x + (mov_x * right.x), GetPosition().y - (mov_y), GetPosition().z + (mov_x * right.z)));
 				}
 				else {
-					SetPosition(XMFLOAT3(GetPosition().x - (mov_y * forward.x), GetPosition().y, GetPosition().z - (mov_y * forward.z)));
-					SetRotation(XMFLOAT3(GetRotation().x, GetRotation().y, GetRotation().z + (mov_x * 0.5f)), true);
+					SetPosition(XMFLOAT3(GetPosition().x + (mov_y * forward.x), GetPosition().y, GetPosition().z + (mov_y * forward.z)));
+					SetRotation(XMFLOAT3(GetRotation().x, GetRotation().y, GetRotation().z - (mov_x * 0.25f)), true);
 					if (GetRotation(false).z >= 360.0f) SetRotation(XMFLOAT3(GetRotation(false).x, GetRotation(false).y, GetRotation(false).z - 360.0f));
 				}
 
