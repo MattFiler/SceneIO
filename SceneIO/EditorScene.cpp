@@ -39,16 +39,13 @@ void EditorScene::Release() {
 /* Update the objects in the scene */
 bool EditorScene::Update(double dt)
 {
-	bool open = true;
-	bool camLock = main_cam.GetLocked();
-
-	ImGui::SetNextWindowPos(ImVec2(950, 0));
-	ImGui::SetNextWindowSize(ImVec2(330, 720));
-	ImGui::Begin("Controls", &open, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus);
+	ImGui::Begin("Controls", nullptr);
 
 	ImGui::Text("Scene Controls");
 	ImGui::Separator();
+	bool camLock = main_cam.GetLocked();
 	ImGui::Checkbox("Lock Cam", &camLock);
+	main_cam.SetLocked(camLock);
 
 	ImGui::Separator();
 	ImGui::Text(("Cam Pos X: " + std::to_string(main_cam.GetPosition().x) + ", Y: " + std::to_string(main_cam.GetPosition().y) + "Z: " + std::to_string(main_cam.GetPosition().z)).c_str());
@@ -92,7 +89,6 @@ bool EditorScene::Update(double dt)
 
 	ImGui::End();
 
-	main_cam.SetLocked(camLock);
 	GameObjectManager::Update(dt);
 
 	//Only continue if our requested edit object is valid
@@ -107,9 +103,7 @@ bool EditorScene::Update(double dt)
 	float* viewMatrix = &dxutils.MatrixToFloat4x4(dxshared::mView).m[0][0];
 
 	//Show options to swap between different transforms
-	ImGui::SetNextWindowPos(ImVec2(950, 590));
-	ImGui::SetNextWindowSize(ImVec2(330, 130));
-	ImGui::Begin("Transform Controls", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
+	ImGui::Begin("Transform Controls", nullptr);
 	if (ImGui::RadioButton("Translate", dxshared::mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
 		dxshared::mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
 	ImGui::SameLine();
