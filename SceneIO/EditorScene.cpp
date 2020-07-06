@@ -80,6 +80,16 @@ bool EditorScene::Update(double dt)
 		selectedEditModel = allActiveModels.size() - 1;
 	}
 
+	ImGui::Separator();
+	int option = dxshared::cameraControlType;
+	ImGui::RadioButton("Camera Control Scheme: Keyboard", &option, 0);
+	ImGui::RadioButton("Camera Control Scheme: Mouse", &option, 1);
+	dxshared::cameraControlType = (CameraControlType)option;
+	ImGui::SliderFloat("Sensitivity", &dxshared::mouseCameraSensitivity, 0.0f, 1.0f);
+	ImGui::SliderFloat("Camera FOV", &dxshared::cameraFOV, 0.01f, 3.14f);
+	if (fovCheck != dxshared::cameraFOV) dxshared::mProjection = DirectX::XMMatrixPerspectiveFovLH(dxshared::cameraFOV, dxshared::m_renderWidth / (FLOAT)dxshared::m_renderHeight, dxshared::cameraNear, dxshared::cameraFar);
+	fovCheck = dxshared::cameraFOV;
+
 	ImGui::End();
 
 	main_cam.SetLocked(camLock);

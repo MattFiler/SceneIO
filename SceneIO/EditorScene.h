@@ -22,6 +22,7 @@ private:
 	std::vector<Model*> allActiveModels = std::vector<Model*>(); 
 
 	int selectedEditModel = -1;
+	float fovCheck = dxshared::cameraFOV;
 
 	Utilities dxutils = Utilities();
 

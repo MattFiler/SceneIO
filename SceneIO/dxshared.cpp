@@ -12,6 +12,13 @@ DirectX::XMMATRIX dxshared::mProjection;
 
 DirectX::XMFLOAT4 dxshared::ambientLightColour;
 
+float dxshared::mouseCameraSensitivity = 0.03f;
+CameraControlType dxshared::cameraControlType = CameraControlType::MOUSE;
+
+float dxshared::cameraFOV = 1.5f;
+float dxshared::cameraNear = 0.01f;
+float dxshared::cameraFar = 2000.0f;
+
 bool dxshared::drawBoundingBoxes = false;
 #if _DEBUG
 bool dxshared::pauseNPCs = true;

@@ -25,5 +25,10 @@ private:
 	XMVECTOR camUp = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	XMVECTOR camTarget = XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
 
+	POINT initMousePos;
+	XMFLOAT2 prevMousePos = XMFLOAT2(0, 0);
+	bool mouseWasDownLastFrame = false;
+	bool mouseWasReset = true;
+
 	bool isLocked = false;
 };

@@ -13,6 +13,11 @@
 #include "imgui/imgui_impl_dx11.h"
 #include "imguizmo/ImGuizmo.h"
 
+enum CameraControlType {
+	KEYBOARD,
+	MOUSE
+};
+
 struct dxshared 
 {
 public:
@@ -27,8 +32,15 @@ public:
 
 	static DirectX::XMFLOAT4 ambientLightColour;
 
+	static float mouseCameraSensitivity;
+	static CameraControlType cameraControlType;
+
 	static bool drawBoundingBoxes;
 	static bool pauseNPCs;
+
+	static float cameraFOV;
+	static float cameraNear;
+	static float cameraFar;
 
 	static std::string currentLevelPath;
 
