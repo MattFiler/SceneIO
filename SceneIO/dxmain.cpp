@@ -306,6 +306,7 @@ bool dxmain::InitImGUI()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	ImGui_ImplWin32_Init(m_hAppWnd);
 	ImGui_ImplDX11_Init(m_pDevice, m_pImmediateContext);
 	ImGui::StyleColorsDark();
