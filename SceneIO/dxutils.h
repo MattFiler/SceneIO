@@ -47,6 +47,12 @@ struct SimpleVertexAlt
 	XMFLOAT2 Tex;
 };
 
+struct Ray {
+	XMFLOAT3 origin;
+	XMFLOAT3 direction;
+	float radius = 1.0f;
+};
+
 struct ConstantBuffer
 {
 	XMMATRIX mWorld;

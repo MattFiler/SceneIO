@@ -98,9 +98,6 @@ bool dxmain::Init()
 /* Set appropriate properties and then initialise window */
 bool dxmain::InitWindow()
 {
-	//Setup input handler
-	InputHandler::Setup();
-
 	//Setup window class
 	WNDCLASSEX wcex;
 	ZeroMemory(&wcex, sizeof(WNDCLASSEX));
@@ -305,12 +302,15 @@ bool dxmain::InitImGUI()
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	InputHandler::Setup();
+
 	ImGui_ImplWin32_Init(m_hAppWnd);
 	ImGui_ImplDX11_Init(m_pDevice, m_pImmediateContext);
-	ImGui::StyleColorsDark();
 
+	ImGui::StyleColorsDark();
 	return true;
 }
 
@@ -327,10 +327,10 @@ LRESULT dxmain::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			PostQuitMessage(0);
 			return 0;
 		case WM_KEYDOWN:
-			InputHandler::SetKeyState((WindowsKey)((unsigned long)wParam), true);
+			//InputHandler::SetKeyState((WindowsKey)((unsigned long)wParam), true);
 			break;
 		case WM_KEYUP:
-			InputHandler::SetKeyState((WindowsKey)((unsigned long)wParam), false);
+			//InputHandler::SetKeyState((WindowsKey)((unsigned long)wParam), false);
 			break;
 	}
 	return DefWindowProc(hwnd, msg, wParam, lParam);
