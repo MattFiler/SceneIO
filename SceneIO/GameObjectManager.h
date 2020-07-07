@@ -5,7 +5,6 @@
 class GameObject;
 class Light;
 class Model;
-class BoundingBox;
 
 class GameObjectManager
 {

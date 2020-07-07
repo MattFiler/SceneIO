@@ -91,7 +91,7 @@ struct Material
 	std::string materialName = "";
 
 	float r, g, b, a = 1.0f;
-	std::string texturePath = "shaders/plastic_base.dds"; //placeholder blank texture
+	std::string texturePath = "data/plastic_base.dds"; //placeholder blank texture
 };
 
 struct LoadedMaterial
@@ -174,6 +174,10 @@ public:
 	}
 	static void Log(size_t msg) {
 		OutputDebugString(std::to_string(msg).c_str());
+		OutputDebugString("\n");
+	}
+	static void Log(DirectX::XMFLOAT3 msg) {
+		OutputDebugString(("(X: " + std::to_string(msg.x) + ", Y: " + std::to_string(msg.y) + ", Z: " + std::to_string(msg.z) + ")").c_str());
 		OutputDebugString("\n");
 	}
 };

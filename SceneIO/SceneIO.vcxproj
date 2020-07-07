@@ -164,7 +164,7 @@
     </ClCompile>
     <PostBuildEvent>
       <Command>Xcopy /E /I /Y "$(SolutionDir)plugins" "$(SolutionDir)$(OutDir)plugins"
-Xcopy /E /I /Y "$(SolutionDir)shaders" "$(SolutionDir)$(OutDir)shaders"</Command>
+Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -199,7 +199,7 @@ Xcopy /E /I /Y "$(SolutionDir)shaders" "$(SolutionDir)$(OutDir)shaders"</Command
     </Link>
     <PostBuildEvent>
       <Command>Xcopy /E /I /Y "$(SolutionDir)plugins" "$(SolutionDir)$(OutDir)plugins"
-Xcopy /E /I /Y "$(SolutionDir)shaders" "$(SolutionDir)$(OutDir)shaders"</Command>
+Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

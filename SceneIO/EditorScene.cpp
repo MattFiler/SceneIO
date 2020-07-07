@@ -58,24 +58,38 @@ bool EditorScene::Update(double dt)
 
 	ImGui::Separator();
 	if (ImGui::Button("Add Suzanne Model")) {
-		Model* new_model = new Model();
-		new_model->SetData(LoadModelToLevel("shaders/test.obj"));
-		new_model->Create();
-		GameObjectManager::AddObject(new_model);
-		allActiveModels.push_back(new_model);
-
-		selectedEditModel = allActiveModels.size() - 1;
+		LoadTestModel("data/test.obj");
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Add Grid Model")) {
-		Model* new_model = new Model();
-		new_model->SetData(LoadModelToLevel("shaders/test_grid.obj"));
-		new_model->Create();
-		GameObjectManager::AddObject(new_model);
-		allActiveModels.push_back(new_model);
-
-		selectedEditModel = allActiveModels.size() - 1;
+		LoadTestModel("data/test_grid.obj");
 	}
+
+	ImGui::Checkbox("Enable Picker Debug", &enablePickerTest);
+
+	//Camera to scene interaction (test)
+	if (InputHandler::MouseDown(WindowsMouse::LEFT_CLICK)) {
+		Ray picker = main_cam.GeneratePickerRay();
+
+		if (!testLastFrame) {
+			for (int i = 0; i < allActiveModels.size(); i++) {
+				if (allActiveModels[i]->DoesIntersect(picker)) {
+					GameObjectManager::RemoveObject(allActiveModels.at(i));
+					delete allActiveModels.at(i);
+					allActiveModels.erase(allActiveModels.begin() + i);
+					Debug::Log("Intersected with model " + std::to_string(i));
+					break;
+				}
+			}
+			testLastFrame = true;
+		}
+
+		if (enablePickerTest) LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 10), picker.origin.y + (picker.direction.y * 10), picker.origin.z + (picker.direction.z * 10)));
+	}
+	else {
+		testLastFrame = false;
+	}
+
 
 	ImGui::Separator();
 	int option = dxshared::cameraControlType;
@@ -139,12 +153,12 @@ bool EditorScene::Update(double dt)
 
 	//Allow text overwrite
 	ImGui::InputFloat3("Translation", matrixTranslation, 3);
-	//if (currentEditorMode != 1) ImGui::InputFloat3("Rotation", matrixRotation, 3);
+	ImGui::InputFloat3("Rotation", matrixRotation, 3);
 	ImGui::InputFloat3("Scale", matrixScale, 3);
 
 	//Set new transforms back
 	objectToEdit->SetPosition(DirectX::XMFLOAT3(matrixTranslation[0], matrixTranslation[1], matrixTranslation[2]));
-	//if (currentEditorMode != 1) objectToEdit->SetRotation(DirectX::XMFLOAT3(matrixRotation[0], matrixRotation[1], matrixRotation[2]));
+	//objectToEdit->SetRotation(DirectX::XMFLOAT3(matrixRotation[0], matrixRotation[1], matrixRotation[2]));
 	objectToEdit->SetScale(DirectX::XMFLOAT3(matrixScale[0], matrixScale[1], matrixScale[2]));
 	ImGui::End();
 
@@ -156,7 +170,6 @@ void EditorScene::Render(double dt)
 {
 	GameObjectManager::Render(dt);
 }
-
 
 /* Requested load of model: check our existing loaded data, and if not already loaded, load it */
 SharedModelBuffers* EditorScene::LoadModelToLevel(std::string filename)

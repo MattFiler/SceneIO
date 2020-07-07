@@ -19,6 +19,8 @@ float dxshared::cameraFOV = 1.5f;
 float dxshared::cameraNear = 0.01f;
 float dxshared::cameraFar = 2000.0f;
 
+HWND dxshared::m_hwnd;
+
 bool dxshared::drawBoundingBoxes = false;
 #if _DEBUG
 bool dxshared::pauseNPCs = true;

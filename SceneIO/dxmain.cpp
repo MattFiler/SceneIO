@@ -138,6 +138,7 @@ bool dxmain::InitWindow()
 		Debug::Log("Failed to create window in dxmain!!");
 		return false;
 	}
+	dxshared::m_hwnd = m_hAppWnd;
 
 	//Show window
 	ShowWindow(m_hAppWnd, SW_SHOW);
@@ -305,10 +306,10 @@ bool dxmain::InitImGUI()
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	io.Fonts->AddFontFromFileTTF("shaders\\Ruda-Bold.ttf", 14);
-	io.Fonts->AddFontFromFileTTF("shaders\\Ruda-Bold.ttf", 12);
-	io.Fonts->AddFontFromFileTTF("shaders\\Ruda-Bold.ttf", 16);
-	io.Fonts->AddFontFromFileTTF("shaders\\Ruda-Bold.ttf", 20);
+	io.Fonts->AddFontFromFileTTF("data\\Ruda-Bold.ttf", 14);
+	io.Fonts->AddFontFromFileTTF("data\\Ruda-Bold.ttf", 12);
+	io.Fonts->AddFontFromFileTTF("data\\Ruda-Bold.ttf", 16);
+	io.Fonts->AddFontFromFileTTF("data\\Ruda-Bold.ttf", 20);
 
 	InputHandler::Setup();
 

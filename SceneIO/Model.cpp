@@ -15,6 +15,16 @@ void Model::Release()
 	if (modelData) modelData->RemoveUseage();
 }
 
+/* Update bounding box transforms as well as normal transforms */
+void Model::Update(float dt)
+{
+	GameObject::Update(dt);
+
+	DirectX::XMStoreFloat4(&boundingBox.Orientation, DirectX::XMQuaternionRotationRollPitchYawFromVector(XMLoadFloat3(&rotation)));
+	boundingBox.Extents = modelData->GetExtents();
+	boundingBox.Center = position;
+}
+
 /* Render all model parts */
 void Model::Render(float dt)
 {

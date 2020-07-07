@@ -9,10 +9,12 @@ SharedModelBuffers::SharedModelBuffers(std::string filepath)
 	LoadedModel _m = dxutils.LoadModelFromOBJ(filepath);
 	for (int i = 0; i < _m.modelParts.size(); i++) {
 		for (int x = 0; x < _m.modelParts[i].compVertices.size(); x++) {
+			CheckAgainstBoundingPoints(_m.modelParts[i].compVertices[x].Pos);
 			allVerts.push_back(_m.modelParts[i].compVertices[x]);
 		}
 		allModels.push_back(new SharedModelPart(_m.modelParts[i]));
 	}
+	CalculateFinalExtents();
 
 	//Create vertex buffer 
 	D3D11_BUFFER_DESC bd;
@@ -42,7 +44,7 @@ SharedModelBuffers::SharedModelBuffers(std::string filepath)
 	//Compile the vertex shader
 	ID3DBlob* pVSBlob = nullptr;
 	Utilities dxutils = Utilities();
-	HR(dxutils.CompileShaderFromFile(L"shaders/ObjectShader.fx", "VS", "vs_4_0", &pVSBlob));
+	HR(dxutils.CompileShaderFromFile(L"data/ObjectShader.fx", "VS", "vs_4_0", &pVSBlob));
 
 	//Create the vertex shader
 	HR(dxshared::m_pDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &m_vertexShader));
@@ -62,7 +64,7 @@ SharedModelBuffers::SharedModelBuffers(std::string filepath)
 
 	//Compile the pixel shader
 	ID3DBlob* pPSBlob = nullptr;
-	HR(dxutils.CompileShaderFromFile(L"shaders/ObjectShader.fx", "PS", "ps_4_0", &pPSBlob));
+	HR(dxutils.CompileShaderFromFile(L"data/ObjectShader.fx", "PS", "ps_4_0", &pPSBlob));
 
 	//Create the pixel shader
 	HR(dxshared::m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &m_pixelShader));

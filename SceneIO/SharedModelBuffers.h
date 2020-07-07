@@ -29,7 +29,26 @@ public:
 		return objPath;
 	}
 
+	DirectX::XMFLOAT3 GetExtents() {
+		return extents;
+	}
+
 private:
+	void CheckAgainstBoundingPoints(XMFLOAT3 pos) {
+		if (pos.x < extents_tempMin.x) extents_tempMin.x = pos.x;
+		if (pos.y < extents_tempMin.y) extents_tempMin.y = pos.y;
+		if (pos.z < extents_tempMin.z) extents_tempMin.z = pos.z;
+		if (pos.x > extents_tempMax.x) extents_tempMax.x = pos.x;
+		if (pos.y > extents_tempMax.y) extents_tempMax.y = pos.y;
+		if (pos.z > extents_tempMax.z) extents_tempMax.z = pos.z;
+	}
+	void CalculateFinalExtents() {
+		extents = XMFLOAT3((extents_tempMin.x * -1) + extents_tempMax.x, (extents_tempMin.y * -1) + extents_tempMax.y, (extents_tempMin.z * -1) + extents_tempMax.z);
+	}
+	DirectX::XMFLOAT3 extents_tempMin;
+	DirectX::XMFLOAT3 extents_tempMax;
+	DirectX::XMFLOAT3 extents;
+
 	Utilities dxutils = Utilities();
 
 	ID3D11Buffer* g_pVertexBuffer = nullptr;

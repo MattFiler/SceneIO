@@ -102,7 +102,7 @@ void DebugCube::Create()
 	//Vertex shader
 	ID3DBlob* pVSBlob = nullptr;
 	Utilities dxutils = Utilities();
-	HR(dxutils.CompileShaderFromFile(L"DATA/SHADERS/ObjectShaderUnlit.fx", "VS_UNLIT", "vs_4_0", &pVSBlob));
+	HR(dxutils.CompileShaderFromFile(L"data/ObjectShaderUnlit.fx", "VS_UNLIT", "vs_4_0", &pVSBlob));
 	HR(dxshared::m_pDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &GO_VertexShader));
 
 	//Input layout
@@ -117,7 +117,7 @@ void DebugCube::Create()
 
 	//Pixel shader
 	ID3DBlob* pPSBlob = nullptr;
-	HR(dxutils.CompileShaderFromFile(L"DATA/SHADERS/ObjectShaderUnlit.fx", "PS_UNLIT", "ps_4_0", &pPSBlob));
+	HR(dxutils.CompileShaderFromFile(L"data/ObjectShaderUnlit.fx", "PS_UNLIT", "ps_4_0", &pPSBlob));
 	HR(dxshared::m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &GO_PixelShader));
 	pPSBlob->Release();
 #endif
@@ -191,7 +191,7 @@ void DebugCube::SetTexture(std::string filename)
 
 	//Load texture file
 	ID3D11ShaderResourceView* newTex;
-	std::string texPath = "DATA/ENV/GLOBAL/" + filename + ".dds";
+	std::string texPath = "data/" + filename + ".dds";
 	std::wstring widestr = std::wstring(texPath.begin(), texPath.end());
 	HR(CreateDDSTextureFromFile(dxshared::m_pDevice, widestr.c_str(), nullptr, &newTex));
 	materialTexture = newTex;

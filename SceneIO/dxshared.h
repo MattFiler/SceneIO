@@ -4,6 +4,7 @@
 #include <d3d11.h>
 #pragma comment(lib, "d3d11.lib")
 #include <DirectXMath.h>
+#include <DirectXCollision.h>
 
 #include <string>
 #include <vector>
@@ -41,6 +42,8 @@ public:
 	static float cameraFOV;
 	static float cameraNear;
 	static float cameraFar;
+
+	static HWND m_hwnd;
 
 	static std::string currentLevelPath;
 
