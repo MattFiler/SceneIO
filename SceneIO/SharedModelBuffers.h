@@ -33,6 +33,8 @@ public:
 		return extents;
 	}
 
+	bool DoesRayIntersect(Ray& _r, DirectX::XMMATRIX _world);
+
 private:
 	void CheckAgainstBoundingPoints(XMFLOAT3 pos) {
 		if (pos.x < extents_tempMin.x) extents_tempMin.x = pos.x;

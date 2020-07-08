@@ -110,3 +110,17 @@ void SharedModelBuffers::Render(XMMATRIX mWorld)
 		allModels[i]->Render(mWorld);
 	}
 }
+
+/* Perform an expensive ray-triangle check */
+bool SharedModelBuffers::DoesRayIntersect(Ray& _r, DirectX::XMMATRIX _world)
+{
+	for (int i = 0; i < allVerts.size(); i += 3) {
+		if (DirectX::TriangleTests::Intersects(DirectX::XMLoadFloat3(&_r.origin), DirectX::XMLoadFloat3(&_r.direction),
+			DirectX::XMVector3Transform(DirectX::XMLoadFloat3(&XMFLOAT3(allVerts[i].Pos.x, allVerts[i].Pos.y, allVerts[i].Pos.z)), _world),
+			DirectX::XMVector3Transform(DirectX::XMLoadFloat3(&XMFLOAT3(allVerts[i + 1].Pos.x, allVerts[i + 1].Pos.y, allVerts[i + 1].Pos.z)), _world),
+			DirectX::XMVector3Transform(DirectX::XMLoadFloat3(&XMFLOAT3(allVerts[i + 2].Pos.x, allVerts[i + 2].Pos.y, allVerts[i + 2].Pos.z)), _world), dxshared::cameraFar)) {
+			return true;
+		}
+	}
+	return false;
+}

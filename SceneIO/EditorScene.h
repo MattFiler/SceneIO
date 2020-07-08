@@ -27,7 +27,7 @@ private:
 		GameObjectManager::AddObject(new_model);
 		allActiveModels.push_back(new_model);
 
-		//selectedEditModel = allActiveModels.size() - 1;
+		selectedEditModel = allActiveModels.size() - 1;
 	}
 
 	SharedModelBuffers* LoadModelToLevel(std::string filename);

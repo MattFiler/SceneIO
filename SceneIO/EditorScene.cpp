@@ -77,6 +77,7 @@ bool EditorScene::Update(double dt)
 					GameObjectManager::RemoveObject(allActiveModels.at(i));
 					delete allActiveModels.at(i);
 					allActiveModels.erase(allActiveModels.begin() + i);
+					selectedEditModel -= 1;
 					Debug::Log("Intersected with model " + std::to_string(i));
 					break;
 				}
