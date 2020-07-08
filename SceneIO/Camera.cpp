@@ -104,17 +104,16 @@ Ray Camera::GeneratePickerRay()
 {
 	ImGuiIO& io = ImGui::GetIO();
 
-	float px = (((2.0f * io.MousePos.x) / dxshared::m_renderWidth) - 1.0f) / dxshared::mProjection.r[0].m128_f32[0];
-	float py = -(((2.0f * io.MousePos.y) / dxshared::m_renderHeight) - 1.0f) / dxshared::mProjection.r[1].m128_f32[1];
+	float px = (((2.0f * io.MousePos.x) / dxshared::m_renderWidth) - 1.0f) / Utilities::MatrixToFloat4x4(dxshared::mProjection).m[0][0];
+	float py = -(((2.0f * io.MousePos.y) / dxshared::m_renderHeight) - 1.0f) / Utilities::MatrixToFloat4x4(dxshared::mProjection).m[1][1];
 
 	XMMATRIX inverseView = DirectX::XMMatrixInverse(nullptr, dxshared::mView);
-	XMVECTOR origTransformed = DirectX::XMVector3TransformCoord(XMLoadFloat3(&XMFLOAT3(px, py, 0.0f)), inverseView);
+	XMVECTOR origTransformed = DirectX::XMVector3TransformCoord(XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, 0.0f)), inverseView);
 	XMVECTOR dirTransformed = DirectX::XMVector3TransformNormal(XMLoadFloat3(&XMFLOAT3(px, py, 1.0f)), inverseView);
 	dirTransformed = DirectX::XMVector3Normalize(dirTransformed);
 
 	Ray toReturn = Ray();
 	XMStoreFloat3(&toReturn.origin, origTransformed);
 	XMStoreFloat3(&toReturn.direction, dirTransformed);
-	Debug::Log(toReturn.direction);
 	return toReturn;
 }

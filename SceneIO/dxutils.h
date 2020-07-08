@@ -119,35 +119,6 @@ struct Face
 	std::string materialName = ""; //Material name to link with MTL
 };
 
-struct ZoneLoadQueue {
-	ZoneLoadQueue(std::thread* _t, int _i) {
-		threadOperation = _t;
-		zoneID = _i;
-	}
-	bool executing = true;
-	bool completed = false;
-	std::thread* threadOperation;
-	int zoneID;
-};
-
-struct ModelDef {
-	std::string modelName = "";
-	std::string modelPath_LOD1 = "";
-	std::string modelPath_LOD2 = "";
-};
-
-struct ModelPlacement {
-	std::string modelName = "";
-	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(0, 0, 0);
-	DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0, 0, 0);
-	DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(0, 0, 0);
-};
-
-struct BoundsPair {
-	DirectX::XMFLOAT3 localBottomLeft;
-	DirectX::XMFLOAT3 localTopRight;
-};
-
 /* Debug logger */
 class Debug
 {
@@ -215,7 +186,7 @@ public:
 	}
 
 	/* Convert a DirectX Matrix to Float4X4 */
-	XMFLOAT4X4 MatrixToFloat4x4(XMMATRIX mat)
+	static XMFLOAT4X4 MatrixToFloat4x4(XMMATRIX mat)
 	{
 		XMFLOAT4X4 temp;
 		XMStoreFloat4x4(&temp, mat);

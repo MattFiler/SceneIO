@@ -85,7 +85,17 @@ bool EditorScene::Update(double dt)
 			testLastFrame = true;
 		}
 
-		if (enablePickerTest) LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 10), picker.origin.y + (picker.direction.y * 10), picker.origin.z + (picker.direction.z * 10)));
+		if (enablePickerTest) {
+			LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 10), picker.origin.y + (picker.direction.y * 10), picker.origin.z + (picker.direction.z * 10)));
+			LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 20), picker.origin.y + (picker.direction.y * 20), picker.origin.z + (picker.direction.z * 20)));
+			LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 30), picker.origin.y + (picker.direction.y * 30), picker.origin.z + (picker.direction.z * 30)));
+			LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 40), picker.origin.y + (picker.direction.y * 40), picker.origin.z + (picker.direction.z * 40)));
+			LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 50), picker.origin.y + (picker.direction.y * 50), picker.origin.z + (picker.direction.z * 50)));
+			LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 60), picker.origin.y + (picker.direction.y * 60), picker.origin.z + (picker.direction.z * 60)));
+			LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 70), picker.origin.y + (picker.direction.y * 70), picker.origin.z + (picker.direction.z * 70)));
+			LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 80), picker.origin.y + (picker.direction.y * 80), picker.origin.z + (picker.direction.z * 80)));
+			LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 90), picker.origin.y + (picker.direction.y * 90), picker.origin.z + (picker.direction.z * 90)));
+		}
 	}
 	else {
 		testLastFrame = false;
@@ -114,8 +124,8 @@ bool EditorScene::Update(double dt)
 
 	//Get matrices as float arrays
 	float* objectMatrix = &objectToEdit->GetWorldMatrix4X4().m[0][0];
-	float* projMatrix = &dxutils.MatrixToFloat4x4(dxshared::mProjection).m[0][0];
-	float* viewMatrix = &dxutils.MatrixToFloat4x4(dxshared::mView).m[0][0];
+	float* projMatrix = &Utilities::MatrixToFloat4x4(dxshared::mProjection).m[0][0];
+	float* viewMatrix = &Utilities::MatrixToFloat4x4(dxshared::mView).m[0][0];
 
 	//Show options to swap between different transforms
 	ImGui::Begin("Transform Controls", nullptr);
