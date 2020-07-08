@@ -64,7 +64,14 @@ bool EditorScene::Update(double dt)
 	if (ImGui::Button("Add Grid Model")) {
 		LoadTestModel("data/test_grid.obj");
 	}
+	if (ImGui::Button("Delete Selected") && selectedEditModel != -1) {
+		GameObjectManager::RemoveObject(allActiveModels.at(selectedEditModel));
+		delete allActiveModels.at(selectedEditModel);
+		allActiveModels.erase(allActiveModels.begin() + selectedEditModel);
+		selectedEditModel -= 1;
+	}
 
+	ImGui::Separator();
 	ImGui::Checkbox("Enable Picker Debug", &enablePickerTest);
 
 	ImGui::Separator();
@@ -92,22 +99,18 @@ bool EditorScene::Update(double dt)
 			Intersection closestHit = Intersection();
 			float testDistance = 0.0f;
 			for (int i = 0; i < allActiveModels.size(); i++) {
-				if (allActiveModels[i]->DoesIntersect(picker, testDistance)) {
-					if (testDistance <= closestHit.distance) closestHit = Intersection(i, testDistance);
-				}
+				if (allActiveModels[i]->DoesIntersect(picker, testDistance) && testDistance <= closestHit.distance) closestHit = Intersection(i, testDistance);
 			}
-			if (closestHit.entityIndex != -1) {
-				GameObjectManager::RemoveObject(allActiveModels.at(closestHit.entityIndex));
-				delete allActiveModels.at(closestHit.entityIndex);
-				allActiveModels.erase(allActiveModels.begin() + closestHit.entityIndex);
-				selectedEditModel -= 1;
-				Debug::Log("Intersected with model " + std::to_string(closestHit.entityIndex) + " at distance " + std::to_string(closestHit.distance));
-			}
+			selectedEditModel = closestHit.entityIndex;
 			testLastFrame = true;
 		}
 
 		//Debug
 		if (enablePickerTest) for (int i = 1; i < 10; i++) LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 10 * i), picker.origin.y + (picker.direction.y * 10 * i), picker.origin.z + (picker.direction.z * 10 * i)));
+	}
+	else 
+	{
+		testLastFrame = false;
 	}
 
 	//Only continue if our requested edit object is valid
@@ -148,8 +151,6 @@ bool EditorScene::Update(double dt)
 		//Draw manipulation control
 		ImGuizmo::SetRect(0, 0, dxshared::m_renderWidth, dxshared::m_renderHeight);
 		ImGuizmo::Manipulate(viewMatrix, projMatrix, dxshared::mCurrentGizmoOperation, dxshared::mCurrentGizmoMode, objectMatrix, NULL, NULL);
-
-		testLastFrame = false;
 	}
 
 	//Get values from manipulation
