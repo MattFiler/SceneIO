@@ -40,7 +40,7 @@ bool SceneManager::Update(double dt)
 	//Dockspace
 	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(ImVec2(dxshared::m_renderWidth, dxshared::m_renderHeight), ImGuiCond_FirstUseEver);
-	ImGui::Begin("DockSpace", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
+	ImGui::Begin("DockSpace", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoBackground);
 	ImGui::DockSpace(ImGui::GetID("MyDockSpace"), ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_PassthruCentralNode);
 	ImGui::End();
 	
