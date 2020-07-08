@@ -318,8 +318,8 @@ bool dxmain::InitImGUI()
 
 	//https://www.unknowncheats.me/forum/c-and-c-/189635-imgui-style-settings.html
 	ImGuiStyle* style = &ImGui::GetStyle();
-	style->WindowPadding = ImVec2(15, 15);
-	style->WindowRounding = 5.0f;
+	style->WindowPadding = ImVec2(0, 0);
+	style->WindowRounding = 0.0f;
 	style->FramePadding = ImVec2(5, 5);
 	style->FrameRounding = 4.0f;
 	style->ItemSpacing = ImVec2(12, 8);
@@ -334,8 +334,8 @@ bool dxmain::InitImGUI()
 	style->Colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
 	//style->Colors[ImGuiCol_ChildWindowBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
 	style->Colors[ImGuiCol_PopupBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
-	style->Colors[ImGuiCol_Border] = ImVec4(0.80f, 0.80f, 0.83f, 0.88f);
-	style->Colors[ImGuiCol_BorderShadow] = ImVec4(0.92f, 0.91f, 0.88f, 0.00f);
+	style->Colors[ImGuiCol_Border] = ImVec4(0.33f, 0.33f, 0.33f, 0.88f);
+	style->Colors[ImGuiCol_BorderShadow] = ImVec4(0.22f, 0.22f, 0.22f, 0.00f);
 	style->Colors[ImGuiCol_FrameBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
 	style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
 	style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
@@ -355,7 +355,7 @@ bool dxmain::InitImGUI()
 	style->Colors[ImGuiCol_ButtonHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
 	style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
 	style->Colors[ImGuiCol_Header] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-	style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+	style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.33f, 0.33f, 0.33f, 1.00f);
 	style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
 	//style->Colors[ImGuiCol_Column] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
 	//style->Colors[ImGuiCol_ColumnHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
