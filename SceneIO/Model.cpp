@@ -37,11 +37,11 @@ void Model::Render(float dt)
 }
 
 /* Check for an intersection with a ray and this model instance */
-bool Model::DoesIntersect(Ray& _r)
+bool Model::DoesIntersect(Ray& _r, float& _d)
 {
 	//First, check less expensive bounding box
-	if (!boundingBox.Intersects(XMLoadFloat3(&_r.origin), XMLoadFloat3(&_r.direction), dxshared::cameraFar)) return false;
+	if (!boundingBox.Intersects(XMLoadFloat3(&_r.origin), XMLoadFloat3(&_r.direction), _d)) return false;
 
 	//If hit the bounding box, check the mesh (expensive)
-	return modelData->DoesRayIntersect(_r, mWorld);
+	return modelData->DoesRayIntersect(_r, mWorld, _d);
 }

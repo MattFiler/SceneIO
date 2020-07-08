@@ -36,7 +36,7 @@ public:
 		return extentsOffset;
 	}
 
-	bool DoesRayIntersect(Ray& _r, DirectX::XMMATRIX _world);
+	bool DoesRayIntersect(Ray& _r, DirectX::XMMATRIX _world, float& _d);
 
 private:
 	void CheckAgainstBoundingPoints(XMFLOAT3 pos) {

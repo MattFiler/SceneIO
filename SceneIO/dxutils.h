@@ -50,7 +50,16 @@ struct SimpleVertexAlt
 struct Ray {
 	XMFLOAT3 origin;
 	XMFLOAT3 direction;
-	float radius = 1.0f;
+};
+
+struct Intersection {
+	Intersection() = default;
+	Intersection(int _i, float _d) {
+		entityIndex = _i;
+		distance = _d;
+	}
+	int entityIndex = -1;
+	float distance = dxshared::cameraFar;
 };
 
 struct ConstantBuffer

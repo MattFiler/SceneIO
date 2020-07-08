@@ -19,7 +19,7 @@ public:
 		modelData = _m;
 	}
 
-	bool DoesIntersect(Ray& _r);
+	bool DoesIntersect(Ray& _r, float& _d);
 
 protected:
 	SharedModelBuffers* modelData = nullptr;

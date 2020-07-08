@@ -89,15 +89,19 @@ bool EditorScene::Update(double dt)
 
 		//Picker to mesh intersection
 		if (!testLastFrame) {
+			Intersection closestHit = Intersection();
+			float testDistance = 0.0f;
 			for (int i = 0; i < allActiveModels.size(); i++) {
-				if (allActiveModels[i]->DoesIntersect(picker)) {
-					GameObjectManager::RemoveObject(allActiveModels.at(i));
-					delete allActiveModels.at(i);
-					allActiveModels.erase(allActiveModels.begin() + i);
-					selectedEditModel -= 1;
-					Debug::Log("Intersected with model " + std::to_string(i));
-					break;
+				if (allActiveModels[i]->DoesIntersect(picker, testDistance)) {
+					if (testDistance <= closestHit.distance) closestHit = Intersection(i, testDistance);
 				}
+			}
+			if (closestHit.entityIndex != -1) {
+				GameObjectManager::RemoveObject(allActiveModels.at(closestHit.entityIndex));
+				delete allActiveModels.at(closestHit.entityIndex);
+				allActiveModels.erase(allActiveModels.begin() + closestHit.entityIndex);
+				selectedEditModel -= 1;
+				Debug::Log("Intersected with model " + std::to_string(closestHit.entityIndex) + " at distance " + std::to_string(closestHit.distance));
 			}
 			testLastFrame = true;
 		}
