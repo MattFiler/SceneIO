@@ -57,13 +57,10 @@ void Camera::Update(float dt)
 		}
 		case CameraControlType::MOUSE: {
 			if (InputHandler::MouseDown(WindowsMouse::RIGHT_CLICK)) {
-				ImGuiIO& io = ImGui::GetIO();
-
 				POINT newMousePos;
 				GetCursorPos(&newMousePos);
 				if (!mouseWasDownLastFrame) {
 					prevMousePos = newMousePos;
-					initMousePos = newMousePos;
 					ShowCursor(false);
 					mouseWasReset = false;
 				}
@@ -82,14 +79,14 @@ void Camera::Update(float dt)
 					if (GetRotation(false).z >= 360.0f) SetRotation(XMFLOAT3(GetRotation(false).x, GetRotation(false).y, GetRotation(false).z - 360.0f));
 				}
 
-				prevMousePos = newMousePos;
+				SetCursorPos(prevMousePos.x, prevMousePos.y);
 				mouseWasDownLastFrame = true;
 			}
 			else
 			{
 				mouseWasDownLastFrame = false;
 				if (!mouseWasReset) {
-					SetCursorPos(initMousePos.x, initMousePos.y);
+					SetCursorPos(prevMousePos.x, prevMousePos.y);
 					ShowCursor(true);
 					mouseWasReset = true;
 				}
