@@ -81,40 +81,8 @@ bool EditorScene::Update(double dt)
 
 	GameObjectManager::Update(dt);
 
-	//Only continue if our requested edit object is valid
-	if (selectedEditModel == -1) return true;
-
-	//Get the GameObject we're editing
-	GameObject* objectToEdit = allActiveModels.at(selectedEditModel);
-
-	//Get matrices as float arrays
-	float* objectMatrix = &objectToEdit->GetWorldMatrix4X4().m[0][0];
-	float* projMatrix = &Utilities::MatrixToFloat4x4(dxshared::mProjection).m[0][0];
-	float* viewMatrix = &Utilities::MatrixToFloat4x4(dxshared::mView).m[0][0];
-
-	//Show options to swap between different transforms
-	ImGui::Begin("Transform Controls", nullptr);
-	if (ImGui::RadioButton("Translate", dxshared::mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
-		dxshared::mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
-	ImGui::SameLine();
-	if (ImGui::RadioButton("Rotate", dxshared::mCurrentGizmoOperation == ImGuizmo::ROTATE))
-		dxshared::mCurrentGizmoOperation = ImGuizmo::ROTATE;
-	ImGui::SameLine();
-	if (ImGui::RadioButton("Scale", dxshared::mCurrentGizmoOperation == ImGuizmo::SCALE))
-		dxshared::mCurrentGizmoOperation = ImGuizmo::SCALE;
-
-	//Allow swap between local/world
-	if (dxshared::mCurrentGizmoOperation != ImGuizmo::SCALE)
-	{
-		if (ImGui::RadioButton("Local", dxshared::mCurrentGizmoMode == ImGuizmo::LOCAL))
-			dxshared::mCurrentGizmoMode = ImGuizmo::LOCAL;
-		ImGui::SameLine();
-		if (ImGui::RadioButton("World", dxshared::mCurrentGizmoMode == ImGuizmo::WORLD))
-			dxshared::mCurrentGizmoMode = ImGuizmo::WORLD;
-	}
-
 	//Allow user to click on a mesh
-	if (InputHandler::KeyDown(WindowsKey::SHIFT) && InputHandler::MouseDown(WindowsMouse::LEFT_CLICK)) 
+	if (InputHandler::KeyDown(WindowsKey::SHIFT) && InputHandler::MouseDown(WindowsMouse::LEFT_CLICK))
 	{
 		//Create picker ray
 		Ray picker = main_cam.GeneratePickerRay();
@@ -135,10 +103,43 @@ bool EditorScene::Update(double dt)
 		}
 
 		//Debug
-		if (enablePickerTest) for (int i = 0; i < 10; i++) LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 10 * i), picker.origin.y + (picker.direction.y * 10 * i), picker.origin.z + (picker.direction.z * 10 * i)));
+		if (enablePickerTest) for (int i = 1; i < 10; i++) LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 10 * i), picker.origin.y + (picker.direction.y * 10 * i), picker.origin.z + (picker.direction.z * 10 * i)));
 	}
-	//Allow user to transform a mesh
-	else 
+
+	//Only continue if our requested edit object is valid
+	if (selectedEditModel == -1) return true;
+
+	//Get the GameObject we're editing
+	GameObject* objectToEdit = allActiveModels.at(selectedEditModel);
+
+	//Get matrices as float arrays
+	float* objectMatrix = &objectToEdit->GetWorldMatrix4X4().m[0][0];
+	float* projMatrix = &Utilities::MatrixToFloat4x4(dxshared::mProjection).m[0][0];
+	float* viewMatrix = &Utilities::MatrixToFloat4x4(dxshared::mView).m[0][0];
+
+	//Show options to swap between different transforms
+	ImGui::Begin("Transform Controls", nullptr);
+	if (ImGui::RadioButton("Translate", dxshared::mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
+		dxshared::mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+	ImGui::SameLine();
+	//if (ImGui::RadioButton("Rotate", dxshared::mCurrentGizmoOperation == ImGuizmo::ROTATE))
+	//	dxshared::mCurrentGizmoOperation = ImGuizmo::ROTATE;
+	ImGui::SameLine();
+	if (ImGui::RadioButton("Scale", dxshared::mCurrentGizmoOperation == ImGuizmo::SCALE))
+		dxshared::mCurrentGizmoOperation = ImGuizmo::SCALE;
+
+	//Allow swap between local/world
+	if (dxshared::mCurrentGizmoOperation != ImGuizmo::SCALE)
+	{
+		if (ImGui::RadioButton("Local", dxshared::mCurrentGizmoMode == ImGuizmo::LOCAL))
+			dxshared::mCurrentGizmoMode = ImGuizmo::LOCAL;
+		ImGui::SameLine();
+		if (ImGui::RadioButton("World", dxshared::mCurrentGizmoMode == ImGuizmo::WORLD))
+			dxshared::mCurrentGizmoMode = ImGuizmo::WORLD;
+	}
+
+	//If user isn't clicking on a mesh, allow gizmo control
+	if (!(InputHandler::KeyDown(WindowsKey::SHIFT) && InputHandler::MouseDown(WindowsMouse::LEFT_CLICK))) 
 	{
 		//Draw manipulation control
 		ImGuizmo::SetRect(0, 0, dxshared::m_renderWidth, dxshared::m_renderHeight);
@@ -152,9 +153,9 @@ bool EditorScene::Update(double dt)
 	ImGuizmo::DecomposeMatrixToComponents(objectMatrix, matrixTranslation, matrixRotation, matrixScale);
 
 	//We don't allow gizmo editing of rotation, as ImGuizmo's accuracy really sucks, and throws everything off
-	//matrixRotation[0] = objectToEdit->GetRotation(false).x;
-	//matrixRotation[1] = objectToEdit->GetRotation(false).y;
-	//matrixRotation[2] = objectToEdit->GetRotation(false).z;
+	matrixRotation[0] = objectToEdit->GetRotation(false).x;
+	matrixRotation[1] = objectToEdit->GetRotation(false).y;
+	matrixRotation[2] = objectToEdit->GetRotation(false).z;
 
 	//Allow text overwrite
 	ImGui::InputFloat3("Translation", matrixTranslation, 3);
