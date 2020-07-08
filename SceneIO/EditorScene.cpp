@@ -39,10 +39,10 @@ void EditorScene::Release() {
 /* Update the objects in the scene */
 bool EditorScene::Update(double dt)
 {
-	ImGui::Begin("Controls", nullptr);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
+	ImGui::Begin("Scene Controls", nullptr);
+	ImGui::PopStyleVar();
 
-	ImGui::Text("Scene Controls");
-	ImGui::Separator();
 	bool camLock = main_cam.GetLocked();
 	ImGui::Checkbox("Lock Cam", &camLock);
 	main_cam.SetLocked(camLock);
@@ -125,7 +125,9 @@ bool EditorScene::Update(double dt)
 	float* viewMatrix = &Utilities::MatrixToFloat4x4(dxshared::mView).m[0][0];
 
 	//Show options to swap between different transforms
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
 	ImGui::Begin("Transform Controls", nullptr);
+	ImGui::PopStyleVar();
 	if (ImGui::RadioButton("Translate", dxshared::mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
 		dxshared::mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
 	ImGui::SameLine();
