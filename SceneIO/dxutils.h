@@ -193,6 +193,24 @@ public:
 		return temp;
 	}
 
+	/* Add two XMFLOAT3 objects */
+	static XMFLOAT3 AddFloat3(XMFLOAT3 a, XMFLOAT3 b)
+	{
+		return XMFLOAT3(a.x + b.x, a.y + b.y, a.z + b.z);
+	}
+
+	/* Multiply two XMFLOAT3 objects */
+	static XMFLOAT3 MultiplyFloat3(XMFLOAT3 a, XMFLOAT3 b)
+	{
+		return XMFLOAT3(a.x * b.x, a.y * b.y, a.z * b.z);
+	}
+
+	/* Multiply an XMFLOAT3 by a float */
+	static XMFLOAT3 MultiplyFloat3(XMFLOAT3 a, float b)
+	{
+		return XMFLOAT3(a.x * b, a.y * b, a.z * b);
+	}
+
 	/* Load a model from an OBJ file and return its indices and vertexes (todo: make it condense the vertex array) */
 	LoadedModel LoadModelFromOBJ(std::string path)
 	{

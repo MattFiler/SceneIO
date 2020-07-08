@@ -32,6 +32,9 @@ public:
 	DirectX::XMFLOAT3 GetExtents() {
 		return extents;
 	}
+	DirectX::XMFLOAT3 GetExtentsOffset() {
+		return extentsOffset;
+	}
 
 	bool DoesRayIntersect(Ray& _r, DirectX::XMMATRIX _world);
 
@@ -45,11 +48,13 @@ private:
 		if (pos.z > extents_tempMax.z) extents_tempMax.z = pos.z;
 	}
 	void CalculateFinalExtents() {
-		extents = XMFLOAT3((extents_tempMin.x * -1) + extents_tempMax.x, (extents_tempMin.y * -1) + extents_tempMax.y, (extents_tempMin.z * -1) + extents_tempMax.z);
+		extents = XMFLOAT3(((extents_tempMin.x * -1) + extents_tempMax.x) / 2.0f, ((extents_tempMin.y * -1) + extents_tempMax.y) / 2.0f, ((extents_tempMin.z * -1) + extents_tempMax.z) / 2.0f);
+		extentsOffset = XMFLOAT3(extents_tempMax.x + extents_tempMin.x, extents_tempMax.y + extents_tempMin.y, extents_tempMax.z + extents_tempMin.z);
 	}
 	DirectX::XMFLOAT3 extents_tempMin;
 	DirectX::XMFLOAT3 extents_tempMax;
 	DirectX::XMFLOAT3 extents;
+	DirectX::XMFLOAT3 extentsOffset;
 
 	Utilities dxutils = Utilities();
 
