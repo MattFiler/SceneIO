@@ -42,16 +42,21 @@ bool SceneManager::Update(double dt)
 	ImGui::SetNextWindowSize(ImVec2(dxshared::m_renderWidth, dxshared::m_renderHeight), ImGuiCond_FirstUseEver);
 	ImGui::Begin("DockSpace", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_MenuBar);
 	ImGui::DockSpace(ImGui::GetID("MyDockSpace"), ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_PassthruCentralNode);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
 	if (ImGui::BeginMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
 		{
+			if (ImGui::MenuItem("Save Scene")) int test1 = 0;
+			if (ImGui::MenuItem("Load Scene")) int test2 = 0;
+			ImGui::Separator();
 			if (ImGui::MenuItem("Quit")) return false;
 			ImGui::EndMenu();
 		}
 
 		ImGui::EndMenuBar();
 	}
+	ImGui::PopStyleVar();
 	ImGui::End();
 	
 	//Update current scene

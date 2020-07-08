@@ -21,7 +21,7 @@ dxmain::dxmain(HINSTANCE hInstance)
 	m_clientWidth = 1280;
 	m_clientHeight = 720; //todo: alt sizes
 	m_appTitle = "SceneIO";
-	m_wndStyle = WS_OVERLAPPEDWINDOW; //todo: do we want this style?
+	m_wndStyle = WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU; //todo: do we want this style?
 
 	g_pApp = this;
 
