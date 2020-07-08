@@ -67,41 +67,6 @@ bool EditorScene::Update(double dt)
 
 	ImGui::Checkbox("Enable Picker Debug", &enablePickerTest);
 
-	//Camera to scene interaction (test)
-	if (InputHandler::MouseDown(WindowsMouse::LEFT_CLICK)) {
-		Ray picker = main_cam.GeneratePickerRay();
-
-		if (!testLastFrame) {
-			for (int i = 0; i < allActiveModels.size(); i++) {
-				if (allActiveModels[i]->DoesIntersect(picker)) {
-					GameObjectManager::RemoveObject(allActiveModels.at(i));
-					delete allActiveModels.at(i);
-					allActiveModels.erase(allActiveModels.begin() + i);
-					selectedEditModel -= 1;
-					Debug::Log("Intersected with model " + std::to_string(i));
-					break;
-				}
-			}
-			testLastFrame = true;
-		}
-
-		if (enablePickerTest) {
-			LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 10), picker.origin.y + (picker.direction.y * 10), picker.origin.z + (picker.direction.z * 10)));
-			LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 20), picker.origin.y + (picker.direction.y * 20), picker.origin.z + (picker.direction.z * 20)));
-			LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 30), picker.origin.y + (picker.direction.y * 30), picker.origin.z + (picker.direction.z * 30)));
-			LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 40), picker.origin.y + (picker.direction.y * 40), picker.origin.z + (picker.direction.z * 40)));
-			LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 50), picker.origin.y + (picker.direction.y * 50), picker.origin.z + (picker.direction.z * 50)));
-			LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 60), picker.origin.y + (picker.direction.y * 60), picker.origin.z + (picker.direction.z * 60)));
-			LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 70), picker.origin.y + (picker.direction.y * 70), picker.origin.z + (picker.direction.z * 70)));
-			LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 80), picker.origin.y + (picker.direction.y * 80), picker.origin.z + (picker.direction.z * 80)));
-			LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 90), picker.origin.y + (picker.direction.y * 90), picker.origin.z + (picker.direction.z * 90)));
-		}
-	}
-	else {
-		testLastFrame = false;
-	}
-
-
 	ImGui::Separator();
 	int option = dxshared::cameraControlType;
 	ImGui::RadioButton("Camera Control Scheme: Keyboard", &option, 0);
@@ -132,8 +97,8 @@ bool EditorScene::Update(double dt)
 	if (ImGui::RadioButton("Translate", dxshared::mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
 		dxshared::mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
 	ImGui::SameLine();
-	//if (currentEditorMode != 1 && ImGui::RadioButton("Rotate", dxshared::mCurrentGizmoOperation == ImGuizmo::ROTATE))
-	//	dxshared::mCurrentGizmoOperation = ImGuizmo::ROTATE;
+	if (ImGui::RadioButton("Rotate", dxshared::mCurrentGizmoOperation == ImGuizmo::ROTATE))
+		dxshared::mCurrentGizmoOperation = ImGuizmo::ROTATE;
 	ImGui::SameLine();
 	if (ImGui::RadioButton("Scale", dxshared::mCurrentGizmoOperation == ImGuizmo::SCALE))
 		dxshared::mCurrentGizmoOperation = ImGuizmo::SCALE;
@@ -148,19 +113,48 @@ bool EditorScene::Update(double dt)
 			dxshared::mCurrentGizmoMode = ImGuizmo::WORLD;
 	}
 
-	//Draw manipulation control
-	ImGuiIO& io = ImGui::GetIO();
-	ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-	ImGuizmo::Manipulate(viewMatrix, projMatrix, dxshared::mCurrentGizmoOperation, dxshared::mCurrentGizmoMode, objectMatrix, NULL, NULL); 
+	//Allow user to click on a mesh
+	if (InputHandler::KeyDown(WindowsKey::SHIFT) && InputHandler::MouseDown(WindowsMouse::LEFT_CLICK)) 
+	{
+		//Create picker ray
+		Ray picker = main_cam.GeneratePickerRay();
+
+		//Picker to mesh intersection
+		if (!testLastFrame) {
+			for (int i = 0; i < allActiveModels.size(); i++) {
+				if (allActiveModels[i]->DoesIntersect(picker)) {
+					GameObjectManager::RemoveObject(allActiveModels.at(i));
+					delete allActiveModels.at(i);
+					allActiveModels.erase(allActiveModels.begin() + i);
+					selectedEditModel -= 1;
+					Debug::Log("Intersected with model " + std::to_string(i));
+					break;
+				}
+			}
+			testLastFrame = true;
+		}
+
+		//Debug
+		if (enablePickerTest) for (int i = 0; i < 10; i++) LoadTestModel("data/cube.obj", XMFLOAT3(picker.origin.x + (picker.direction.x * 10 * i), picker.origin.y + (picker.direction.y * 10 * i), picker.origin.z + (picker.direction.z * 10 * i)));
+	}
+	//Allow user to transform a mesh
+	else 
+	{
+		//Draw manipulation control
+		ImGuizmo::SetRect(0, 0, dxshared::m_renderWidth, dxshared::m_renderHeight);
+		ImGuizmo::Manipulate(viewMatrix, projMatrix, dxshared::mCurrentGizmoOperation, dxshared::mCurrentGizmoMode, objectMatrix, NULL, NULL);
+
+		testLastFrame = false;
+	}
 
 	//Get values from manipulation
 	float matrixTranslation[3], matrixRotation[3], matrixScale[3];
 	ImGuizmo::DecomposeMatrixToComponents(objectMatrix, matrixTranslation, matrixRotation, matrixScale);
 
 	//We don't allow gizmo editing of rotation, as ImGuizmo's accuracy really sucks, and throws everything off
-	matrixRotation[0] = objectToEdit->GetRotation(false).x;
-	matrixRotation[1] = objectToEdit->GetRotation(false).y;
-	matrixRotation[2] = objectToEdit->GetRotation(false).z;
+	//matrixRotation[0] = objectToEdit->GetRotation(false).x;
+	//matrixRotation[1] = objectToEdit->GetRotation(false).y;
+	//matrixRotation[2] = objectToEdit->GetRotation(false).z;
 
 	//Allow text overwrite
 	ImGui::InputFloat3("Translation", matrixTranslation, 3);
@@ -169,8 +163,9 @@ bool EditorScene::Update(double dt)
 
 	//Set new transforms back
 	objectToEdit->SetPosition(DirectX::XMFLOAT3(matrixTranslation[0], matrixTranslation[1], matrixTranslation[2]));
-	//objectToEdit->SetRotation(DirectX::XMFLOAT3(matrixRotation[0], matrixRotation[1], matrixRotation[2]));
+	objectToEdit->SetRotation(DirectX::XMFLOAT3(matrixRotation[0], matrixRotation[1], matrixRotation[2]));
 	objectToEdit->SetScale(DirectX::XMFLOAT3(matrixScale[0], matrixScale[1], matrixScale[2]));
+
 	ImGui::End();
 
 	return true;
