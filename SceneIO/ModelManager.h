@@ -37,4 +37,7 @@ private:
 	std::vector<Model*> models = std::vector<Model*>();
 
 	int selectedModelUI = -1;
+
+	std::string requestedLoadPath = "";
+	bool didRequestLoad = false;
 };

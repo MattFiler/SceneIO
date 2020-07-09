@@ -101,8 +101,7 @@ void DebugCube::Create()
 
 	//Vertex shader
 	ID3DBlob* pVSBlob = nullptr;
-	Utilities dxutils = Utilities();
-	HR(dxutils.CompileShaderFromFile(L"data/ObjectShaderUnlit.fx", "VS_UNLIT", "vs_4_0", &pVSBlob));
+	HR(Utilities::CompileShaderFromFile(L"data/ObjectShaderUnlit.fx", "VS_UNLIT", "vs_4_0", &pVSBlob));
 	HR(Shared::m_pDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &GO_VertexShader));
 
 	//Input layout
@@ -117,7 +116,7 @@ void DebugCube::Create()
 
 	//Pixel shader
 	ID3DBlob* pPSBlob = nullptr;
-	HR(dxutils.CompileShaderFromFile(L"data/ObjectShaderUnlit.fx", "PS_UNLIT", "ps_4_0", &pPSBlob));
+	HR(Utilities::CompileShaderFromFile(L"data/ObjectShaderUnlit.fx", "PS_UNLIT", "ps_4_0", &pPSBlob));
 	HR(Shared::m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &GO_PixelShader));
 	pPSBlob->Release();
 #endif

@@ -41,6 +41,22 @@ void ModelManager::ModelManagerUI()
 	if (ImGui::Button("Add Grid Model")) {
 		LoadTestModel("data/test_grid.obj");
 	}
+
+	/*
+	if (didRequestLoad) {
+		if (requestedLoadPath != "") {
+			LoadTestModel(requestedLoadPath);
+		}
+		didRequestLoad = false;
+	}
+	if (ImGui::Button("Select Model To Add")) {
+		requestedLoadPath = Utilities::OpenFile();
+		didRequestLoad = true;
+	}
+	*/
+
+	ImGui::Separator();
+
 	if (ImGui::Button("Delete Selected") && selectedModelUI != -1) {
 		GameObjectManager::RemoveObject(models.at(selectedModelUI));
 		delete models.at(selectedModelUI);

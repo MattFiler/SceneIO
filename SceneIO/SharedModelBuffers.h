@@ -57,8 +57,6 @@ private:
 	DirectX::XMFLOAT3 extents;
 	DirectX::XMFLOAT3 extentsOffset;
 
-	Utilities dxutils = Utilities();
-
 	ID3D11Buffer* g_pVertexBuffer = nullptr;
 
 	ID3D11SamplerState* g_pSamplerLinear = nullptr;

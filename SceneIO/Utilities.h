@@ -166,7 +166,7 @@ class Utilities
 {
 public:
 	/* Try and compile a shader from file (function created by Microsoft originally) */
-	HRESULT CompileShaderFromFile(LPCWSTR szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
+	static HRESULT CompileShaderFromFile(LPCWSTR szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
 	{
 		//Request d3d debugging if in debug
 		DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
@@ -221,7 +221,7 @@ public:
 	}
 
 	/* Load a model from an OBJ file and return its indices and vertexes (todo: make it condense the vertex array) */
-	LoadedModel LoadModelFromOBJ(std::string path)
+	static LoadedModel LoadModelFromOBJ(std::string path)
 	{
 		//Open OBJ
 		std::ifstream in(path.c_str());
@@ -531,7 +531,7 @@ public:
 	}
 
 	/* Copy a file from one location to another */
-	void CopyFromTo(std::string from, std::string to) {
+	static void CopyFile(std::string from, std::string to) {
 		std::ifstream  src(from, std::ios::binary);
 		std::ofstream  dst(to, std::ios::binary);
 		dst << src.rdbuf();
@@ -540,7 +540,7 @@ public:
 	}
 
 	/* Allows the user to select a file from a file picker window */
-	std::string OpenFile(std::string filter = "All Files (*.*)\0*.*\0", HWND owner = NULL) {
+	static std::string OpenFile(std::string filter = "All Files (*.*)\0*.*\0", HWND owner = NULL) {
 		OPENFILENAME ofn;
 		char fileName[MAX_PATH] = "";
 		ZeroMemory(&ofn, sizeof(ofn));
@@ -558,7 +558,7 @@ public:
 	}
 
 	/* Transform a loadedmodel by a world matrix, and push it to another loadedmodel */
-	void TransformAndPush(XMMATRIX world, LoadedModel& model, LoadedModel& push_to) {
+	static void TransformAndPush(XMMATRIX world, LoadedModel& model, LoadedModel& push_to) {
 		XMFLOAT3 transformedVert = XMFLOAT3(0.0f, 0.0f, 0.0f);
 		for (int x = 0; x < model.modelParts.size(); x++) {
 			LoadedModelPart thisPart = LoadedModelPart();

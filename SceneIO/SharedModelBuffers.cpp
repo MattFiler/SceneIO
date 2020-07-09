@@ -6,7 +6,7 @@ SharedModelBuffers::SharedModelBuffers(std::string filepath)
 	//Push data for our vertex buffer, and create children index buffers
 	Debug::Log("Loading model from disk.");
 	objPath = filepath;
-	LoadedModel _m = dxutils.LoadModelFromOBJ(filepath);
+	LoadedModel _m = Utilities::LoadModelFromOBJ(filepath);
 	for (int i = 0; i < _m.modelParts.size(); i++) {
 		for (int x = 0; x < _m.modelParts[i].compVertices.size(); x++) {
 			CheckAgainstBoundingPoints(_m.modelParts[i].compVertices[x].Pos);
@@ -43,8 +43,7 @@ SharedModelBuffers::SharedModelBuffers(std::string filepath)
 
 	//Compile the vertex shader
 	ID3DBlob* pVSBlob = nullptr;
-	Utilities dxutils = Utilities();
-	HR(dxutils.CompileShaderFromFile(L"data/ObjectShader.fx", "VS", "vs_4_0", &pVSBlob));
+	HR(Utilities::CompileShaderFromFile(L"data/ObjectShader.fx", "VS", "vs_4_0", &pVSBlob));
 
 	//Create the vertex shader
 	HR(Shared::m_pDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &m_vertexShader));
@@ -64,7 +63,7 @@ SharedModelBuffers::SharedModelBuffers(std::string filepath)
 
 	//Compile the pixel shader
 	ID3DBlob* pPSBlob = nullptr;
-	HR(dxutils.CompileShaderFromFile(L"data/ObjectShader.fx", "PS", "ps_4_0", &pPSBlob));
+	HR(Utilities::CompileShaderFromFile(L"data/ObjectShader.fx", "PS", "ps_4_0", &pPSBlob));
 
 	//Create the pixel shader
 	HR(Shared::m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &m_pixelShader));

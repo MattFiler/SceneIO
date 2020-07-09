@@ -20,8 +20,6 @@ public:
 private:
 	float fovCheck = Shared::cameraFOV;
 
-	Utilities dxutils = Utilities();
-
 	bool testLastFrame = false;
 
 	Camera main_cam;
