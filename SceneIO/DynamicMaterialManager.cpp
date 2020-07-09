@@ -78,11 +78,21 @@ void DynamicMaterialManager::MaterialConfigUI()
 	ImGui::Begin("Material Config", nullptr);
 	ImGui::PopStyleVar();
 
-	//ImGui::InputText("Name");
+	ImGui::Text("Selected:");
+	ImGui::Separator();
+	ImGui::Text(GetMaterial(selectedMaterialUI)->GetName().c_str());
+
+	ImGui::Separator();
+	ImGui::Dummy(ImVec2(15.0f, 15.0f));
+	ImGui::Separator();
 
 	//This should match the DataTypes enum in DataTypes.h
 	const char* items[] = { "RGB", "STRING", "FLOAT", "INTEGER", "UNSIGNED_INTEGER", "BOOLEAN", "FLOAT_ARRAY" };
-	ImGui::Text("Parameters");
+
+	if (GetMaterial(selectedMaterialUI)->GetParameterCount() != 0) {
+		ImGui::Text("Parameters:");
+		ImGui::Separator();
+	}
 	for (int i = 0; i < GetMaterial(selectedMaterialUI)->GetParameterCount(); i++) {
 		ImGui::Text(("(" + std::to_string(i) + ") Name: " + GetMaterial(selectedMaterialUI)->GetParameter(i)->name).c_str());
 		int valueType = (int)GetMaterial(selectedMaterialUI)->GetParameter(i)->value.type;
@@ -90,7 +100,6 @@ void DynamicMaterialManager::MaterialConfigUI()
 		ImGui::Text(("(" + std::to_string(i) + ") Binding: " + GetMaterial(selectedMaterialUI)->GetParameter(i)->bind).c_str());
 		ImGui::Separator();
 	}
-	if (GetMaterial(selectedMaterialUI)->GetParameterCount() == 0) ImGui::Separator();
 
 	ImGui::End();
 }
