@@ -21,6 +21,14 @@ public:
 		return nullptr;
 	}
 
+	int GetMaterialCount() {
+		return materials.size();
+	}
+
+	std::vector<DynamicMaterial>* GetMaterials() {
+		return &materials;
+	}
+
 private:
 	std::vector<DynamicMaterial> materials = std::vector<DynamicMaterial>();
 };

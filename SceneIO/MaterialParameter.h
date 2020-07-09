@@ -10,39 +10,39 @@ public:
 		name = config["name"].get<std::string>();
 		switch (config["type"].get<int>()) {
 			case (int)DataTypes::RGB: {
-				type = DataTypeRGB();
+				value = DataTypeRGB();
 				break;
 			}
 			case (int)DataTypes::STRING: {
-				type = DataTypeString();
+				value = DataTypeString();
 				break;
 			}
 			case (int)DataTypes::FLOAT: {
-				type = DataTypeFloat();
+				value = DataTypeFloat();
 				break;
 			}
 			case (int)DataTypes::INTEGER: {
-				type = DataTypeInt();
+				value = DataTypeInt();
 				break;
 			}
 			case (int)DataTypes::UNSIGNED_INTEGER: {
-				type = DataTypeUInt();
+				value = DataTypeUInt();
 				break;
 			}
 			case (int)DataTypes::BOOLEAN: {
-				type = DataTypeBool();
+				value = DataTypeBool();
 				break;
 			}
 			case (int)DataTypes::FLOAT_ARRAY: {
-				type = DataTypeFloatArray();
+				value = DataTypeFloatArray();
 				break;
 			}
 		}
-		type.type = (DataTypes)config["type"].get<int>();
+		value.type = (DataTypes)config["type"].get<int>();
 		bind = config["binding"].get<std::string>();
 	}
 
 	std::string name;
-	DataType type;
+	DataType value;
 	std::string bind;
 };

@@ -2,9 +2,9 @@
 
 DynamicMaterial::DynamicMaterial(json config)
 {
-	materialName = config["name"].get<std::string>();
+	name = config["name"].get<std::string>();
 
 	for (int i = 0; i < config["parameters"].size(); i++) {
-		materialParameters.emplace_back(config["parameters"][i]);
+		parameters.emplace_back(config["parameters"][i]);
 	}
 }

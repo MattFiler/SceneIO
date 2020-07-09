@@ -8,23 +8,31 @@ public:
 	~DynamicMaterial() = default;
 
 	std::string GetName() {
-		return materialName;
+		return name;
 	}
 
 	MaterialParameter* GetParameter(std::string name) {
-		for (int i = 0; i < materialParameters.size(); i++) {
-			if (materialParameters[i].name == name) {
-				return &materialParameters[i];
+		for (int i = 0; i < parameters.size(); i++) {
+			if (parameters[i].name == name) {
+				return &parameters[i];
 			}
 		}
 		return nullptr;
 	}
 	MaterialParameter* GetParameter(int index) {
-		if (index >= 0 && index < materialParameters.size()) return &materialParameters[index];
+		if (index >= 0 && index < parameters.size()) return &parameters[index];
 		return nullptr;
 	}
 
+	int GetParameterCount() {
+		return parameters.size();
+	}
+
+	std::vector<MaterialParameter>* GetParameters() {
+		return &parameters;
+	}
+
 private:
-	std::string materialName;
-	std::vector<MaterialParameter> materialParameters = std::vector<MaterialParameter>();
+	std::string name;
+	std::vector<MaterialParameter> parameters = std::vector<MaterialParameter>();
 };
