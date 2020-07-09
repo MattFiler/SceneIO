@@ -33,6 +33,9 @@ public:
 	}
 
 private:
+	void MaterialManagerUI();
+	void MaterialConfigUI();
+
 	std::vector<DynamicMaterial> materials = std::vector<DynamicMaterial>();
 	int selectedMaterialUI = -1;
 };
