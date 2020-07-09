@@ -19,17 +19,11 @@
     <Filter Include="Source Files\Scenes">
       <UniqueIdentifier>{34c9fbd2-9abd-4512-8fc7-a5a37ed0ee05}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\ImGui">
-      <UniqueIdentifier>{896c74de-11d7-4826-a9ef-efc6a54e7d78}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\GameObjects">
       <UniqueIdentifier>{de206f1f-b50f-4dc7-bbe5-a8e3c0e253b6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\GameObjects">
       <UniqueIdentifier>{4747e57f-96bd-4611-8875-ef76a9d86fd9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\ImGuizmo">
-      <UniqueIdentifier>{be34651f-f4a8-49d8-8838-cc362ed691c4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Utilities">
       <UniqueIdentifier>{d8a1e3c7-f45f-4209-90a3-854cce6dedf8}</UniqueIdentifier>
@@ -61,22 +55,31 @@
     <Filter Include="Source Files\Utilities">
       <UniqueIdentifier>{8607b813-98f9-4ff9-b67b-d203791ac679}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Libraries">
+      <UniqueIdentifier>{24eb0983-5c2d-44be-8019-4ad382cda173}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Libraries\ImGui">
+      <UniqueIdentifier>{896c74de-11d7-4826-a9ef-efc6a54e7d78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Libraries\ImGuizmo">
+      <UniqueIdentifier>{be34651f-f4a8-49d8-8838-cc362ed691c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui_impl_dx11.cpp">
-      <Filter>Source Files\ImGui</Filter>
+      <Filter>Source Files\Libraries\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui_impl_win32.cpp">
-      <Filter>Source Files\ImGui</Filter>
+      <Filter>Source Files\Libraries\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui_widgets.cpp">
-      <Filter>Source Files\ImGui</Filter>
+      <Filter>Source Files\Libraries\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui.cpp">
-      <Filter>Source Files\ImGui</Filter>
+      <Filter>Source Files\Libraries\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui_draw.cpp">
-      <Filter>Source Files\ImGui</Filter>
+      <Filter>Source Files\Libraries\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Source Files\GameObjects</Filter>
@@ -88,19 +91,19 @@
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="imguizmo\ImGuizmo.cpp">
-      <Filter>Source Files\ImGuizmo</Filter>
+      <Filter>Source Files\Libraries\ImGuizmo</Filter>
     </ClCompile>
     <ClCompile Include="EditorScene.cpp">
       <Filter>Source Files\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="imguizmo\ImCurveEdit.cpp">
-      <Filter>Source Files\ImGuizmo</Filter>
+      <Filter>Source Files\Libraries\ImGuizmo</Filter>
     </ClCompile>
     <ClCompile Include="imguizmo\ImGradient.cpp">
-      <Filter>Source Files\ImGuizmo</Filter>
+      <Filter>Source Files\Libraries\ImGuizmo</Filter>
     </ClCompile>
     <ClCompile Include="imguizmo\ImSequencer.cpp">
-      <Filter>Source Files\ImGuizmo</Filter>
+      <Filter>Source Files\Libraries\ImGuizmo</Filter>
     </ClCompile>
     <ClCompile Include="DebugCube.cpp">
       <Filter>Source Files\GameObjects</Filter>

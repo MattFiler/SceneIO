@@ -32,5 +32,7 @@ private:
 	int requestedSceneIndex = -1;
 	int currentSceneIndex = -1;
 	std::vector<Scene*> availableScenes = std::vector<Scene*>();
+
+	bool showControlsMenu = false;
 };
 

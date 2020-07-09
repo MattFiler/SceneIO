@@ -38,9 +38,12 @@ void DynamicMaterialManager::Update()
 	ImGui::Separator();
 
 	if (selectedMaterialUI != -1) {
-		const char* items[] = { "AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIIIIII", "JJJJ", "KKKKKKK" };
+		//ImGui::InputText("Name");
+
+		//This should match the DataTypes enum in DataTypes.h
+		const char* items[] = { "RGB", "STRING", "FLOAT", "INTEGER", "UNSIGNED_INTEGER", "BOOLEAN", "FLOAT_ARRAY" };
 		static int item_current = 0;
-		ImGui::Combo("combo", &item_current, items, IM_ARRAYSIZE(items));
+		ImGui::Combo("DataType", &item_current, items, IM_ARRAYSIZE(items));
 	}
 
 	ImGui::End();

@@ -1,5 +1,6 @@
 #include "ModelManager.h"
 #include "imgui/imgui.h"
+#include "InputHandler.h"
 
 /* Free all model instances */
 ModelManager::~ModelManager()
@@ -12,6 +13,22 @@ ModelManager::~ModelManager()
 
 /* Render controls UI */
 void ModelManager::Update()
+{
+	//Hotkeys for swapping modes (TODO: add rotation back)
+	if (InputHandler::KeyDown(WindowsKey::O)) {
+		Shared::mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+	}
+	else if (InputHandler::KeyDown(WindowsKey::P)) {
+		Shared::mCurrentGizmoOperation = ImGuizmo::SCALE;
+	}
+
+	//UI
+	ModelManagerUI();
+	ModelTransformUI();
+}
+
+/* Model manager core UI (list model instances, add new models, etc) */
+void ModelManager::ModelManagerUI()
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
 	ImGui::Begin("Model Controls", nullptr);
@@ -40,7 +57,11 @@ void ModelManager::Update()
 	}
 
 	ImGui::End();
+}
 
+/* Model transform UI (select model and control it) */
+void ModelManager::ModelTransformUI()
+{
 	//Only continue if our requested edit object is valid
 	if (selectedModelUI == -1) return;
 

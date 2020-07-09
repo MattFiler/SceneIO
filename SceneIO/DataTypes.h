@@ -4,6 +4,7 @@
 
 /* Inheritable datatypes for dynamic casting */
 
+//This should match the combobox values in DynamicMaterialManager.cpp
 enum class DataTypes {
 	RGB,
 	STRING,

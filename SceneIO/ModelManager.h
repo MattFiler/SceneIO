@@ -27,6 +27,9 @@ public:
 	void SelectModel(Ray& _r);
 
 private:
+	void ModelManagerUI();
+	void ModelTransformUI();
+
 	void LoadTestModel(std::string name, DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3 rot = DirectX::XMFLOAT3(0, 0, 0));
 
 	SharedModelBuffers* LoadModelToLevel(std::string filename);

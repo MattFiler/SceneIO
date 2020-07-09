@@ -54,12 +54,44 @@ bool SceneManager::Update(double dt)
 			if (ImGui::MenuItem("Quit")) return false;
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("About")) {
+			if (ImGui::MenuItem("Controls")) {
+				showControlsMenu = true;
+			}
+			ImGui::EndMenu();
+		}
 
 		ImGui::EndMenuBar();
 	}
 	ImGui::PopStyleVar();
 	ImGui::End();
 	
+	//Controls menu
+	if (showControlsMenu) {
+		ImGui::SetNextWindowPos(ImVec2(490, 248));
+		ImGui::SetNextWindowSize(ImVec2(279, 205));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
+		ImGui::Begin("Controls", nullptr, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
+		ImGui::PopStyleVar();
+
+		ImGui::Text("Select Model: Shift+LMB");
+		ImGui::Text("Move Camera: RMB");
+		ImGui::Text("Move Camera Alt: Ctrl+RMB");
+
+		ImGui::Separator();
+
+		ImGui::Text("Translate Mode: O");
+		ImGui::Text("Scale Mode: P");
+
+		ImGui::Separator();
+
+		if (ImGui::Button("Close")) {
+			showControlsMenu = false;
+		}
+
+		ImGui::End();
+	}
+
 	//Update current scene
 	if (currentSceneIndex != -1)
 		return availableScenes[currentSceneIndex]->Update(dt);
