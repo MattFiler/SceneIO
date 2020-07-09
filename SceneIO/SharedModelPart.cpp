@@ -16,14 +16,14 @@ SharedModelPart::SharedModelPart(LoadedModelPart _m)
 	D3D11_SUBRESOURCE_DATA InitData;
 	ZeroMemory(&InitData, sizeof(InitData));
 	InitData.pSysMem = modelMetaData.compIndices.data();
-	HR(dxshared::m_pDevice->CreateBuffer(&bd, &InitData, &g_pIndexBuffer));
+	HR(Shared::m_pDevice->CreateBuffer(&bd, &InitData, &g_pIndexBuffer));
 
 	//Create the constant buffer 
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.ByteWidth = sizeof(ConstantBuffer);
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	bd.CPUAccessFlags = 0;
-	HR(dxshared::m_pDevice->CreateBuffer(&bd, nullptr, &g_pConstantBuffer));
+	HR(Shared::m_pDevice->CreateBuffer(&bd, nullptr, &g_pConstantBuffer));
 
 	//Setup material
 	loadedMaterial.materialName = modelMetaData.thisMaterial.materialName;
@@ -31,7 +31,7 @@ SharedModelPart::SharedModelPart(LoadedModelPart _m)
 	//Load texture file
 	ID3D11ShaderResourceView* newTex;
 	std::wstring widestr = std::wstring(modelMetaData.thisMaterial.texturePath.begin(), modelMetaData.thisMaterial.texturePath.end());
-	HR(CreateDDSTextureFromFile(dxshared::m_pDevice, widestr.c_str(), nullptr, &newTex));
+	HR(CreateDDSTextureFromFile(Shared::m_pDevice, widestr.c_str(), nullptr, &newTex));
 	loadedMaterial.materialTexture = newTex;
 
 	//Populate colour data
@@ -55,8 +55,8 @@ void SharedModelPart::Render(XMMATRIX world)
 	//Update and set constant buffer
 	ConstantBuffer cb;
 	cb.mWorld = XMMatrixTranspose(world);
-	cb.mView = XMMatrixTranspose(dxshared::mView);
-	cb.mProjection = XMMatrixTranspose(dxshared::mProjection);
+	cb.mView = XMMatrixTranspose(Shared::mView);
+	cb.mProjection = XMMatrixTranspose(Shared::mProjection);
 	cb.colourTint = loadedMaterial.materialColour;
 	//cb.numOfLights = (LightManager::GetLightCount() > 10) ? 10 : LightManager::GetLightCount();
 	//for (int i = 0; i < 10; i++) {
@@ -65,15 +65,15 @@ void SharedModelPart::Render(XMMATRIX world)
 		cb.pointlightPosition = XMFLOAT4(pos.x, pos.y, pos.z, GameObjectManager::GetLights()[0]->GetIntensity());
 		cb.pointlightColour = GameObjectManager::GetLights()[0]->GetColour();
 	//}
-	cb.ambientLight = dxshared::ambientLightColour;
-	dxshared::m_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, nullptr, &cb, 0, 0);
-	dxshared::m_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
-	dxshared::m_pImmediateContext->PSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+	cb.ambientLight = Shared::ambientLightColour;
+	Shared::m_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+	Shared::m_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+	Shared::m_pImmediateContext->PSSetConstantBuffers(0, 1, &g_pConstantBuffer);
 
 	//Set texture
-	dxshared::m_pImmediateContext->PSSetShaderResources(0, 1, &loadedMaterial.materialTexture);
+	Shared::m_pImmediateContext->PSSetShaderResources(0, 1, &loadedMaterial.materialTexture);
 
 	//Set index buffer and draw
-	dxshared::m_pImmediateContext->IASetIndexBuffer(g_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-	dxshared::m_pImmediateContext->DrawIndexed(indexCount, 0, 0);
+	Shared::m_pImmediateContext->IASetIndexBuffer(g_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+	Shared::m_pImmediateContext->DrawIndexed(indexCount, 0, 0);
 }

@@ -49,38 +49,38 @@ void ModelManager::Update()
 
 	//Get matrices as float arrays
 	float* objectMatrix = &objectToEdit->GetWorldMatrix4X4().m[0][0];
-	float* projMatrix = &Utilities::MatrixToFloat4x4(dxshared::mProjection).m[0][0];
-	float* viewMatrix = &Utilities::MatrixToFloat4x4(dxshared::mView).m[0][0];
+	float* projMatrix = &Utilities::MatrixToFloat4x4(Shared::mProjection).m[0][0];
+	float* viewMatrix = &Utilities::MatrixToFloat4x4(Shared::mView).m[0][0];
 
 	//Show options to swap between different transforms
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
 	ImGui::Begin("Transform Controls", nullptr);
 	ImGui::PopStyleVar();
-	if (ImGui::RadioButton("Translate", dxshared::mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
-		dxshared::mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+	if (ImGui::RadioButton("Translate", Shared::mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
+		Shared::mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
 	ImGui::SameLine();
 	//if (ImGui::RadioButton("Rotate", dxshared::mCurrentGizmoOperation == ImGuizmo::ROTATE))
 	//	dxshared::mCurrentGizmoOperation = ImGuizmo::ROTATE;
 	ImGui::SameLine();
-	if (ImGui::RadioButton("Scale", dxshared::mCurrentGizmoOperation == ImGuizmo::SCALE))
-		dxshared::mCurrentGizmoOperation = ImGuizmo::SCALE;
+	if (ImGui::RadioButton("Scale", Shared::mCurrentGizmoOperation == ImGuizmo::SCALE))
+		Shared::mCurrentGizmoOperation = ImGuizmo::SCALE;
 
 	//Allow swap between local/world
-	if (dxshared::mCurrentGizmoOperation != ImGuizmo::SCALE)
+	if (Shared::mCurrentGizmoOperation != ImGuizmo::SCALE)
 	{
-		if (ImGui::RadioButton("Local", dxshared::mCurrentGizmoMode == ImGuizmo::LOCAL))
-			dxshared::mCurrentGizmoMode = ImGuizmo::LOCAL;
+		if (ImGui::RadioButton("Local", Shared::mCurrentGizmoMode == ImGuizmo::LOCAL))
+			Shared::mCurrentGizmoMode = ImGuizmo::LOCAL;
 		ImGui::SameLine();
-		if (ImGui::RadioButton("World", dxshared::mCurrentGizmoMode == ImGuizmo::WORLD))
-			dxshared::mCurrentGizmoMode = ImGuizmo::WORLD;
+		if (ImGui::RadioButton("World", Shared::mCurrentGizmoMode == ImGuizmo::WORLD))
+			Shared::mCurrentGizmoMode = ImGuizmo::WORLD;
 	}
 
 	//If user isn't clicking on a mesh, allow gizmo control
 	if (!(InputHandler::KeyDown(WindowsKey::SHIFT) && InputHandler::MouseDown(WindowsMouse::LEFT_CLICK)))
 	{
 		//Draw manipulation control
-		ImGuizmo::SetRect(0, 0, dxshared::m_renderWidth, dxshared::m_renderHeight);
-		ImGuizmo::Manipulate(viewMatrix, projMatrix, dxshared::mCurrentGizmoOperation, dxshared::mCurrentGizmoMode, objectMatrix, NULL, NULL);
+		ImGuizmo::SetRect(0, 0, Shared::m_renderWidth, Shared::m_renderHeight);
+		ImGuizmo::Manipulate(viewMatrix, projMatrix, Shared::mCurrentGizmoOperation, Shared::mCurrentGizmoMode, objectMatrix, NULL, NULL);
 	}
 
 	//Get values from manipulation

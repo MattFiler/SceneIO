@@ -27,7 +27,7 @@ SharedModelBuffers::SharedModelBuffers(std::string filepath)
 	D3D11_SUBRESOURCE_DATA InitData;
 	ZeroMemory(&InitData, sizeof(InitData));
 	InitData.pSysMem = allVerts.data();
-	HR(dxshared::m_pDevice->CreateBuffer(&bd, &InitData, &g_pVertexBuffer));
+	HR(Shared::m_pDevice->CreateBuffer(&bd, &InitData, &g_pVertexBuffer));
 
 	// Create the sample state
 	D3D11_SAMPLER_DESC sampDesc;
@@ -39,7 +39,7 @@ SharedModelBuffers::SharedModelBuffers(std::string filepath)
 	sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
 	sampDesc.MinLOD = 0;
 	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
-	HR(dxshared::m_pDevice->CreateSamplerState(&sampDesc, &g_pSamplerLinear));
+	HR(Shared::m_pDevice->CreateSamplerState(&sampDesc, &g_pSamplerLinear));
 
 	//Compile the vertex shader
 	ID3DBlob* pVSBlob = nullptr;
@@ -47,7 +47,7 @@ SharedModelBuffers::SharedModelBuffers(std::string filepath)
 	HR(dxutils.CompileShaderFromFile(L"data/ObjectShader.fx", "VS", "vs_4_0", &pVSBlob));
 
 	//Create the vertex shader
-	HR(dxshared::m_pDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &m_vertexShader));
+	HR(Shared::m_pDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &m_vertexShader));
 
 	//Define the input layout
 	D3D11_INPUT_ELEMENT_DESC layout[] =
@@ -59,7 +59,7 @@ SharedModelBuffers::SharedModelBuffers(std::string filepath)
 	UINT numElements = ARRAYSIZE(layout);
 
 	//Create the input layout
-	HR(dxshared::m_pDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &m_vertexLayout));
+	HR(Shared::m_pDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &m_vertexLayout));
 	pVSBlob->Release();
 
 	//Compile the pixel shader
@@ -67,7 +67,7 @@ SharedModelBuffers::SharedModelBuffers(std::string filepath)
 	HR(dxutils.CompileShaderFromFile(L"data/ObjectShader.fx", "PS", "ps_4_0", &pPSBlob));
 
 	//Create the pixel shader
-	HR(dxshared::m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &m_pixelShader));
+	HR(Shared::m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &m_pixelShader));
 	pPSBlob->Release();
 }
 
@@ -91,19 +91,19 @@ void SharedModelBuffers::Render(XMMATRIX mWorld)
 	if (allModels.size() == 0) return;
 
 	//Set shaders to use
-	dxshared::m_pImmediateContext->VSSetShader(m_vertexShader, nullptr, 0);
-	dxshared::m_pImmediateContext->PSSetShader(m_pixelShader, nullptr, 0);
+	Shared::m_pImmediateContext->VSSetShader(m_vertexShader, nullptr, 0);
+	Shared::m_pImmediateContext->PSSetShader(m_pixelShader, nullptr, 0);
 
 	//Set vertex buffer 
 	UINT stride = sizeof(SimpleVertex);
 	UINT offset = 0;
-	dxshared::m_pImmediateContext->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
+	Shared::m_pImmediateContext->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
 
 	//Set sampler
-	dxshared::m_pImmediateContext->PSSetSamplers(0, 1, &g_pSamplerLinear);
+	Shared::m_pImmediateContext->PSSetSamplers(0, 1, &g_pSamplerLinear);
 
 	//Set input layout (submeshes don't use GO render state, so we can do this here)
-	dxshared::m_pImmediateContext->IASetInputLayout(m_vertexLayout);
+	Shared::m_pImmediateContext->IASetInputLayout(m_vertexLayout);
 
 	//Render each model part
 	for (int i = 0; i < allModels.size(); i++) {

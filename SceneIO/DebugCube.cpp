@@ -49,7 +49,7 @@ void DebugCube::Create()
 	D3D11_SUBRESOURCE_DATA InitData;
 	ZeroMemory(&InitData, sizeof(InitData));
 	InitData.pSysMem = vertices;
-	HR(dxshared::m_pDevice->CreateBuffer(&bd, &InitData, &GO_VertexBuffer));
+	HR(Shared::m_pDevice->CreateBuffer(&bd, &InitData, &GO_VertexBuffer));
 
 	//Create index buffer 
 	WORD indices[] =
@@ -78,14 +78,14 @@ void DebugCube::Create()
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	InitData.pSysMem = indices;
-	HR(dxshared::m_pDevice->CreateBuffer(&bd, &InitData, &GO_IndexBuffer));
+	HR(Shared::m_pDevice->CreateBuffer(&bd, &InitData, &GO_IndexBuffer));
 
 	//Constant buffer 
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.ByteWidth = sizeof(ConstantBufferAlt);
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	bd.CPUAccessFlags = 0;
-	HR(dxshared::m_pDevice->CreateBuffer(&bd, nullptr, &GO_ConstantBuffer));
+	HR(Shared::m_pDevice->CreateBuffer(&bd, nullptr, &GO_ConstantBuffer));
 
 	// Create the sample state
 	D3D11_SAMPLER_DESC sampDesc;
@@ -97,13 +97,13 @@ void DebugCube::Create()
 	sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
 	sampDesc.MinLOD = 0;
 	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
-	HR(dxshared::m_pDevice->CreateSamplerState(&sampDesc, &g_pSamplerLinear));
+	HR(Shared::m_pDevice->CreateSamplerState(&sampDesc, &g_pSamplerLinear));
 
 	//Vertex shader
 	ID3DBlob* pVSBlob = nullptr;
 	Utilities dxutils = Utilities();
 	HR(dxutils.CompileShaderFromFile(L"data/ObjectShaderUnlit.fx", "VS_UNLIT", "vs_4_0", &pVSBlob));
-	HR(dxshared::m_pDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &GO_VertexShader));
+	HR(Shared::m_pDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &GO_VertexShader));
 
 	//Input layout
 	D3D11_INPUT_ELEMENT_DESC layout[] =
@@ -112,13 +112,13 @@ void DebugCube::Create()
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 	UINT numElements = ARRAYSIZE(layout);
-	HR(dxshared::m_pDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &GO_VertLayout));
+	HR(Shared::m_pDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &GO_VertLayout));
 	pVSBlob->Release();
 
 	//Pixel shader
 	ID3DBlob* pPSBlob = nullptr;
 	HR(dxutils.CompileShaderFromFile(L"data/ObjectShaderUnlit.fx", "PS_UNLIT", "ps_4_0", &pPSBlob));
-	HR(dxshared::m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &GO_PixelShader));
+	HR(Shared::m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &GO_PixelShader));
 	pPSBlob->Release();
 #endif
 }
@@ -149,35 +149,35 @@ void DebugCube::Render(float dt)
 		}
 
 		//Input layout
-		dxshared::m_pImmediateContext->IASetInputLayout(GO_VertLayout);
+		Shared::m_pImmediateContext->IASetInputLayout(GO_VertLayout);
 
 		//Set sampler
-		dxshared::m_pImmediateContext->PSSetSamplers(0, 1, &g_pSamplerLinear);
+		Shared::m_pImmediateContext->PSSetSamplers(0, 1, &g_pSamplerLinear);
 
 		//Set texture
-		dxshared::m_pImmediateContext->PSSetShaderResources(0, 1, &materialTexture);
+		Shared::m_pImmediateContext->PSSetShaderResources(0, 1, &materialTexture);
 
 		//Shaders
-		dxshared::m_pImmediateContext->VSSetShader(GO_VertexShader, nullptr, 0);
-		dxshared::m_pImmediateContext->PSSetShader(GO_PixelShader, nullptr, 0);
+		Shared::m_pImmediateContext->VSSetShader(GO_VertexShader, nullptr, 0);
+		Shared::m_pImmediateContext->PSSetShader(GO_PixelShader, nullptr, 0);
 
 		//Constant buffer
 		ConstantBufferAlt cb;
 		cb.mWorld = XMMatrixTranspose(mWorld);
-		cb.mView = XMMatrixTranspose(dxshared::mView);
-		cb.mProjection = XMMatrixTranspose(dxshared::mProjection);
-		dxshared::m_pImmediateContext->UpdateSubresource(GO_ConstantBuffer, 0, nullptr, &cb, 0, 0);
-		dxshared::m_pImmediateContext->VSSetConstantBuffers(0, 1, &GO_ConstantBuffer);
-		dxshared::m_pImmediateContext->PSSetConstantBuffers(0, 1, &GO_ConstantBuffer);
+		cb.mView = XMMatrixTranspose(Shared::mView);
+		cb.mProjection = XMMatrixTranspose(Shared::mProjection);
+		Shared::m_pImmediateContext->UpdateSubresource(GO_ConstantBuffer, 0, nullptr, &cb, 0, 0);
+		Shared::m_pImmediateContext->VSSetConstantBuffers(0, 1, &GO_ConstantBuffer);
+		Shared::m_pImmediateContext->PSSetConstantBuffers(0, 1, &GO_ConstantBuffer);
 
 		//Index/vertex buffers
-		dxshared::m_pImmediateContext->IASetIndexBuffer(GO_IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+		Shared::m_pImmediateContext->IASetIndexBuffer(GO_IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
 		UINT stride = sizeof(SimpleVertexAlt);
 		UINT offset = 0;
-		dxshared::m_pImmediateContext->IASetVertexBuffers(0, 1, &GO_VertexBuffer, &stride, &offset);
+		Shared::m_pImmediateContext->IASetVertexBuffers(0, 1, &GO_VertexBuffer, &stride, &offset);
 
 		//Draw
-		dxshared::m_pImmediateContext->DrawIndexed(GO_IndexCount, 0, 0);
+		Shared::m_pImmediateContext->DrawIndexed(GO_IndexCount, 0, 0);
 	}
 #endif
 }
@@ -193,7 +193,7 @@ void DebugCube::SetTexture(std::string filename)
 	ID3D11ShaderResourceView* newTex;
 	std::string texPath = "data/" + filename + ".dds";
 	std::wstring widestr = std::wstring(texPath.begin(), texPath.end());
-	HR(CreateDDSTextureFromFile(dxshared::m_pDevice, widestr.c_str(), nullptr, &newTex));
+	HR(CreateDDSTextureFromFile(Shared::m_pDevice, widestr.c_str(), nullptr, &newTex));
 	materialTexture = newTex;
 
 	setTex = true;

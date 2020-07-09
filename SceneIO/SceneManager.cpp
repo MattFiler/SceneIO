@@ -11,7 +11,7 @@ SceneManager::~SceneManager()
 /* Set up the core functionality */
 bool SceneManager::Init()
 {
-	bool dxInit = dxmain::Init();
+	bool dxInit = MainSetup::Init();
 
 	EditorScene* level_scene = new EditorScene();
 	AddScene(level_scene);
@@ -40,7 +40,7 @@ bool SceneManager::Update(double dt)
 
 	//Dockspace
 	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
-	ImGui::SetNextWindowSize(ImVec2(dxshared::m_renderWidth, dxshared::m_renderHeight), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowSize(ImVec2(Shared::m_renderWidth, Shared::m_renderHeight), ImGuiCond_FirstUseEver);
 	ImGui::Begin("DockSpace", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_MenuBar);
 	ImGui::DockSpace(ImGui::GetID("MyDockSpace"), ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_PassthruCentralNode);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));

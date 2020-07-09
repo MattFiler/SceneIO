@@ -19,9 +19,6 @@
     <Filter Include="Source Files\Scenes">
       <UniqueIdentifier>{34c9fbd2-9abd-4512-8fc7-a5a37ed0ee05}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\ImGui">
-      <UniqueIdentifier>{30127ea4-ab0d-4dc5-964b-62460538925b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\ImGui">
       <UniqueIdentifier>{896c74de-11d7-4826-a9ef-efc6a54e7d78}</UniqueIdentifier>
     </Filter>
@@ -31,38 +28,41 @@
     <Filter Include="Header Files\GameObjects">
       <UniqueIdentifier>{4747e57f-96bd-4611-8875-ef76a9d86fd9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\nlohmann">
-      <UniqueIdentifier>{735155ad-9576-4c13-8cf7-e5717cbd627b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\ImGuizmo">
-      <UniqueIdentifier>{8cfeeb4e-cc56-4d22-a601-c4a4b1abf534}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\ImGuizmo">
       <UniqueIdentifier>{be34651f-f4a8-49d8-8838-cc362ed691c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Utilities">
+      <UniqueIdentifier>{d8a1e3c7-f45f-4209-90a3-854cce6dedf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Libraries">
+      <UniqueIdentifier>{bd07252e-d29c-4333-81a9-ee6ece48158c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Libraries\ImGui">
+      <UniqueIdentifier>{30127ea4-ab0d-4dc5-964b-62460538925b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Libraries\ImGuizmo">
+      <UniqueIdentifier>{8cfeeb4e-cc56-4d22-a601-c4a4b1abf534}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Libraries\nlohmann">
+      <UniqueIdentifier>{735155ad-9576-4c13-8cf7-e5717cbd627b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core">
+      <UniqueIdentifier>{791b5389-dbd9-4dc1-aec6-e2622e8af026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Models/Materials">
+      <UniqueIdentifier>{6a5e12ac-847d-40b7-ad7b-6a94941df1a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Models/Materials">
+      <UniqueIdentifier>{79c8face-bd9e-490d-a58c-ac4c232a504c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{a0e0ac79-6140-4e5a-9514-df577e1b63e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utilities">
+      <UniqueIdentifier>{8607b813-98f9-4ff9-b67b-d203791ac679}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="winmain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dxmain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dxshared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dxerr.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DDSTextureLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InputHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="imgui\imgui_impl_dx11.cpp">
       <Filter>Source Files\ImGui</Filter>
     </ClCompile>
@@ -77,9 +77,6 @@
     </ClCompile>
     <ClCompile Include="imgui\imgui_draw.cpp">
       <Filter>Source Files\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObjectManager.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Source Files\GameObjects</Filter>
@@ -105,79 +102,76 @@
     <ClCompile Include="imguizmo\ImSequencer.cpp">
       <Filter>Source Files\ImGuizmo</Filter>
     </ClCompile>
-    <ClCompile Include="SharedModelBuffers.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SharedModelPart.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DebugCube.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="DynamicMaterial.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Models/Materials</Filter>
     </ClCompile>
     <ClCompile Include="DynamicMaterialManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Models/Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectManager.cpp">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSTextureLoader.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="EXErr.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="winmain.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="SharedModelPart.cpp">
+      <Filter>Source Files\Models/Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="SharedModelBuffers.cpp">
+      <Filter>Source Files\Models/Materials</Filter>
     </ClCompile>
     <ClCompile Include="ModelManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Models/Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="MainSetup.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Picker.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Shared.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="InputHandler.cpp">
+      <Filter>Source Files\Utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="dxmain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dxutils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dxshared.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dxerr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DDSTextureLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="InputHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="imgui\imgui_impl_win32.h">
-      <Filter>Header Files\ImGui</Filter>
+      <Filter>Header Files\Libraries\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imgui_internal.h">
-      <Filter>Header Files\ImGui</Filter>
+      <Filter>Header Files\Libraries\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imstb_rectpack.h">
-      <Filter>Header Files\ImGui</Filter>
+      <Filter>Header Files\Libraries\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imstb_textedit.h">
-      <Filter>Header Files\ImGui</Filter>
+      <Filter>Header Files\Libraries\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imstb_truetype.h">
-      <Filter>Header Files\ImGui</Filter>
+      <Filter>Header Files\Libraries\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imconfig.h">
-      <Filter>Header Files\ImGui</Filter>
+      <Filter>Header Files\Libraries\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imgui.h">
-      <Filter>Header Files\ImGui</Filter>
+      <Filter>Header Files\Libraries\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imgui_impl_dx11.h">
-      <Filter>Header Files\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObjectManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Libraries\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files\GameObjects</Filter>
@@ -192,46 +186,76 @@
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="nlohmann\json.hpp">
-      <Filter>Header Files\nlohmann</Filter>
+      <Filter>Header Files\Libraries\nlohmann</Filter>
     </ClInclude>
     <ClInclude Include="imguizmo\ImGuizmo.h">
-      <Filter>Header Files\ImGuizmo</Filter>
+      <Filter>Header Files\Libraries\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="EditorScene.h">
       <Filter>Header Files\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="imguizmo\ImSequencer.h">
-      <Filter>Header Files\ImGuizmo</Filter>
+      <Filter>Header Files\Libraries\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="imguizmo\ImCurveEdit.h">
-      <Filter>Header Files\ImGuizmo</Filter>
+      <Filter>Header Files\Libraries\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="imguizmo\ImGradient.h">
-      <Filter>Header Files\ImGuizmo</Filter>
-    </ClInclude>
-    <ClInclude Include="SharedModelBuffers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SharedModelPart.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Libraries\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="DebugCube.h">
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="DataTypes.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="DynamicMaterial.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Utilities.h">
+      <Filter>Header Files\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="DynamicMaterialManager.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="MainSetup.h">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="MaterialParameter.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="EXErr.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Picker.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Header Files\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="SharedModelPart.h">
+      <Filter>Header Files\Models/Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="SharedModelBuffers.h">
+      <Filter>Header Files\Models/Materials</Filter>
     </ClInclude>
     <ClInclude Include="ModelManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Models/Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialParameter.h">
+      <Filter>Header Files\Models/Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="InputHandler.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicMaterial.h">
+      <Filter>Header Files\Models/Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicMaterialManager.h">
+      <Filter>Header Files\Models/Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectManager.h">
+      <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="DataTypes.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader.h">
+      <Filter>Header Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -22,9 +22,9 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="DebugCube.cpp" />
-    <ClCompile Include="dxerr.cpp" />
-    <ClCompile Include="dxmain.cpp" />
-    <ClCompile Include="dxshared.cpp" />
+    <ClCompile Include="EXErr.cpp" />
+    <ClCompile Include="MainSetup.cpp" />
+    <ClCompile Include="Shared.cpp" />
     <ClCompile Include="DynamicMaterial.cpp" />
     <ClCompile Include="DynamicMaterialManager.cpp" />
     <ClCompile Include="EditorScene.cpp" />
@@ -42,6 +42,7 @@
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelManager.cpp" />
+    <ClCompile Include="Picker.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SharedModelBuffers.cpp" />
     <ClCompile Include="SharedModelPart.cpp" />
@@ -52,10 +53,10 @@
     <ClInclude Include="DataTypes.h" />
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="DebugCube.h" />
-    <ClInclude Include="dxerr.h" />
-    <ClInclude Include="dxmain.h" />
-    <ClInclude Include="dxshared.h" />
-    <ClInclude Include="dxutils.h" />
+    <ClInclude Include="EXErr.h" />
+    <ClInclude Include="MainSetup.h" />
+    <ClInclude Include="Shared.h" />
+    <ClInclude Include="Utilities.h" />
     <ClInclude Include="DynamicMaterial.h" />
     <ClInclude Include="DynamicMaterialManager.h" />
     <ClInclude Include="EditorScene.h" />
@@ -79,11 +80,11 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelManager.h" />
     <ClInclude Include="nlohmann\json.hpp" />
+    <ClInclude Include="Picker.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SharedModelBuffers.h" />
     <ClInclude Include="SharedModelPart.h" />
-    <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

@@ -1,14 +1,14 @@
 #pragma once
 
-#include "dxmain.h"
+#include "MainSetup.h"
 #include "DynamicMaterialManager.h"
 #include "Scene.h"
 
 /* The core of the application: calls to set up DirectX, and sets up & handles "scenes" */
-class SceneManager : public dxmain
+class SceneManager : public MainSetup
 {
 public:
-	SceneManager(HINSTANCE hInstance) : dxmain(hInstance) {};
+	SceneManager(HINSTANCE hInstance) : MainSetup(hInstance) {};
 	~SceneManager();
 
 	bool Init() override;

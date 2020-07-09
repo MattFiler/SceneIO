@@ -1,8 +1,8 @@
-#include "dxmain.h"
+#include "MainSetup.h"
 
 /* Because we can't create this function as a callback in dxmain, here's a wrapper for it in global namespace */
 namespace {
-	dxmain* g_pApp = nullptr;
+	MainSetup* g_pApp = nullptr;
 }
 LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 {
@@ -14,7 +14,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 }
 
 /* Initialise the default window configuration */
-dxmain::dxmain(HINSTANCE hInstance)
+MainSetup::MainSetup(HINSTANCE hInstance)
 {
 	m_hAppInstance = hInstance;
 	m_hAppWnd = NULL;
@@ -32,7 +32,7 @@ dxmain::dxmain(HINSTANCE hInstance)
 }
 
 /* Release our d3d resources on exit */
-dxmain::~dxmain()
+MainSetup::~MainSetup()
 {
 	if (m_pImmediateContext)
 	{
@@ -45,7 +45,7 @@ dxmain::~dxmain()
 }
 
 /* Keep an eye on Windows messages, and call Update/Render if we aren't told to exit */
-int dxmain::Run()
+int MainSetup::Run()
 {
 	MSG msg = { 0 };
 	static double gameTime = 0.0f;
@@ -89,14 +89,14 @@ int dxmain::Run()
 }
 
 /* Set appropriate properties and then initialise window */
-bool dxmain::Init()
+bool MainSetup::Init()
 {
 	srand(time(NULL));
 	return InitWindow() && InitDirectX() && InitImGUI();
 }
 
 /* Set appropriate properties and then initialise window */
-bool dxmain::InitWindow()
+bool MainSetup::InitWindow()
 {
 	//Setup window class
 	WNDCLASSEX wcex;
@@ -138,7 +138,7 @@ bool dxmain::InitWindow()
 		Debug::Log("Failed to create window in dxmain!!");
 		return false;
 	}
-	dxshared::m_hwnd = m_hAppWnd;
+	Shared::m_hwnd = m_hAppWnd;
 
 	//Show window
 	ShowWindow(m_hAppWnd, SW_SHOW);
@@ -146,7 +146,7 @@ bool dxmain::InitWindow()
 }
 
 /* Set appropriate properties and then initialise d3d to the window */
-bool dxmain::InitDirectX()
+bool MainSetup::InitDirectX()
 {
 	//Request d3d debugging if in debug
 	UINT createDeviceFlags = 0;
@@ -273,15 +273,15 @@ bool dxmain::InitDirectX()
 	m_pImmediateContext->RSSetViewports(1, &m_viewport);
 
 	//Share out render size (todo: will need to be done on update for resizing)
-	dxshared::m_renderWidth = m_clientWidth;
-	dxshared::m_renderHeight = m_clientHeight;
+	Shared::m_renderWidth = m_clientWidth;
+	Shared::m_renderHeight = m_clientHeight;
 	
 	//Share out the device and device context
-	dxshared::m_pDevice = m_pDevice;
-	dxshared::m_pImmediateContext = m_pImmediateContext;
+	Shared::m_pDevice = m_pDevice;
+	Shared::m_pImmediateContext = m_pImmediateContext;
 
 	//Set default ambient lighting
-	dxshared::ambientLightColour = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.0f);
+	Shared::ambientLightColour = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.0f);
 
 	//Set topology for rendering
 	m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -290,16 +290,16 @@ bool dxmain::InitDirectX()
 	DirectX::XMVECTOR Eye = DirectX::XMVectorSet(0.0f, 1.0f, -5.0f, 0.0f);
 	DirectX::XMVECTOR At = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	DirectX::XMVECTOR Up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	dxshared::mView = DirectX::XMMatrixLookAtLH(Eye, At, Up);
+	Shared::mView = DirectX::XMMatrixLookAtLH(Eye, At, Up);
 
 	//Initialize the projection matrix 
-	dxshared::mProjection = DirectX::XMMatrixPerspectiveFovLH(dxshared::cameraFOV, dxshared::m_renderWidth / (FLOAT)dxshared::m_renderHeight, dxshared::cameraNear, dxshared::cameraFar);
+	Shared::mProjection = DirectX::XMMatrixPerspectiveFovLH(Shared::cameraFOV, Shared::m_renderWidth / (FLOAT)Shared::m_renderHeight, Shared::cameraNear, Shared::cameraFar);
 	
 	return true;
 }
 
 /* Initialise ImGUI */
-bool dxmain::InitImGUI()
+bool MainSetup::InitImGUI()
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -377,7 +377,7 @@ bool dxmain::InitImGUI()
 
 /* Handle windows messages */
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-LRESULT dxmain::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT MainSetup::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wParam, lParam))
 		return true;

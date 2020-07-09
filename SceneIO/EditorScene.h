@@ -18,7 +18,7 @@ public:
 	void Render(double dt) override;
 
 private:
-	float fovCheck = dxshared::cameraFOV;
+	float fovCheck = Shared::cameraFOV;
 
 	Utilities dxutils = Utilities();
 

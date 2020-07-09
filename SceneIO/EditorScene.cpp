@@ -1,10 +1,11 @@
 #include "EditorScene.h"
 #include <iomanip>
+#include "Picker.h"
 
 /* Init the objects in the scene */
 void EditorScene::Init()
 {
-	dxshared::mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+	Shared::mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
 
 	//Setup cam & light source
 	light_source = Light();
@@ -53,19 +54,19 @@ bool EditorScene::Update(double dt)
 	ImGui::Text(("Cam Rot X: " + std::to_string(main_cam.GetRotation().x) + ", Y: " + std::to_string(main_cam.GetRotation().y) + "Z: " + std::to_string(main_cam.GetRotation().z)).c_str());
 
 	ImGui::Separator();
-	ImGui::SliderFloat("Ambient R", &dxshared::ambientLightColour.x, 0.0f, 1.0f);
-	ImGui::SliderFloat("Ambient G", &dxshared::ambientLightColour.y, 0.0f, 1.0f);
-	ImGui::SliderFloat("Ambient B", &dxshared::ambientLightColour.z, 0.0f, 1.0f);
+	ImGui::SliderFloat("Ambient R", &Shared::ambientLightColour.x, 0.0f, 1.0f);
+	ImGui::SliderFloat("Ambient G", &Shared::ambientLightColour.y, 0.0f, 1.0f);
+	ImGui::SliderFloat("Ambient B", &Shared::ambientLightColour.z, 0.0f, 1.0f);
 
 	ImGui::Separator();
-	int option = dxshared::cameraControlType;
+	int option = Shared::cameraControlType;
 	ImGui::RadioButton("Camera Control Scheme: Keyboard", &option, 0);
 	ImGui::RadioButton("Camera Control Scheme: Mouse", &option, 1);
-	dxshared::cameraControlType = (CameraControlType)option;
-	ImGui::SliderFloat("Sensitivity", &dxshared::mouseCameraSensitivity, 0.0f, 1.0f);
-	ImGui::SliderFloat("Camera FOV", &dxshared::cameraFOV, 0.01f, 3.14f);
-	if (fovCheck != dxshared::cameraFOV) dxshared::mProjection = DirectX::XMMatrixPerspectiveFovLH(dxshared::cameraFOV, dxshared::m_renderWidth / (FLOAT)dxshared::m_renderHeight, dxshared::cameraNear, dxshared::cameraFar);
-	fovCheck = dxshared::cameraFOV;
+	Shared::cameraControlType = (CameraControlType)option;
+	ImGui::SliderFloat("Sensitivity", &Shared::mouseCameraSensitivity, 0.0f, 1.0f);
+	ImGui::SliderFloat("Camera FOV", &Shared::cameraFOV, 0.01f, 3.14f);
+	if (fovCheck != Shared::cameraFOV) Shared::mProjection = DirectX::XMMatrixPerspectiveFovLH(Shared::cameraFOV, Shared::m_renderWidth / (FLOAT)Shared::m_renderHeight, Shared::cameraNear, Shared::cameraFar);
+	fovCheck = Shared::cameraFOV;
 
 	ImGui::End();
 
@@ -78,7 +79,7 @@ bool EditorScene::Update(double dt)
 	if (InputHandler::KeyDown(WindowsKey::SHIFT) && InputHandler::MouseDown(WindowsMouse::LEFT_CLICK))
 	{
 		//Create picker ray
-		Ray picker = main_cam.GeneratePickerRay();
+		Ray picker = Picker::GenerateRay();
 
 		//Picker to mesh intersection
 		if (!testLastFrame) {

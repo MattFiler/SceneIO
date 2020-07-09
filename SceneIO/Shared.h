@@ -20,7 +20,7 @@ enum CameraControlType {
 };
 
 /* Shared values which are persistant throughout the application's lifetime */
-struct dxshared 
+struct Shared 
 {
 public:
 	/* DirectX/Windows Core */

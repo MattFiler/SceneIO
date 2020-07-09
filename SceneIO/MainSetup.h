@@ -1,13 +1,13 @@
 #pragma once
 
-#include "dxutils.h";
+#include "Utilities.h";
 
 /* The core: Windows setup, DirectX setup, ImGui setup */
-class dxmain
+class MainSetup
 {
 public:
-	dxmain(HINSTANCE hInstance);
-	virtual ~dxmain();
+	MainSetup(HINSTANCE hInstance);
+	virtual ~MainSetup();
 
 	int Run();
 

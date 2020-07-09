@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dxutils.h"
+#include "Utilities.h"
 #include "GameObject.h"
 #include "SharedModelBuffers.h"
 

@@ -1,14 +1,14 @@
 #pragma once
 
 #include <windows.h>
-#include "dxshared.h"
+#include "Shared.h"
 #include <d3dcompiler.h>
 #pragma comment(lib, "D3DCompiler.lib")
 
 #include <DirectXMath.h>
 #include <DirectXColors.h>
 
-#include "dxerr.h"
+#include "EXErr.h"
 #include "DDSTextureLoader.h"
 #include "InputHandler.h"
 
@@ -59,7 +59,7 @@ struct Intersection {
 		distance = _d;
 	}
 	int entityIndex = -1;
-	float distance = dxshared::cameraFar;
+	float distance = Shared::cameraFar;
 };
 
 struct ConstantBuffer

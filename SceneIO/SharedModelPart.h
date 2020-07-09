@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dxutils.h"
+#include "Utilities.h"
 #include "Light.h"
 
 /* A submesh within a SharedModelBuffers object (used per-material type) */

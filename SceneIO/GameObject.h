@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dxutils.h"
+#include "Utilities.h"
 #include "GameObjectManager.h"
 
 /* The parent GameObject can be inherited from to define an in-world entity */

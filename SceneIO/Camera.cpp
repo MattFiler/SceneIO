@@ -10,12 +10,12 @@ void Camera::Update(float dt)
 	if (!isActive) return;
 
 	camTarget = DirectX::XMLoadFloat3(&position) + XMVector3Normalize(XMVector3TransformCoord(DefaultForward, XMMatrixRotationRollPitchYaw(rotation.x, rotation.z, rotation.y)));
-	dxshared::mView = XMMatrixLookAtLH(DirectX::XMLoadFloat3(&position), camTarget, camUp);
+	Shared::mView = XMMatrixLookAtLH(DirectX::XMLoadFloat3(&position), camTarget, camUp);
 
 	if (isLocked) return;
 
 	//Camera look controls
-	switch (dxshared::cameraControlType) {
+	switch (Shared::cameraControlType) {
 		case CameraControlType::KEYBOARD: {
 			double moveSpeed = dt;
 			if (InputHandler::KeyDown(WindowsKey::SHIFT)) {
@@ -65,10 +65,10 @@ void Camera::Update(float dt)
 					mouseWasReset = false;
 				}
 
-				DirectX::XMFLOAT3 forward = DirectX::XMFLOAT3(dxshared::mView.r[0].m128_f32[2], dxshared::mView.r[1].m128_f32[2], dxshared::mView.r[2].m128_f32[2]);
-				DirectX::XMFLOAT3 right = DirectX::XMFLOAT3(dxshared::mView.r[0].m128_f32[0], dxshared::mView.r[1].m128_f32[0], dxshared::mView.r[2].m128_f32[0]);
-				float mov_x = (prevMousePos.x - newMousePos.x) * dxshared::mouseCameraSensitivity;
-				float mov_y = (prevMousePos.y - newMousePos.y) * dxshared::mouseCameraSensitivity;
+				DirectX::XMFLOAT3 forward = DirectX::XMFLOAT3(Shared::mView.r[0].m128_f32[2], Shared::mView.r[1].m128_f32[2], Shared::mView.r[2].m128_f32[2]);
+				DirectX::XMFLOAT3 right = DirectX::XMFLOAT3(Shared::mView.r[0].m128_f32[0], Shared::mView.r[1].m128_f32[0], Shared::mView.r[2].m128_f32[0]);
+				float mov_x = (prevMousePos.x - newMousePos.x) * Shared::mouseCameraSensitivity;
+				float mov_y = (prevMousePos.y - newMousePos.y) * Shared::mouseCameraSensitivity;
 
 				if (InputHandler::KeyDown(WindowsKey::CTRL)) {
 					SetPosition(XMFLOAT3(GetPosition().x + (mov_x * right.x), GetPosition().y - (mov_y), GetPosition().z + (mov_x * right.z)));
@@ -94,23 +94,4 @@ void Camera::Update(float dt)
 			break;
 		}
 	}
-}
-
-/* Generate a "picker" ray from the camera through the scene */
-Ray Camera::GeneratePickerRay()
-{
-	ImGuiIO& io = ImGui::GetIO();
-
-	float px = (((2.0f * io.MousePos.x) / dxshared::m_renderWidth) - 1.0f) / Utilities::MatrixToFloat4x4(dxshared::mProjection).m[0][0];
-	float py = -(((2.0f * io.MousePos.y) / dxshared::m_renderHeight) - 1.0f) / Utilities::MatrixToFloat4x4(dxshared::mProjection).m[1][1];
-
-	XMMATRIX inverseView = DirectX::XMMatrixInverse(nullptr, dxshared::mView);
-	XMVECTOR origTransformed = DirectX::XMVector3TransformCoord(XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, 0.0f)), inverseView);
-	XMVECTOR dirTransformed = DirectX::XMVector3TransformNormal(XMLoadFloat3(&XMFLOAT3(px, py, 1.0f)), inverseView);
-	dirTransformed = DirectX::XMVector3Normalize(dirTransformed);
-
-	Ray toReturn = Ray();
-	XMStoreFloat3(&toReturn.origin, origTransformed);
-	XMStoreFloat3(&toReturn.direction, dirTransformed);
-	return toReturn;
 }
