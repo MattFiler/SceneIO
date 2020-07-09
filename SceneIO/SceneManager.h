@@ -1,6 +1,7 @@
 #pragma once
 
 #include "dxmain.h"
+#include "DynamicMaterialManager.h"
 #include "Scene.h"
 
 class SceneManager : public dxmain

@@ -6,9 +6,6 @@
 #include "Camera.h"
 #include "Light.h"
 
-#include "nlohmann/json.hpp"
-using json = nlohmann::json;
-
 class Scene
 {
 public:

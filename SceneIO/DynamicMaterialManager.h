@@ -8,6 +8,8 @@ public:
 	DynamicMaterialManager();
 	~DynamicMaterialManager() = default;
 
+	void RenderUI();
+
 	DynamicMaterial* GetMaterial(std::string name) {
 		for (int i = 0; i < materials.size(); i++) {
 			if (materials[i].GetName() == name) {

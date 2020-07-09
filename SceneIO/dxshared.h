@@ -14,12 +14,12 @@
 #include "imgui/imgui_impl_dx11.h"
 #include "imguizmo/ImGuizmo.h"
 
-#include "DynamicMaterialManager.h"
-
 enum CameraControlType {
 	KEYBOARD,
 	MOUSE
 };
+
+class DynamicMaterialManager;
 
 struct dxshared 
 {
@@ -48,7 +48,7 @@ public:
 	static float cameraFar;
 
 	/* Engine Features */
-	static DynamicMaterialManager materialManager;
+	static DynamicMaterialManager* materialManager;
 
 	/* ImGuizmo */
 	static ImGuizmo::OPERATION mCurrentGizmoOperation;
