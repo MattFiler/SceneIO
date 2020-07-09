@@ -4,6 +4,7 @@
 #include "SharedModelPart.h"
 #include "GameObjectManager.h"
 
+/* A model data buffer which can be shared between multiple model instances to save memory */
 class SharedModelBuffers {
 public:
 	SharedModelBuffers(std::string filepath);

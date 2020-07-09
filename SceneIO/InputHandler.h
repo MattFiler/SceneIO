@@ -113,6 +113,7 @@ enum WindowsMouse {
 	MOUSE_BUTTON_3
 };
 
+/* A simple wrapper around ImGui's IO, for keyboard and mouse controls */
 class InputHandler
 {
 public:

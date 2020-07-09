@@ -3,6 +3,7 @@
 #include "dxutils.h"
 #include "Light.h"
 
+/* A submesh within a SharedModelBuffers object (used per-material type) */
 class SharedModelPart {
 public:
 	SharedModelPart(LoadedModelPart _m);

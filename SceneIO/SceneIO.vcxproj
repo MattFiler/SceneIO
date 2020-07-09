@@ -41,6 +41,7 @@
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="ModelManager.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SharedModelBuffers.cpp" />
     <ClCompile Include="SharedModelPart.cpp" />
@@ -76,6 +77,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="MaterialParameter.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelManager.h" />
     <ClInclude Include="nlohmann\json.hpp" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />

@@ -1,7 +1,11 @@
 #pragma once
 
-#include "dxutils.h"
+#include "DataTypes.h"
 
+#include "nlohmann/json.hpp"
+using json = nlohmann::json;
+
+/* A parameter for a JSON define material */
 class MaterialParameter {
 public:
 	MaterialParameter(json config) {

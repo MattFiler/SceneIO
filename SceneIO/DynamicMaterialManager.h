@@ -3,12 +3,13 @@
 #include "DynamicMaterial.h"
 #include <vector>
 
+/* Manages all defined material types from JSON */
 class DynamicMaterialManager {
 public:
 	DynamicMaterialManager();
 	~DynamicMaterialManager() = default;
 
-	void RenderUI();
+	void Update();
 
 	DynamicMaterial* GetMaterial(std::string name) {
 		for (int i = 0; i < materials.size(); i++) {
@@ -33,4 +34,5 @@ public:
 
 private:
 	std::vector<DynamicMaterial> materials = std::vector<DynamicMaterial>();
+	int selectedMaterialUI = -1;
 };

@@ -1,5 +1,6 @@
 #include "DynamicMaterial.h"
 
+/* Initialise the dynamic material */
 DynamicMaterial::DynamicMaterial(json config)
 {
 	name = config["name"].get<std::string>();

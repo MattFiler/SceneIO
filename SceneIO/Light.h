@@ -2,6 +2,7 @@
 
 #include "GameObject.h"
 
+/* An object handled by shaders as a light source */
 class Light : public GameObject
 {
 public:

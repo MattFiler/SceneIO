@@ -2,6 +2,8 @@
 
 #include <string>
 
+/* Inheritable datatypes for dynamic casting */
+
 enum class DataTypes {
 	RGB,
 	STRING,

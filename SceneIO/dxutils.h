@@ -12,8 +12,6 @@
 #include "DDSTextureLoader.h"
 #include "InputHandler.h"
 
-#include "DataTypes.h"
-
 #include <string>
 #include <vector>
 #include <fstream>
@@ -22,9 +20,6 @@
 
 #include <time.h>
 #include <random>
-
-#include "nlohmann/json.hpp"
-using json = nlohmann::json;
 
 using namespace DirectX;
 

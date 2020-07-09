@@ -2,6 +2,7 @@
 
 #include "MaterialParameter.h"
 
+/* A material which can be defined by JSON */
 class DynamicMaterial {
 public:
 	DynamicMaterial(json config);

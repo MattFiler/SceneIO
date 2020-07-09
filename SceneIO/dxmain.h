@@ -2,6 +2,7 @@
 
 #include "dxutils.h";
 
+/* The core: Windows setup, DirectX setup, ImGui setup */
 class dxmain
 {
 public:

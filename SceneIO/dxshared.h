@@ -19,8 +19,7 @@ enum CameraControlType {
 	MOUSE
 };
 
-class DynamicMaterialManager;
-
+/* Shared values which are persistant throughout the application's lifetime */
 struct dxshared 
 {
 public:
@@ -46,9 +45,6 @@ public:
 	static float cameraFOV;
 	static float cameraNear;
 	static float cameraFar;
-
-	/* Engine Features */
-	static DynamicMaterialManager* materialManager;
 
 	/* ImGuizmo */
 	static ImGuizmo::OPERATION mCurrentGizmoOperation;

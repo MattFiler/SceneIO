@@ -3,6 +3,7 @@
 #include "dxutils.h"
 #include "GameObjectManager.h"
 
+/* The parent GameObject can be inherited from to define an in-world entity */
 class GameObject
 {
 public:

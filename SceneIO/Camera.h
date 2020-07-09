@@ -2,6 +2,7 @@
 
 #include "GameObject.h"
 
+/* A camera game object: sets up the application's view matrix */
 class Camera : public GameObject
 {
 public:

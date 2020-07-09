@@ -2,6 +2,7 @@
 
 #include "GameObject.h"
 
+/* A debug cube which can be rendered at any given location with any given texture for testing */
 class DebugCube : public GameObject {
 public:
 	~DebugCube() {

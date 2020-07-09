@@ -6,6 +6,7 @@ class GameObject;
 class Light;
 class Model;
 
+/* Keeps a track of all active GameObjects: provides a simple interface for updating/rendering/releasing everything */
 class GameObjectManager
 {
 public:

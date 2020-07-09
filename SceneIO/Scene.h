@@ -6,6 +6,10 @@
 #include "Camera.h"
 #include "Light.h"
 
+#include "DynamicMaterialManager.h"
+#include "ModelManager.h"
+
+/* The parent for a defined "scene" within the SceneManager instance */
 class Scene
 {
 public:

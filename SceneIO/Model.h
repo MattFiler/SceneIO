@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "SharedModelBuffers.h"
 
+/* A model instance, pulling from a shared vertex/index buffer */
 class Model : public GameObject {
 public:
 	~Model() {
