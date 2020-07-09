@@ -142,7 +142,7 @@ void DebugCube::Render(float dt)
 	GameObject::Render(dt);
 
 #ifdef _DEBUG
-	if (dxshared::drawBoundingBoxes || showBounds) {
+	if (showBounds) {
 		if (!setTex) {
 			Debug::Log("ERROR! Tried to render debug cube, but SetTexture hasn't been called! Check script!");
 			return;

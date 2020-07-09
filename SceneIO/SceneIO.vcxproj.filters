@@ -114,6 +114,12 @@
     <ClCompile Include="DebugCube.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="DynamicMaterial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicMaterialManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dxmain.h">
@@ -208,6 +214,18 @@
     </ClInclude>
     <ClInclude Include="DebugCube.h">
       <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="DataTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicMaterial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicMaterialManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialParameter.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

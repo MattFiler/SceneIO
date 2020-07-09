@@ -16,6 +16,10 @@ bool SceneManager::Init()
 	AddScene(level_scene);
 	ChangeScene(0);
 
+	Debug::Log("Material added, with Albedo type: ");
+	Debug::Log((int)dxshared::materialManager.GetMaterial("diffuse")->GetParameter("Albedo")->type.type);
+	Debug::Log("--");
+
 	return dxInit;
 }
 

@@ -1,0 +1,28 @@
+{
+	"materials": [
+		{
+			"name": "diffuse",
+			"parameters": [
+				{
+					"name": "Albedo",
+					"type": 0,
+					"binding": "b0"
+				},
+				{
+					"name": "Albedo Texture",
+					"type": 1,
+					"binding": "t0"
+				},
+				{
+					"name": "Normal Map",
+					"type": 1,
+					"binding": "t1"
+				}
+			],
+			"pixel_shader":
+			{
+				"code": "return ($b0|$t0 / pi) * lighColour;"
+			}
+		}
+	]
+}

@@ -25,6 +25,8 @@
     <ClCompile Include="dxerr.cpp" />
     <ClCompile Include="dxmain.cpp" />
     <ClCompile Include="dxshared.cpp" />
+    <ClCompile Include="DynamicMaterial.cpp" />
+    <ClCompile Include="DynamicMaterialManager.cpp" />
     <ClCompile Include="EditorScene.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
@@ -46,12 +48,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="DataTypes.h" />
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="DebugCube.h" />
     <ClInclude Include="dxerr.h" />
     <ClInclude Include="dxmain.h" />
     <ClInclude Include="dxshared.h" />
     <ClInclude Include="dxutils.h" />
+    <ClInclude Include="DynamicMaterial.h" />
+    <ClInclude Include="DynamicMaterialManager.h" />
     <ClInclude Include="EditorScene.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectManager.h" />
@@ -69,6 +74,7 @@
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="MaterialParameter.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="nlohmann\json.hpp" />
     <ClInclude Include="Scene.h" />

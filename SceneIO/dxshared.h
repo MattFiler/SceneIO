@@ -14,6 +14,8 @@
 #include "imgui/imgui_impl_dx11.h"
 #include "imguizmo/ImGuizmo.h"
 
+#include "DynamicMaterialManager.h"
+
 enum CameraControlType {
 	KEYBOARD,
 	MOUSE
@@ -22,9 +24,13 @@ enum CameraControlType {
 struct dxshared 
 {
 public:
+	/* DirectX/Windows Core */
 	static ID3D11Device* m_pDevice;
 	static ID3D11DeviceContext* m_pImmediateContext;
 
+	static HWND m_hwnd;
+
+	/* Rendering Parameters */
 	static UINT m_renderWidth;
 	static UINT m_renderHeight;
 
@@ -33,20 +39,18 @@ public:
 
 	static DirectX::XMFLOAT4 ambientLightColour;
 
+	/* Camera Properties */
 	static float mouseCameraSensitivity;
 	static CameraControlType cameraControlType;
-
-	static bool drawBoundingBoxes;
-	static bool pauseNPCs;
 
 	static float cameraFOV;
 	static float cameraNear;
 	static float cameraFar;
 
-	static HWND m_hwnd;
+	/* Engine Features */
+	static DynamicMaterialManager materialManager;
 
-	static std::string currentLevelPath;
-
+	/* ImGuizmo */
 	static ImGuizmo::OPERATION mCurrentGizmoOperation;
 	static ImGuizmo::MODE mCurrentGizmoMode;
 };
