@@ -31,6 +31,7 @@ private:
 	void ModelManagerUI();
 	void ModelTransformUI();
 	void ModelMaterialUI();
+	void MaterialDropdownUI(Model* model, int submeshID);
 
 	void LoadTestModel(std::string name, DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3 rot = DirectX::XMFLOAT3(0, 0, 0));
 
@@ -43,6 +44,7 @@ private:
 	float timeSinceDeallocCheck = 0.0f;
 
 	int selectedModelUI = -1;
+	int selectedModelSubmeshUI = -1;
 
 	std::string requestedLoadPath = "";
 	bool didRequestLoad = false;

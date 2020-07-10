@@ -4,7 +4,7 @@
 
 /* Inheritable datatypes for dynamic casting */
 
-//This should match the combobox values in DynamicMaterialManager.cpp
+//This should match the values and order in Shared.cpp
 enum class DataTypes {
 	RGB,
 	STRING,
@@ -23,6 +23,11 @@ public:
 class RGBValue
 {
 public:
+	float* AsFloatArray() {
+		float* toReturn[3] = { &R, &G, &B };
+		return *toReturn;
+	}
+
 	float R = 0.0f;
 	float G = 0.0f;
 	float B = 0.0f;

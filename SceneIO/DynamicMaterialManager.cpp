@@ -1,6 +1,7 @@
 #include "DynamicMaterialManager.h"
 #include <fstream>
 #include "imgui/imgui.h"
+#include "Shared.h"
 
 /* Initialise materials */
 DynamicMaterialManager::DynamicMaterialManager()
@@ -88,17 +89,20 @@ void DynamicMaterialManager::MaterialConfigUI()
 	ImGui::Dummy(ImVec2(15.0f, 15.0f));
 	ImGui::Separator();
 
-	//This should match the DataTypes enum in DataTypes.h
-	const char* items[] = { "RGB", "STRING", "FLOAT", "INTEGER", "UNSIGNED_INTEGER", "BOOLEAN", "FLOAT_ARRAY" };
-
 	if (materials[selectedMaterialUI].GetParameterCount() != 0) {
 		ImGui::Text("Parameters:");
 		ImGui::Separator();
 	}
 	for (int i = 0; i < materials[selectedMaterialUI].GetParameterCount(); i++) {
 		ImGui::Text(("(" + std::to_string(i) + ") Name: " + materials[selectedMaterialUI].GetParameter(i)->name).c_str());
-		int valueType = (int)materials[selectedMaterialUI].GetParameter(i)->value.type;
-		ImGui::Combo(("(" + std::to_string(i) + ") DataType").c_str(), &valueType, items, IM_ARRAYSIZE(items));
+		int valueType = (int)materials[selectedMaterialUI].GetParameter(i)->value->type;
+		ImGui::Combo(("(" + std::to_string(i) + ") DataType").c_str(), &valueType, Shared::dataTypes, IM_ARRAYSIZE(Shared::dataTypes));
+
+		//THIS ALLOWS YOU TO CHANGE THE DATATYPE - FOR EDITOR SUPPPORT LATER
+		//int valueType = (int)thisMaterial->GetParameter(i)->value.type;
+		//ImGui::Combo((thisMaterial->GetParameter(i)->name + " DataType").c_str(), &valueType, Shared::dataTypes, IM_ARRAYSIZE(Shared::dataTypes));
+		//if (valueType != (int)thisMaterial->GetParameter(i)->value.type) thisMaterial->GetParameter(i)->ChangeValueType((DataTypes)valueType);
+
 		ImGui::Text(("(" + std::to_string(i) + ") Binding: " + materials[selectedMaterialUI].GetParameter(i)->bind).c_str());
 		ImGui::Separator();
 	}

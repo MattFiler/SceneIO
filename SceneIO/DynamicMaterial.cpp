@@ -1,7 +1,21 @@
 #include "DynamicMaterial.h"
 
+/* Created organically */
+DynamicMaterial::DynamicMaterial(json _config)
+{
+	config = _config;
+	Setup();
+}
+
+/* Created from copy */
+DynamicMaterial::DynamicMaterial(const DynamicMaterial& cpy)
+{
+	config = cpy.config;
+	Setup();
+}
+
 /* Initialise the dynamic material */
-DynamicMaterial::DynamicMaterial(json config)
+void DynamicMaterial::Setup()
 {
 	name = config["name"].get<std::string>();
 

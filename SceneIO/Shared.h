@@ -13,6 +13,7 @@
 #include "imgui/imgui_impl_win32.h"
 #include "imgui/imgui_impl_dx11.h"
 #include "imguizmo/ImGuizmo.h"
+#include "imgui_stl.h"
 
 enum CameraControlType {
 	KEYBOARD,
@@ -39,6 +40,9 @@ public:
 	static DirectX::XMMATRIX mProjection;
 
 	static DirectX::XMFLOAT4 ambientLightColour;
+
+	/* Misc Shared Variables */
+	const static char* dataTypes[7];
 
 	/* Camera Properties */
 	static float mouseCameraSensitivity;

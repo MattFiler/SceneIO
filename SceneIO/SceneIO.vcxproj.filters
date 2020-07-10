@@ -150,6 +150,9 @@
     <ClCompile Include="winmain.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="imgui_stl.cpp">
+      <Filter>Source Files\Libraries\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imgui_impl_win32.h">
@@ -259,6 +262,9 @@
     </ClInclude>
     <ClInclude Include="DDSTextureLoader.h">
       <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_stl.h">
+      <Filter>Header Files\Libraries\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

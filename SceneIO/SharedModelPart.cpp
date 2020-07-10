@@ -45,7 +45,8 @@ void SharedModelPart::Render(XMMATRIX world, DynamicMaterial* material)
 	cb.mWorld = XMMatrixTranspose(world);
 	cb.mView = XMMatrixTranspose(Shared::mView);
 	cb.mProjection = XMMatrixTranspose(Shared::mProjection);
-	DataTypeRGB* rgbVal = static_cast<DataTypeRGB*>(&material->GetParameter("Albedo")->value);
+	DataTypeRGB* rgbVal = static_cast<DataTypeRGB*>(material->GetParameter("Albedo")->value);
+	//Debug::Log(XMFLOAT3(rgbVal->value.R, rgbVal->value.G, rgbVal->value.B));
 	cb.colourTint = XMFLOAT4(rgbVal->value.R, rgbVal->value.G, rgbVal->value.B, 1.0f);
 	//cb.numOfLights = (LightManager::GetLightCount() > 10) ? 10 : LightManager::GetLightCount();
 	//for (int i = 0; i < 10; i++) {

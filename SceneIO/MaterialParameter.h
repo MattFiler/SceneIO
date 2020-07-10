@@ -10,41 +10,46 @@ class MaterialParameter {
 public:
 	MaterialParameter(json config) {
 		name = config["name"].get<std::string>();
-		switch (config["type"].get<int>()) {
-			case (int)DataTypes::RGB: {
-				value = DataTypeRGB();
-				break;
-			}
-			case (int)DataTypes::STRING: {
-				value = DataTypeString();
-				break;
-			}
-			case (int)DataTypes::FLOAT: {
-				value = DataTypeFloat();
-				break;
-			}
-			case (int)DataTypes::INTEGER: {
-				value = DataTypeInt();
-				break;
-			}
-			case (int)DataTypes::UNSIGNED_INTEGER: {
-				value = DataTypeUInt();
-				break;
-			}
-			case (int)DataTypes::BOOLEAN: {
-				value = DataTypeBool();
-				break;
-			}
-			case (int)DataTypes::FLOAT_ARRAY: {
-				value = DataTypeFloatArray();
-				break;
-			}
-		}
-		value.type = (DataTypes)config["type"].get<int>();
+		ChangeValueType((DataTypes)config["type"].get<int>());
 		bind = config["binding"].get<std::string>();
 	}
 
+	/* Change the datatype of this parameter (WILL RESET THE VALUE) */
+	void ChangeValueType(DataTypes newType) {
+		switch (newType) {
+			case DataTypes::RGB: {
+				value = new DataTypeRGB();
+				break;
+			}
+			case DataTypes::STRING: {
+				value = new DataTypeString();
+				break;
+			}
+			case DataTypes::FLOAT: {
+				value = new DataTypeFloat();
+				break;
+			}
+			case DataTypes::INTEGER: {
+				value = new DataTypeInt();
+				break;
+			}
+			case DataTypes::UNSIGNED_INTEGER: {
+				value = new DataTypeUInt();
+				break;
+			}
+			case DataTypes::BOOLEAN: {
+				value = new DataTypeBool();
+				break;
+			}
+			case DataTypes::FLOAT_ARRAY: {
+				value = new DataTypeFloatArray();
+				break;
+			}
+		}
+		value->type = newType;
+	}
+
 	std::string name;
-	DataType value;
+	DataType* value = nullptr;
 	std::string bind;
 };

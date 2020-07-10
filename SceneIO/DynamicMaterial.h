@@ -1,11 +1,13 @@
 #pragma once
 
 #include "MaterialParameter.h"
+#include "Utilities.h"
 
 /* A material which can be defined by JSON */
 class DynamicMaterial {
 public:
-	DynamicMaterial(json config);
+	DynamicMaterial(json _config);
+	DynamicMaterial(const DynamicMaterial& cpy);
 	~DynamicMaterial() = default;
 
 	std::string GetName() {
@@ -34,6 +36,9 @@ public:
 	}
 
 private:
+	void Setup();
+
 	std::string name;
 	std::vector<MaterialParameter> parameters = std::vector<MaterialParameter>();
+	json config;
 };

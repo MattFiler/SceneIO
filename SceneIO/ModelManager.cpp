@@ -1,6 +1,9 @@
 #include "ModelManager.h"
 #include "imgui/imgui.h"
 #include "InputHandler.h"
+#include <iostream>
+#include <algorithm>
+#include <vector>
 
 /* Free all model instances */
 ModelManager::~ModelManager()
@@ -181,14 +184,77 @@ void ModelManager::ModelMaterialUI()
 	//Get the GameObject we're editing
 	Model* objectToEdit = models.at(selectedModelUI);
 
-	//Show options to change material properties
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
 	ImGui::Begin("Model Material Control", nullptr);
 	ImGui::PopStyleVar();
 
-	//Shared::materialManager->GetMaterial(objectToEdit->);
+	for (int i = 0; i < objectToEdit->GetSubmeshCount(); i++) {
+		if (ImGui::CollapsingHeader(("Submesh " + std::to_string(i)).c_str())) {
+			MaterialDropdownUI(objectToEdit, i);
+		}
+	}
 
 	ImGui::End();
+}
+void ModelManager::MaterialDropdownUI(Model* model, int submeshID)
+{
+	DynamicMaterial* thisMaterial = model->GetSubmeshMaterial(submeshID);
+
+	//TODO: allow user to select material type here
+	//TODO: don't immediately save config changes - provide a save button (will avoid fuck-ups with changing strings that are filepaths, etc)
+	//TODO: yoou can call SetSubmeshMaterial on the model to save a new one
+
+	if (thisMaterial->GetParameterCount() != 0) { //Should never be zero, else what's the point!
+		ImGui::Text(thisMaterial->GetName().c_str());
+		ImGui::Separator();
+	}
+	for (int i = 0; i < thisMaterial->GetParameterCount(); i++) {
+		MaterialParameter* thisParam = thisMaterial->GetParameter(i);
+		std::string inputLabel = ("S" + std::to_string(submeshID) + " " + thisParam->name);
+
+		switch (thisParam->value->type) {
+			case DataTypes::RGB: {
+				DataTypeRGB* param = static_cast<DataTypeRGB*>(thisParam->value);
+				ImGui::InputFloat3(inputLabel.c_str(), param->value.AsFloatArray());
+				break;
+			}
+			case DataTypes::STRING: {
+				DataTypeString* param = static_cast<DataTypeString*>(thisParam->value);
+				ImGui::InputText(inputLabel.c_str(), &param->value);
+				break;
+			}
+			case DataTypes::FLOAT: {
+				DataTypeFloat* param = static_cast<DataTypeFloat*>(thisParam->value);
+				ImGui::InputFloat(inputLabel.c_str(), &param->value);
+				break;
+			}
+			case DataTypes::INTEGER: {
+				DataTypeInt* param = static_cast<DataTypeInt*>(thisParam->value);
+				ImGui::InputInt(inputLabel.c_str(), &param->value);
+				break;
+			}
+			case DataTypes::UNSIGNED_INTEGER: {
+				DataTypeUInt* param = static_cast<DataTypeUInt*>(thisParam->value);
+				int toEdit = (int)param->value;
+				ImGui::InputInt(inputLabel.c_str(), &toEdit);
+				param->value = (uint32_t)toEdit;
+				break;
+			}
+			case DataTypes::BOOLEAN: {
+				DataTypeBool* param = static_cast<DataTypeBool*>(thisParam->value);
+				ImGui::Checkbox(inputLabel.c_str(), &param->value);
+				break;
+			}
+			case DataTypes::FLOAT_ARRAY: {
+				DataTypeFloatArray* param = static_cast<DataTypeFloatArray*>(thisParam->value);
+				//Input TBD
+				//ImGui::InputText(inputLabel.c_str(), &param->value);
+				break;
+			}
+		}
+
+		if (i == thisMaterial->GetParameterCount() - 1) ImGui::Separator();
+	}
 }
 
 /* Select a model given a ray through the scene */

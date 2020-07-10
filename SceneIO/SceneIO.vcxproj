@@ -23,6 +23,7 @@
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="DebugCube.cpp" />
     <ClCompile Include="EXErr.cpp" />
+    <ClCompile Include="imgui_stl.cpp" />
     <ClCompile Include="MainSetup.cpp" />
     <ClCompile Include="Shared.cpp" />
     <ClCompile Include="DynamicMaterial.cpp" />
@@ -54,6 +55,7 @@
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="DebugCube.h" />
     <ClInclude Include="EXErr.h" />
+    <ClInclude Include="imgui_stl.h" />
     <ClInclude Include="MainSetup.h" />
     <ClInclude Include="Shared.h" />
     <ClInclude Include="Utilities.h" />
@@ -170,6 +172,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <PostBuildEvent>
       <Command>Xcopy /E /I /Y "$(SolutionDir)plugins" "$(SolutionDir)$(OutDir)plugins"
@@ -201,6 +204,7 @@ Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"</Command>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
