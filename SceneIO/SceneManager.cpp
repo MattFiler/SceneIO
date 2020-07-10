@@ -4,6 +4,11 @@
 /* Destroy active scene on exit, if one is */
 SceneManager::~SceneManager()
 {
+	if (Shared::materialManager) {
+		delete Shared::materialManager;
+		Shared::materialManager = nullptr;
+	}
+
 	if (currentSceneIndex != -1)
 		availableScenes[currentSceneIndex]->Release();
 }
@@ -16,6 +21,8 @@ bool SceneManager::Init()
 	EditorScene* level_scene = new EditorScene();
 	AddScene(level_scene);
 	ChangeScene(0);
+
+	Shared::materialManager = new DynamicMaterialManager();
 
 	return dxInit;
 }

@@ -1,4 +1,5 @@
 #include "SharedModelPart.h"
+#include "DataTypes.h"
 
 /* Create the model part (a child to SharedModelBuffers) */
 SharedModelPart::SharedModelPart(LoadedModelPart _m)
@@ -24,40 +25,25 @@ SharedModelPart::SharedModelPart(LoadedModelPart _m)
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	bd.CPUAccessFlags = 0;
 	HR(Shared::m_pDevice->CreateBuffer(&bd, nullptr, &g_pConstantBuffer));
-
-	//Setup material
-	loadedMaterial.materialName = modelMetaData.thisMaterial.materialName;
-
-	//Load texture file
-	ID3D11ShaderResourceView* newTex;
-	std::wstring widestr = std::wstring(modelMetaData.thisMaterial.texturePath.begin(), modelMetaData.thisMaterial.texturePath.end());
-	HR(CreateDDSTextureFromFile(Shared::m_pDevice, widestr.c_str(), nullptr, &newTex));
-	loadedMaterial.materialTexture = newTex;
-
-	//Populate colour data
-	loadedMaterial.materialColour.x = modelMetaData.thisMaterial.r;
-	loadedMaterial.materialColour.y = modelMetaData.thisMaterial.g;
-	loadedMaterial.materialColour.z = modelMetaData.thisMaterial.b;
-	loadedMaterial.materialColour.w = modelMetaData.thisMaterial.a;
 }
 
 /* Destroy our model part */
 SharedModelPart::~SharedModelPart()
 {
 	Memory::SafeRelease(g_pIndexBuffer);
-	Memory::SafeRelease(loadedMaterial.materialTexture);
 	Memory::SafeRelease(g_pConstantBuffer);
 }
 
 /* Render our model part */
-void SharedModelPart::Render(XMMATRIX world)
+void SharedModelPart::Render(XMMATRIX world, DynamicMaterial* material)
 {
 	//Update and set constant buffer
 	ConstantBuffer cb;
 	cb.mWorld = XMMatrixTranspose(world);
 	cb.mView = XMMatrixTranspose(Shared::mView);
 	cb.mProjection = XMMatrixTranspose(Shared::mProjection);
-	cb.colourTint = loadedMaterial.materialColour;
+	DataTypeRGB* rgbVal = static_cast<DataTypeRGB*>(&material->GetParameter("Albedo")->value);
+	cb.colourTint = XMFLOAT4(rgbVal->value.R, rgbVal->value.G, rgbVal->value.B, 1.0f);
 	//cb.numOfLights = (LightManager::GetLightCount() > 10) ? 10 : LightManager::GetLightCount();
 	//for (int i = 0; i < 10; i++) {
 		//if (i >= LightManager::GetLightCount()) break;
@@ -71,7 +57,7 @@ void SharedModelPart::Render(XMMATRIX world)
 	Shared::m_pImmediateContext->PSSetConstantBuffers(0, 1, &g_pConstantBuffer);
 
 	//Set texture
-	Shared::m_pImmediateContext->PSSetShaderResources(0, 1, &loadedMaterial.materialTexture);
+	//Shared::m_pImmediateContext->PSSetShaderResources(0, 1, &loadedMaterial.materialTexture);
 
 	//Set index buffer and draw
 	Shared::m_pImmediateContext->IASetIndexBuffer(g_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);

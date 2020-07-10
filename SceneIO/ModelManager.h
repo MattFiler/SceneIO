@@ -2,6 +2,7 @@
 #include "Utilities.h"
 #include "Model.h"
 #include "SharedModelBuffers.h"
+#include "DynamicMaterialManager.h"
 
 /* Manages all model instances within the scene */
 class ModelManager {
@@ -29,6 +30,7 @@ public:
 private:
 	void ModelManagerUI();
 	void ModelTransformUI();
+	void ModelMaterialUI();
 
 	void LoadTestModel(std::string name, DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3 rot = DirectX::XMFLOAT3(0, 0, 0));
 

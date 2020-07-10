@@ -21,16 +21,11 @@ void EditorScene::Init()
 	main_cam.SetRotation(DirectX::XMFLOAT3(0, 0, 0));
 
 	//Setup subsystems
-	materialManager = new DynamicMaterialManager();
 	modelManager = new ModelManager();
 }
 
 /* Release all objects in the scene */
 void EditorScene::Release() {
-	if (materialManager) {
-		delete materialManager;
-		materialManager = nullptr;
-	}
 	if (modelManager) {
 		delete modelManager;
 		modelManager = nullptr;
@@ -71,7 +66,7 @@ bool EditorScene::Update(double dt)
 	ImGui::End();
 
 	modelManager->Update();
-	materialManager->Update();
+	Shared::materialManager->Update();
 
 	GameObjectManager::Update(dt);
 

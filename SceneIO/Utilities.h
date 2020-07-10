@@ -114,7 +114,7 @@ struct LoadedModelPart
 {
 	std::vector<SimpleVertex> compVertices = std::vector<SimpleVertex>();
 	std::vector<WORD> compIndices = std::vector<WORD>();
-	Material thisMaterial = Material();
+	std::string materialName = ""; //Old compatibility for OBJ importer (to be removed)
 };
 
 struct LoadedModel 
@@ -503,7 +503,7 @@ public:
 				thisVertInfo.Tex = coords[faces[i].verts[x].c - 1];
 				thisVertInfo.Normal = normals[faces[i].verts[x].n - 1];
 
-				if (modelPart.thisMaterial.materialName != faces[i].materialName) 
+				if (modelPart.materialName != faces[i].materialName) 
 				{
 					if (totalIndex != 0)
 					{
@@ -514,7 +514,7 @@ public:
 					{
 						if (materials[y].materialName == faces[i].materialName)
 						{
-							modelPart.thisMaterial = materials[y];
+							modelPart.materialName = materials[y].materialName;
 							break;
 						}
 					}
@@ -563,7 +563,7 @@ public:
 		for (int x = 0; x < model.modelParts.size(); x++) {
 			LoadedModelPart thisPart = LoadedModelPart();
 			thisPart.compIndices = model.modelParts[x].compIndices;
-			thisPart.thisMaterial = model.modelParts[x].thisMaterial;
+			thisPart.materialName = model.modelParts[x].materialName;
 			for (int y = 0; y < model.modelParts[x].compVertices.size(); y++) {
 				SimpleVertex thisVertInfo = model.modelParts[x].compVertices[y];
 				XMStoreFloat3(&transformedVert, XMVector3Transform(XMLoadFloat3(&model.modelParts[x].compVertices[y].Pos), world));

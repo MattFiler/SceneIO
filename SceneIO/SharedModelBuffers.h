@@ -10,7 +10,7 @@ public:
 	SharedModelBuffers(std::string filepath);
 	~SharedModelBuffers();
 
-	void Render(XMMATRIX mWorld);
+	void Render(XMMATRIX mWorld, std::vector<DynamicMaterial>* materials);
 
 	int GetVertCount() {
 		return vertexCount;
@@ -35,6 +35,10 @@ public:
 	}
 	DirectX::XMFLOAT3 GetExtentsOffset() {
 		return extentsOffset;
+	}
+
+	int GetSubmeshCount() {
+		return allModels.size();
 	}
 
 	bool DoesRayIntersect(Ray& _r, DirectX::XMMATRIX _world, float& _d);

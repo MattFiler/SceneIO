@@ -20,5 +20,7 @@ float Shared::cameraFOV = 1.5f;
 float Shared::cameraNear = 0.01f;
 float Shared::cameraFar = 2000.0f;
 
+DynamicMaterialManager* Shared::materialManager = nullptr;
+
 ImGuizmo::OPERATION Shared::mCurrentGizmoOperation = ImGuizmo::ROTATE;
 ImGuizmo::MODE Shared::mCurrentGizmoMode = ImGuizmo::WORLD;

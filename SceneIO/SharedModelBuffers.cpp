@@ -84,10 +84,21 @@ SharedModelBuffers::~SharedModelBuffers()
 }
 
 /* Render the model parts */
-void SharedModelBuffers::Render(XMMATRIX mWorld)
+void SharedModelBuffers::Render(XMMATRIX mWorld, std::vector<DynamicMaterial>* materials)
 {
-	if (vertexCount == 0) return;
-	if (allModels.size() == 0) return;
+	//Validate: this will cause an error spam - and for good reason!
+	if (vertexCount == 0) {
+		Debug::Log("WARNING: Model buffer is not rendering - no vertices.");
+		return;
+	}
+	if (allModels.size() == 0) {
+		Debug::Log("WARNING: Model buffer is not rendering - no submeshes.");
+		return;
+	}
+	if (materials->size() != allModels.size()) {
+		Debug::Log("WARNING: Model buffer is not rendering - incorrect number of materials passed.");
+		return;
+	}
 
 	//Set shaders to use
 	Shared::m_pImmediateContext->VSSetShader(m_vertexShader, nullptr, 0);
@@ -106,7 +117,7 @@ void SharedModelBuffers::Render(XMMATRIX mWorld)
 
 	//Render each model part
 	for (int i = 0; i < allModels.size(); i++) {
-		allModels[i]->Render(mWorld);
+		allModels[i]->Render(mWorld, &materials->at(i));
 	}
 }
 

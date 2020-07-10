@@ -25,7 +25,6 @@ private:
 	Camera main_cam;
 	Light light_source;
 
-	DynamicMaterialManager* materialManager;
 	ModelManager* modelManager;
 };
 

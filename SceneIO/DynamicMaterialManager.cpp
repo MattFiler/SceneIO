@@ -13,7 +13,9 @@ DynamicMaterialManager::DynamicMaterialManager()
 		materials.emplace_back(config["materials"][i]);
 	}
 
-	if (materials.size() > 0) selectedMaterialUI = 0;
+	if (materials.size() == 0) {
+		throw std::out_of_range("ERROR! No materials provided in configuration JSON file. Fatal.");
+	}
 }
 
 /* Render material manager UI */
@@ -61,7 +63,7 @@ void DynamicMaterialManager::MaterialManagerUI()
 
 	if (ImGui::CollapsingHeader("Material Instances", ImGuiTreeNodeFlags_DefaultOpen)) {
 		for (int i = 0; i < GetMaterialCount(); i++) {
-			ImGui::RadioButton(GetMaterial(i)->GetName().c_str(), &selectedMaterialUI, i);
+			ImGui::RadioButton(materials[i].GetName().c_str(), &selectedMaterialUI, i);
 		}
 	}
 
@@ -80,7 +82,7 @@ void DynamicMaterialManager::MaterialConfigUI()
 
 	ImGui::Text("Selected:");
 	ImGui::Separator();
-	ImGui::Text(GetMaterial(selectedMaterialUI)->GetName().c_str());
+	ImGui::Text(materials[selectedMaterialUI].GetName().c_str());
 
 	ImGui::Separator();
 	ImGui::Dummy(ImVec2(15.0f, 15.0f));
@@ -89,15 +91,15 @@ void DynamicMaterialManager::MaterialConfigUI()
 	//This should match the DataTypes enum in DataTypes.h
 	const char* items[] = { "RGB", "STRING", "FLOAT", "INTEGER", "UNSIGNED_INTEGER", "BOOLEAN", "FLOAT_ARRAY" };
 
-	if (GetMaterial(selectedMaterialUI)->GetParameterCount() != 0) {
+	if (materials[selectedMaterialUI].GetParameterCount() != 0) {
 		ImGui::Text("Parameters:");
 		ImGui::Separator();
 	}
-	for (int i = 0; i < GetMaterial(selectedMaterialUI)->GetParameterCount(); i++) {
-		ImGui::Text(("(" + std::to_string(i) + ") Name: " + GetMaterial(selectedMaterialUI)->GetParameter(i)->name).c_str());
-		int valueType = (int)GetMaterial(selectedMaterialUI)->GetParameter(i)->value.type;
+	for (int i = 0; i < materials[selectedMaterialUI].GetParameterCount(); i++) {
+		ImGui::Text(("(" + std::to_string(i) + ") Name: " + materials[selectedMaterialUI].GetParameter(i)->name).c_str());
+		int valueType = (int)materials[selectedMaterialUI].GetParameter(i)->value.type;
 		ImGui::Combo(("(" + std::to_string(i) + ") DataType").c_str(), &valueType, items, IM_ARRAYSIZE(items));
-		ImGui::Text(("(" + std::to_string(i) + ") Binding: " + GetMaterial(selectedMaterialUI)->GetParameter(i)->bind).c_str());
+		ImGui::Text(("(" + std::to_string(i) + ") Binding: " + materials[selectedMaterialUI].GetParameter(i)->bind).c_str());
 		ImGui::Separator();
 	}
 

@@ -25,6 +25,7 @@ void ModelManager::Update()
 	//UI
 	ModelManagerUI();
 	ModelTransformUI();
+	ModelMaterialUI();
 }
 
 /* Model manager core UI (list model instances, add new models, etc) */
@@ -75,7 +76,7 @@ void ModelManager::ModelManagerUI()
 	ImGui::End();
 }
 
-/* Model transform UI (select model and control it) */
+/* Model transform UI (control rotation/scale/position of selected model) */
 void ModelManager::ModelTransformUI()
 {
 	//Only continue if our requested edit object is valid
@@ -91,7 +92,7 @@ void ModelManager::ModelTransformUI()
 
 	//Show options to swap between different transforms
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
-	ImGui::Begin("Transform Controls", nullptr);
+	ImGui::Begin("Model Transform Control", nullptr);
 	ImGui::PopStyleVar();
 	if (ImGui::RadioButton("Translate", Shared::mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
 		Shared::mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
@@ -138,6 +139,25 @@ void ModelManager::ModelTransformUI()
 	objectToEdit->SetPosition(DirectX::XMFLOAT3(matrixTranslation[0], matrixTranslation[1], matrixTranslation[2]));
 	objectToEdit->SetRotation(DirectX::XMFLOAT3(matrixRotation[0], matrixRotation[1], matrixRotation[2]));
 	objectToEdit->SetScale(DirectX::XMFLOAT3(matrixScale[0], matrixScale[1], matrixScale[2]));
+
+	ImGui::End();
+}
+
+/* Model material UI (change selected model's material parameters) */
+void ModelManager::ModelMaterialUI()
+{
+	//Only continue if our requested edit object is valid
+	if (selectedModelUI == -1) return;
+
+	//Get the GameObject we're editing
+	Model* objectToEdit = models.at(selectedModelUI);
+
+	//Show options to change material properties
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
+	ImGui::Begin("Model Material Control", nullptr);
+	ImGui::PopStyleVar();
+
+	//Shared::materialManager->GetMaterial(objectToEdit->);
 
 	ImGui::End();
 }
