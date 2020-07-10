@@ -4,13 +4,11 @@
 /* Destroy active scene on exit, if one is */
 SceneManager::~SceneManager()
 {
-	if (Shared::materialManager) {
-		delete Shared::materialManager;
-		Shared::materialManager = nullptr;
+	Memory::SafeDelete(Shared::materialManager);
+	if (currentSceneIndex != -1) availableScenes[currentSceneIndex]->Release();
+	for (int i = 0; i < availableScenes.size(); i++) {
+		Memory::SafeRelease(availableScenes[i]);
 	}
-
-	if (currentSceneIndex != -1)
-		availableScenes[currentSceneIndex]->Release();
 }
 
 /* Set up the core functionality */
@@ -33,8 +31,7 @@ bool SceneManager::Update(double dt)
 	//Swap scenes if requested
 	if (requestedSceneIndex != currentSceneIndex)
 	{
-		if (currentSceneIndex != -1)
-			availableScenes[currentSceneIndex]->Release();
+		if (currentSceneIndex != -1) availableScenes[currentSceneIndex]->Release();
 		currentSceneIndex = requestedSceneIndex;
 		availableScenes[currentSceneIndex]->Init();
 	}

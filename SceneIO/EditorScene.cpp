@@ -26,10 +26,7 @@ void EditorScene::Init()
 
 /* Release all objects in the scene */
 void EditorScene::Release() {
-	if (modelManager) {
-		delete modelManager;
-		modelManager = nullptr;
-	}
+	Memory::SafeDelete(modelManager);
 	GameObjectManager::Release();
 }
 
@@ -65,7 +62,7 @@ bool EditorScene::Update(double dt)
 
 	ImGui::End();
 
-	modelManager->Update();
+	modelManager->Update(dt);
 	Shared::materialManager->Update();
 
 	GameObjectManager::Update(dt);

@@ -5,14 +5,18 @@
 /* Free all model instances */
 ModelManager::~ModelManager()
 {
+	for (int i = 0; i < models.size(); i++) {
+		Memory::SafeRelease(models[i]);
+	}
+	models.clear();
 	for (int i = 0; i < modelBuffers.size(); i++) {
-		delete modelBuffers[i];
+		Memory::SafeDelete(modelBuffers[i]);
 	}
 	modelBuffers.clear();
 }
 
 /* Render controls UI */
-void ModelManager::Update()
+void ModelManager::Update(double dt)
 {
 	//Hotkeys for swapping modes (TODO: add rotation back)
 	if (InputHandler::KeyDown(WindowsKey::O)) {
@@ -20,6 +24,27 @@ void ModelManager::Update()
 	}
 	else if (InputHandler::KeyDown(WindowsKey::P)) {
 		Shared::mCurrentGizmoOperation = ImGuizmo::SCALE;
+	}
+
+	//Deallocate from the buffer pool after a time of inactivity
+	timeSinceDeallocCheck += dt;
+	if (timeSinceDeallocCheck >= deallocCheckAfter) {
+		modelBuffersSanity.clear();
+		for (int i = 0; i < modelBuffers.size(); i++) {
+			if (modelBuffers[i]->GetUseageCount() <= 0) 
+			{
+				Memory::SafeDelete(modelBuffers[i]);
+			}
+			else
+			{
+				modelBuffersSanity.push_back(modelBuffers[i]);
+			}
+		}
+		if (modelBuffersSanity.size() != modelBuffers.size()) {
+			Debug::Log("Successfully deallocated " + std::to_string(modelBuffers.size() - modelBuffersSanity.size()) + " model buffer(s).");
+			modelBuffers = modelBuffersSanity;
+		}
+		timeSinceDeallocCheck = 0.0f;
 	}
 
 	//UI

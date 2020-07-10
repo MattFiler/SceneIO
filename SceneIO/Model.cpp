@@ -13,6 +13,7 @@ void Model::Release()
 {
 	GameObject::Release();
 	if (modelData) modelData->RemoveUseage();
+	modelData = nullptr;
 }
 
 /* Update bounding box transforms as well as normal transforms */

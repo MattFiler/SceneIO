@@ -37,6 +37,9 @@ SharedModelPart::~SharedModelPart()
 /* Render our model part */
 void SharedModelPart::Render(XMMATRIX world, DynamicMaterial* material)
 {
+	//TODO: This will need reworking to be dynamic to the content in the Dynamic Material - just pulling Albedo colour for now
+	//Remember wherever the texture ends up getting defined to use Memory::SafeRelease to release it on texture change/unload (probably in Model)
+
 	//Update and set constant buffer
 	ConstantBuffer cb;
 	cb.mWorld = XMMatrixTranspose(world);

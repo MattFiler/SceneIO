@@ -10,7 +10,7 @@ public:
 	ModelManager() = default;
 	~ModelManager();
 
-	void Update();
+	void Update(double dt);
 
 	Model* GetModel(int index) {
 		if (index >= 0 && index < models.size()) return models[index];
@@ -37,6 +37,10 @@ private:
 	SharedModelBuffers* LoadModelToLevel(std::string filename);
 	std::vector<SharedModelBuffers*> modelBuffers = std::vector<SharedModelBuffers*>();
 	std::vector<Model*> models = std::vector<Model*>();
+
+	std::vector<SharedModelBuffers*> modelBuffersSanity = std::vector<SharedModelBuffers*>(); //DO NOT USE - TEMP DEALLOC CHECK
+	float deallocCheckAfter = 10.0f;
+	float timeSinceDeallocCheck = 0.0f;
 
 	int selectedModelUI = -1;
 
