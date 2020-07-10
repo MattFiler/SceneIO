@@ -60,12 +60,16 @@ void ModelManager::ModelManagerUI()
 	ImGui::Begin("Model Controls", nullptr);
 	ImGui::PopStyleVar();
 
-	if (ImGui::Button("Add Suzanne Model")) {
+	if (ImGui::Button("Add Suzanne")) {
 		LoadTestModel("data/test.obj");
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("Add Grid Model")) {
+	if (ImGui::Button("Add Grid")) {
 		LoadTestModel("data/test_grid.obj");
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Add Boltgun")) {
+		LoadTestModel("data/boltgun_test_triangulated.obj");
 	}
 
 	/*
