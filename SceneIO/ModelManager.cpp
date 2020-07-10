@@ -31,7 +31,7 @@ void ModelManager::Update(double dt)
 	if (timeSinceDeallocCheck >= deallocCheckAfter) {
 		modelBuffersSanity.clear();
 		for (int i = 0; i < modelBuffers.size(); i++) {
-			if (modelBuffers[i]->GetUseageCount() <= 0) 
+			if (modelBuffers[i]->GetUsageCount() <= 0) 
 			{
 				Memory::SafeDelete(modelBuffers[i]);
 			}

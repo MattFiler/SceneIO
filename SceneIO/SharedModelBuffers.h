@@ -16,14 +16,14 @@ public:
 		return vertexCount;
 	}
 
-	int GetUseageCount() {
+	int GetUsageCount() {
 		return useCount;
 	}
-	void AddUseage() {
+	void AddUsage() {
 		Debug::Log("Logged new buffer usage.");
 		useCount++;
 	}
-	void RemoveUseage() {
+	void RemoveUsage() {
 		Debug::Log("Removed log of buffer usage.");
 		useCount--;
 	}

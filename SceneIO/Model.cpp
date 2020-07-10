@@ -5,14 +5,14 @@ void Model::Create()
 {
 	GameObject::Create();
 	if (!modelData) Debug::Log("Creating a model without its data - check scripts!");
-	modelData->AddUseage();
+	modelData->AddUsage();
 }
 
 /* Remove useage from model data */
 void Model::Release()
 {
 	GameObject::Release();
-	if (modelData) modelData->RemoveUseage();
+	if (modelData) modelData->RemoveUsage();
 	modelData = nullptr;
 }
 
