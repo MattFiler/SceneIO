@@ -21,9 +21,10 @@ void Model::Update(float dt)
 {
 	GameObject::Update(dt);
 
-	DirectX::XMStoreFloat4(&boundingBox.Orientation, DirectX::XMQuaternionRotationRollPitchYawFromVector(XMLoadFloat3(&rotation)));
-	boundingBox.Extents = Utilities::MultiplyFloat3(modelData->GetExtents(), scale);
-	boundingBox.Center = Utilities::AddFloat3(position, modelData->GetExtentsOffset());
+	//Something is wrong with this bounding box ... disabling it for now, but fix it if required!
+	//DirectX::XMStoreFloat4(&boundingBox.Orientation, DirectX::XMQuaternionRotationRollPitchYawFromVector(XMLoadFloat3(&rotation)));
+	//boundingBox.Extents = Utilities::MultiplyFloat3(modelData->GetExtents(), scale);
+	//boundingBox.Center = Utilities::AddFloat3(position, modelData->GetExtentsOffset());
 }
 
 /* Render all model parts */
@@ -41,7 +42,7 @@ void Model::Render(float dt)
 bool Model::DoesIntersect(Ray& _r, float& _d)
 {
 	//First, check less expensive bounding box
-	if (!boundingBox.Intersects(XMLoadFloat3(&_r.origin), XMLoadFloat3(&_r.direction), _d)) return false;
+	//if (!boundingBox.Intersects(XMLoadFloat3(&_r.origin), XMLoadFloat3(&_r.direction), _d)) return false;
 
 	//If hit the bounding box, check the mesh (expensive)
 	return modelData->DoesRayIntersect(_r, mWorld, _d);
