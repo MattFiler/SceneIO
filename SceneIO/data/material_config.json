@@ -18,6 +18,12 @@
 					"name": "Normal Map",
 					"type": "string",
 					"binding": "t1"
+				},
+				{
+					"name": "TEST OPTIONS!",
+					"type": "options",
+					"binding": "e1",
+					"values": ["TEST1", "TEST2"]
 				}
 			],
 			"pixel_shader":

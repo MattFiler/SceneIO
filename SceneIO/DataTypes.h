@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include <string>
 #include <stdexcept>
 
@@ -14,6 +15,7 @@ enum class DataTypes {
 	UNSIGNED_INTEGER,
 	BOOLEAN,
 	FLOAT_ARRAY,
+	OPTIONS_LIST,
 };
 
 class DataType {
@@ -26,6 +28,7 @@ public:
 		if (_t == "uint") return DataTypes::UNSIGNED_INTEGER;
 		if (_t == "bool") return DataTypes::BOOLEAN;
 		if (_t == "array") return DataTypes::FLOAT_ARRAY;
+		if (_t == "options") return DataTypes::OPTIONS_LIST;
 		throw new std::invalid_argument("Could not match type string to enum value!");
 	}
 	DataTypes type;
@@ -77,4 +80,10 @@ public:
 class DataTypeFloatArray : public DataType {
 public:
 	float* value[];
+};
+
+class DataTypeOptionsList : public DataType {
+public:
+	int value = 0;
+	std::vector<std::string> options = std::vector<std::string>();
 };

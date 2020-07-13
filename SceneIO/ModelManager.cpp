@@ -251,6 +251,23 @@ void ModelManager::MaterialDropdownUI(Model* model, int submeshID)
 				//ImGui::InputText(inputLabel.c_str(), &param->value);
 				break;
 			}
+			case DataTypes::OPTIONS_LIST: {
+				DataTypeOptionsList* param = static_cast<DataTypeOptionsList*>(thisParam->value);
+				if (ImGui::BeginCombo(inputLabel.c_str(), param->options[param->value].c_str()))
+				{
+					for (int x = 0; x < param->options.size(); x++)
+					{
+						const bool is_selected = (param->value == x);
+						if (ImGui::Selectable(param->options[x].c_str(), is_selected))
+							param->value = x;
+
+						if (is_selected)
+							ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndCombo();
+				}
+				break;
+			}
 		}
 
 		if (i == thisMaterial->GetParameterCount() - 1) ImGui::Separator();

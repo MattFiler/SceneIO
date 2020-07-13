@@ -9,9 +9,19 @@ using json = nlohmann::json;
 class MaterialParameter {
 public:
 	MaterialParameter(json config) {
+		//Setup base info
 		name = config["name"].get<std::string>();
-		ChangeValueType(DataType::TypeStringToEnum(config["type"].get<std::string>()));
+		DataTypes type = DataType::TypeStringToEnum(config["type"].get<std::string>());
+		ChangeValueType(type);
 		bind = config["binding"].get<std::string>();
+
+		//The options parameter takes in its options from the definition
+		if (type == DataTypes::OPTIONS_LIST) {
+			DataTypeOptionsList* valueOptions = static_cast<DataTypeOptionsList*>(value);
+			for (int i = 0; i < config["values"].size(); i++) {
+				valueOptions->options.push_back(config["values"][i].get<std::string>());
+			}
+		}
 	}
 
 	/* Change the datatype of this parameter (WILL RESET THE VALUE) */
@@ -43,6 +53,10 @@ public:
 			}
 			case DataTypes::FLOAT_ARRAY: {
 				value = new DataTypeFloatArray();
+				break;
+			}
+			case DataTypes::OPTIONS_LIST: {
+				value = new DataTypeOptionsList();
 				break;
 			}
 		}
