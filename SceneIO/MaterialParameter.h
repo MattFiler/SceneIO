@@ -10,7 +10,7 @@ class MaterialParameter {
 public:
 	MaterialParameter(json config) {
 		name = config["name"].get<std::string>();
-		ChangeValueType((DataTypes)config["type"].get<int>());
+		ChangeValueType(DataType::TypeStringToEnum(config["type"].get<std::string>()));
 		bind = config["binding"].get<std::string>();
 	}
 

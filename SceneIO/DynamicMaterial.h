@@ -3,6 +3,12 @@
 #include "MaterialParameter.h"
 #include "Utilities.h"
 
+enum class MaterialSurfaceTypes {
+	SURFACE,
+	VOLUME,
+	ENVIRONMENT,
+};
+
 /* A material which can be defined by JSON */
 class DynamicMaterial {
 public:
@@ -12,6 +18,10 @@ public:
 
 	std::string GetName() {
 		return name;
+	}
+
+	MaterialSurfaceTypes GetSurfaceType() {
+		return type;
 	}
 
 	MaterialParameter* GetParameter(std::string name) {
@@ -38,7 +48,8 @@ public:
 private:
 	void Setup();
 
-	std::string name;
+	std::string name = "";
+	MaterialSurfaceTypes type = MaterialSurfaceTypes::SURFACE;
 	std::vector<MaterialParameter> parameters = std::vector<MaterialParameter>();
 	json config;
 };

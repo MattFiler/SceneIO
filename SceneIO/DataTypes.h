@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <stdexcept>
 
 /* Inheritable datatypes for dynamic casting */
 
@@ -17,6 +18,16 @@ enum class DataTypes {
 
 class DataType {
 public:
+	static DataTypes TypeStringToEnum(std::string _t) {
+		if (_t == "rgb") return DataTypes::RGB;
+		if (_t == "string") return DataTypes::STRING;
+		if (_t == "float") return DataTypes::FLOAT;
+		if (_t == "int") return DataTypes::INTEGER;
+		if (_t == "uint") return DataTypes::UNSIGNED_INTEGER;
+		if (_t == "bool") return DataTypes::BOOLEAN;
+		if (_t == "array") return DataTypes::FLOAT_ARRAY;
+		throw new std::invalid_argument("Could not match type string to enum value!");
+	}
 	DataTypes type;
 };
 
