@@ -17,7 +17,6 @@ DirectX::XMFLOAT4 Shared::ambientLightColour;
 const char* Shared::dataTypes[7] = { "RGB", "STRING", "FLOAT", "INTEGER", "UNSIGNED_INTEGER", "BOOLEAN", "FLOAT_ARRAY" };
 
 float Shared::mouseCameraSensitivity = 0.03f;
-CameraControlType Shared::cameraControlType = CameraControlType::MOUSE;
 
 float Shared::cameraFOV = 1.5f;
 float Shared::cameraNear = 0.01f;

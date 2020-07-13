@@ -46,7 +46,6 @@ public:
 
 	/* Camera Properties */
 	static float mouseCameraSensitivity;
-	static CameraControlType cameraControlType;
 
 	static float cameraFOV;
 	static float cameraNear;

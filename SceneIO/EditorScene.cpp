@@ -51,10 +51,6 @@ bool EditorScene::Update(double dt)
 	ImGui::SliderFloat("Ambient B", &Shared::ambientLightColour.z, 0.0f, 1.0f);
 
 	ImGui::Separator();
-	int option = Shared::cameraControlType;
-	ImGui::RadioButton("Camera Control Scheme: Keyboard", &option, 0);
-	ImGui::RadioButton("Camera Control Scheme: Mouse", &option, 1);
-	Shared::cameraControlType = (CameraControlType)option;
 	ImGui::SliderFloat("Sensitivity", &Shared::mouseCameraSensitivity, 0.0f, 1.0f);
 	ImGui::SliderFloat("Camera FOV", &Shared::cameraFOV, 0.01f, 3.14f);
 	if (fovCheck != Shared::cameraFOV) Shared::mProjection = DirectX::XMMatrixPerspectiveFovLH(Shared::cameraFOV, Shared::m_renderWidth / (FLOAT)Shared::m_renderHeight, Shared::cameraNear, Shared::cameraFar);

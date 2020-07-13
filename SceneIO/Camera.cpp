@@ -14,84 +14,71 @@ void Camera::Update(float dt)
 
 	if (isLocked) return;
 
-	//Camera look controls
-	switch (Shared::cameraControlType) {
-		case CameraControlType::KEYBOARD: {
-			double moveSpeed = dt;
-			if (InputHandler::KeyDown(WindowsKey::SHIFT)) {
-				moveSpeed *= 10;
-			}
+	DirectX::XMFLOAT3 forward = DirectX::XMFLOAT3(Shared::mView.r[0].m128_f32[2], Shared::mView.r[1].m128_f32[2], Shared::mView.r[2].m128_f32[2]);
+	DirectX::XMFLOAT3 right = DirectX::XMFLOAT3(Shared::mView.r[0].m128_f32[0], Shared::mView.r[1].m128_f32[0], Shared::mView.r[2].m128_f32[0]);
 
-			if (InputHandler::KeyDown(WindowsKey::W)) {
-				SetPosition(XMFLOAT3(GetPosition().x, GetPosition().y, GetPosition().z - moveSpeed));
-			}
-			if (InputHandler::KeyDown(WindowsKey::S)) {
-				SetPosition(XMFLOAT3(GetPosition().x, GetPosition().y, GetPosition().z + moveSpeed));
-			}
-			if (InputHandler::KeyDown(WindowsKey::A)) {
-				SetPosition(XMFLOAT3(GetPosition().x + moveSpeed, GetPosition().y, GetPosition().z));
-			}
-			if (InputHandler::KeyDown(WindowsKey::D)) {
-				SetPosition(XMFLOAT3(GetPosition().x - moveSpeed, GetPosition().y, GetPosition().z));
-			}
-			if (InputHandler::KeyDown(WindowsKey::Z)) {
-				SetPosition(XMFLOAT3(GetPosition().x, GetPosition().y + moveSpeed, GetPosition().z));
-			}
-			if (InputHandler::KeyDown(WindowsKey::X)) {
-				SetPosition(XMFLOAT3(GetPosition().x, GetPosition().y - moveSpeed, GetPosition().z));
-			}
-
-			if (InputHandler::KeyDown(WindowsKey::Q)) {
-				SetRotation(XMFLOAT3(GetRotation().x, GetRotation().y, GetRotation().z - dt), true);
-			}
-			if (InputHandler::KeyDown(WindowsKey::E)) {
-				SetRotation(XMFLOAT3(GetRotation().x, GetRotation().y, GetRotation().z + dt), true);
-			}
-			if (InputHandler::KeyDown(WindowsKey::F)) {
-				SetRotation(XMFLOAT3(GetRotation().x - dt, GetRotation().y, GetRotation().z), true);
-			}
-			if (InputHandler::KeyDown(WindowsKey::V)) {
-				SetRotation(XMFLOAT3(GetRotation().x + dt, GetRotation().y, GetRotation().z), true);
-			}
-			break;
+	//Camera core mouse movement
+	if (InputHandler::MouseDown(WindowsMouse::RIGHT_CLICK)) {
+		POINT newMousePos;
+		GetCursorPos(&newMousePos);
+		if (!mouseWasDownLastFrame) {
+			prevMousePos = newMousePos;
+			ShowCursor(false);
+			mouseWasReset = false;
 		}
-		case CameraControlType::MOUSE: {
-			if (InputHandler::MouseDown(WindowsMouse::RIGHT_CLICK)) {
-				POINT newMousePos;
-				GetCursorPos(&newMousePos);
-				if (!mouseWasDownLastFrame) {
-					prevMousePos = newMousePos;
-					ShowCursor(false);
-					mouseWasReset = false;
-				}
 
-				DirectX::XMFLOAT3 forward = DirectX::XMFLOAT3(Shared::mView.r[0].m128_f32[2], Shared::mView.r[1].m128_f32[2], Shared::mView.r[2].m128_f32[2]);
-				DirectX::XMFLOAT3 right = DirectX::XMFLOAT3(Shared::mView.r[0].m128_f32[0], Shared::mView.r[1].m128_f32[0], Shared::mView.r[2].m128_f32[0]);
-				float mov_x = (prevMousePos.x - newMousePos.x) * Shared::mouseCameraSensitivity;
-				float mov_y = (prevMousePos.y - newMousePos.y) * Shared::mouseCameraSensitivity;
+		float mov_x = (prevMousePos.x - newMousePos.x) * Shared::mouseCameraSensitivity;
+		float mov_y = (prevMousePos.y - newMousePos.y) * Shared::mouseCameraSensitivity;
 
-				if (InputHandler::KeyDown(WindowsKey::CTRL)) {
-					SetPosition(XMFLOAT3(GetPosition().x + (mov_x * right.x), GetPosition().y - (mov_y), GetPosition().z + (mov_x * right.z)));
-				}
-				else {
-					SetPosition(XMFLOAT3(GetPosition().x + (mov_y * forward.x), GetPosition().y, GetPosition().z + (mov_y * forward.z)));
-					SetRotation(XMFLOAT3(GetRotation().x, GetRotation().y, GetRotation().z - (mov_x * 0.25f)), true);
-					if (GetRotation(false).z >= 360.0f) SetRotation(XMFLOAT3(GetRotation(false).x, GetRotation(false).y, GetRotation(false).z - 360.0f));
-				}
-
-				SetCursorPos(prevMousePos.x, prevMousePos.y);
-				mouseWasDownLastFrame = true;
-			}
-			else
-			{
-				mouseWasDownLastFrame = false;
-				if (!mouseWasReset) {
-					SetCursorPos(prevMousePos.x, prevMousePos.y);
-					ShowCursor(true);
-					mouseWasReset = true;
-				}
-			}
-			break;
+		if (InputHandler::KeyDown(WindowsKey::CTRL)) {
+			SetPosition(XMFLOAT3(GetPosition().x + (mov_x * right.x), GetPosition().y - (mov_y), GetPosition().z + (mov_x * right.z)));
 		}
+		else {
+			SetPosition(XMFLOAT3(GetPosition().x + (mov_y * forward.x), GetPosition().y, GetPosition().z + (mov_y * forward.z)));
+			SetRotation(XMFLOAT3(GetRotation().x, GetRotation().y, GetRotation().z - (mov_x * 0.25f)), true);
+			if (GetRotation(false).z >= 360.0f) SetRotation(XMFLOAT3(GetRotation(false).x, GetRotation(false).y, GetRotation(false).z - 360.0f));
+		}
+
+		SetCursorPos(prevMousePos.x, prevMousePos.y);
+		mouseWasDownLastFrame = true;
+	}
+	else
+	{
+		mouseWasDownLastFrame = false;
+		if (!mouseWasReset) {
+			SetCursorPos(prevMousePos.x, prevMousePos.y);
+			ShowCursor(true);
+			mouseWasReset = true;
+		}
+	}
+
+	//Camera accompanying keyboard movement (TODO: keybinds)
+	float speedMod = 1.0f;
+	if (InputHandler::KeyDown(WindowsKey::SHIFT)) {
+		speedMod = 3.0f;
+	}
+	if (InputHandler::KeyDown(WindowsKey::A)) {
+		//Look Up
+		SetRotation(XMFLOAT3(GetRotation().x + (dt * speedMod), GetRotation().y, GetRotation().z), true);
+	}
+	if (InputHandler::KeyDown(WindowsKey::Z)) {
+		//Look Down
+		SetRotation(XMFLOAT3(GetRotation().x - (dt * speedMod), GetRotation().y, GetRotation().z), true);
+	}
+	if (InputHandler::KeyDown(WindowsKey::Q)) {
+		//Look Left
+		SetRotation(XMFLOAT3(GetRotation().x, GetRotation().y, GetRotation().z - (dt * speedMod)), true);
+	}
+	if (InputHandler::KeyDown(WindowsKey::E)) {
+		//Look Right
+		SetRotation(XMFLOAT3(GetRotation().x, GetRotation().y, GetRotation().z + (dt * speedMod)), true);
+	}
+	if (InputHandler::KeyDown(WindowsKey::D)) {
+		//Move Up
+		SetPosition(XMFLOAT3(GetPosition().x, GetPosition().y + (dt * speedMod), GetPosition().z));
+	}
+	if (InputHandler::KeyDown(WindowsKey::C)) {
+		//Move Down
+		SetPosition(XMFLOAT3(GetPosition().x, GetPosition().y - (dt * speedMod), GetPosition().z));
 	}
 }

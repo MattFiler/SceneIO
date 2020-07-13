@@ -126,7 +126,7 @@ public:
 		io = &ImGui::GetIO();
 	}
 
-	/* Is a key down? */
+	/* Is a key currently down? */
 	static bool KeyDown(WindowsKey _key)
 	{
 		return io->KeysDown[(int)_key];

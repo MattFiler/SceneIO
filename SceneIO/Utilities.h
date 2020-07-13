@@ -74,12 +74,6 @@ struct SimpleVertex
 	XMFLOAT3 Normal;
 };
 
-struct SimpleVertexAlt
-{
-	XMFLOAT3 Pos;
-	XMFLOAT2 Tex;
-};
-
 struct Ray {
 	XMFLOAT3 origin;
 	XMFLOAT3 direction;
@@ -168,6 +162,7 @@ struct Texture {
 	}
 	ID3D11Texture2D* texture = nullptr;
 	ID3D11ShaderResourceView* textureView = nullptr;
+	XMFLOAT2 dimensions;
 };
 
 /* Debug logger */
@@ -277,21 +272,19 @@ public:
 			FreeImage_Unload(image);
 			image = tmp;
 		}
-
-		int width = FreeImage_GetWidth(image);
-		int height = FreeImage_GetHeight(image);
 		BPP = FreeImage_GetBPP(image);
-
 		FreeImage_FlipVertical(image);
 
-		char* buffer = new char[width * height * 4];
-		memcpy(buffer, FreeImage_GetBits(image), width * height * 4);
+		thisTex->dimensions = XMFLOAT2(FreeImage_GetWidth(image), FreeImage_GetHeight(image));
+		int imgLength = thisTex->dimensions.x * thisTex->dimensions.y * 4;
+		char* buffer = new char[imgLength];
+		memcpy(buffer, FreeImage_GetBits(image), imgLength);
 		FreeImage_Unload(image);
 
 		D3D11_TEXTURE2D_DESC desc;
 		ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
-		desc.Width = width;
-		desc.Height = height;
+		desc.Width = thisTex->dimensions.x;
+		desc.Height = thisTex->dimensions.y;
 		desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 		desc.Usage = D3D11_USAGE_DYNAMIC;
 		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -304,9 +297,8 @@ public:
 
 		D3D11_SUBRESOURCE_DATA initData;
 		initData.pSysMem = buffer;
-		initData.SysMemPitch = width * 4;
-		initData.SysMemSlicePitch = width * height * 4;
-
+		initData.SysMemPitch = thisTex->dimensions.x * 4;
+		initData.SysMemSlicePitch = imgLength;
 		HR(Shared::m_pDevice->CreateTexture2D(&desc, &initData, &thisTex->texture));
 
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
@@ -314,7 +306,6 @@ public:
 		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvDesc.Texture2D.MipLevels = desc.MipLevels;
 		srvDesc.Texture2D.MostDetailedMip = desc.MipLevels - 1;
-
 		HR(Shared::m_pDevice->CreateShaderResourceView(thisTex->texture, &srvDesc, &thisTex->textureView));
 
 		return thisTex;
