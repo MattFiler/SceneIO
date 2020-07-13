@@ -9,7 +9,7 @@
 #include <DirectXColors.h>
 
 #include "EXErr.h"
-#include "DDSTextureLoader.h"
+#include "FreeImage.h"
 #include "InputHandler.h"
 
 #include <string>
@@ -33,6 +33,39 @@ using namespace DirectX;
 		#define HR(x) x;
 	#endif
 #endif
+
+namespace Memory
+{
+	/* Safely delete a pointer */
+	template <class T> void SafeDelete(T& t)
+	{
+		if (t)
+		{
+			delete t;
+			t = nullptr;
+		}
+	}
+
+	/* Safely delete a pointer array */
+	template <class T> void SafeDeleteArray(T& t)
+	{
+		if (t)
+		{
+			delete[] t;
+			t = nullptr;
+		}
+	}
+
+	/* Safely release a d3d resource */
+	template <class T> void SafeRelease(T& t)
+	{
+		if (t)
+		{
+			t->Release();
+			t = nullptr;
+		}
+	}
+};
 
 struct SimpleVertex
 {
@@ -128,6 +161,15 @@ struct Face
 	std::string materialName = ""; //Material name to link with MTL
 };
 
+struct Texture {
+	~Texture() {
+		Memory::SafeRelease(textureView);
+		Memory::SafeRelease(texture);
+	}
+	ID3D11Texture2D* texture = nullptr;
+	ID3D11ShaderResourceView* textureView = nullptr;
+};
+
 /* Debug logger */
 class Debug
 {
@@ -218,6 +260,64 @@ public:
 	static XMFLOAT3 MultiplyFloat3(XMFLOAT3 a, float b)
 	{
 		return XMFLOAT3(a.x * b, a.y * b, a.z * b);
+	}
+
+	/* Load an image to texture using FreeImage */
+	static Texture* LoadTexture(std::string filepath)
+	{
+		Texture* thisTex = new Texture();
+		const char* filename = filepath.c_str();
+
+		FREE_IMAGE_FORMAT format = FreeImage_GetFileType(filename, 0);
+		FIBITMAP* image = FreeImage_Load(format, filename);
+
+		int BPP = FreeImage_GetBPP(image);
+		if (BPP != 32) {
+			FIBITMAP* tmp = FreeImage_ConvertTo32Bits(image);
+			FreeImage_Unload(image);
+			image = tmp;
+		}
+
+		int width = FreeImage_GetWidth(image);
+		int height = FreeImage_GetHeight(image);
+		BPP = FreeImage_GetBPP(image);
+
+		FreeImage_FlipVertical(image);
+
+		char* buffer = new char[width * height * 4];
+		memcpy(buffer, FreeImage_GetBits(image), width * height * 4);
+		FreeImage_Unload(image);
+
+		D3D11_TEXTURE2D_DESC desc;
+		ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
+		desc.Width = width;
+		desc.Height = height;
+		desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+		desc.Usage = D3D11_USAGE_DYNAMIC;
+		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		desc.MiscFlags = 0;
+		desc.MipLevels = 1;
+		desc.ArraySize = 1;
+		desc.SampleDesc.Count = 1;
+		desc.SampleDesc.Quality = 0;
+		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+		D3D11_SUBRESOURCE_DATA initData;
+		initData.pSysMem = buffer;
+		initData.SysMemPitch = width * 4;
+		initData.SysMemSlicePitch = width * height * 4;
+
+		HR(Shared::m_pDevice->CreateTexture2D(&desc, &initData, &thisTex->texture));
+
+		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+		srvDesc.Format = desc.Format;
+		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.Texture2D.MipLevels = desc.MipLevels;
+		srvDesc.Texture2D.MostDetailedMip = desc.MipLevels - 1;
+
+		HR(Shared::m_pDevice->CreateShaderResourceView(thisTex->texture, &srvDesc, &thisTex->textureView));
+
+		return thisTex;
 	}
 
 	/* Load a model from an OBJ file and return its indices and vertexes (todo: make it condense the vertex array) */
@@ -571,39 +671,6 @@ public:
 				thisPart.compVertices.push_back(thisVertInfo);
 			}
 			push_to.modelParts.push_back(thisPart);
-		}
-	}
-};
-
-namespace Memory 
-{
-	/* Safely delete a pointer */
-	template <class T> void SafeDelete(T& t)
-	{
-		if (t)
-		{
-			delete t;
-			t = nullptr;
-		}
-	}
-
-	/* Safely delete a pointer array */
-	template <class T> void SafeDeleteArray(T& t)
-	{
-		if (t)
-		{
-			delete[] t;
-			t = nullptr;
-		}
-	}
-
-	/* Safely release a d3d resource */
-	template <class T> void SafeRelease(T& t)
-	{
-		if (t)
-		{
-			t->Release();
-			t = nullptr;
 		}
 	}
 };

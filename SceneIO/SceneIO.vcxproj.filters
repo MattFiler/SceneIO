@@ -117,9 +117,6 @@
     <ClCompile Include="GameObjectManager.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="DDSTextureLoader.cpp">
-      <Filter>Source Files\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="EXErr.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>

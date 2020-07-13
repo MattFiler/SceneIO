@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="DebugCube.cpp" />
     <ClCompile Include="EXErr.cpp" />
     <ClCompile Include="imgui_stl.cpp" />
@@ -161,10 +160,18 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>freeimage/x32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <PostBuildEvent>
-      <Command>Xcopy /E /I /Y "$(SolutionDir)DATA" "$(SolutionDir)$(OutDir)DATA"</Command>
+      <Command>Xcopy /E /I /Y "$(SolutionDir)plugins" "$(SolutionDir)$(OutDir)plugins"
+Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"
+copy "$(SolutionDir)freeimage\x32\FreeImage.dll" "$(SolutionDir)$(OutDir)"</Command>
     </PostBuildEvent>
+    <Link>
+      <AdditionalLibraryDirectories>freeimage/x32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freeimage/x32/FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -173,11 +180,17 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>freeimage/x64;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <PostBuildEvent>
       <Command>Xcopy /E /I /Y "$(SolutionDir)plugins" "$(SolutionDir)$(OutDir)plugins"
-Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"</Command>
+Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"
+copy "$(SolutionDir)freeimage\x64\FreeImage.dll" "$(SolutionDir)$(OutDir)"</Command>
     </PostBuildEvent>
+    <Link>
+      <AdditionalLibraryDirectories>freeimage/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freeimage/x64/FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -187,13 +200,19 @@ Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"</Command>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>freeimage/x32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>freeimage/x32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freeimage/x32/FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>Xcopy /E /I /Y "$(SolutionDir)DATA" "$(SolutionDir)$(OutDir)DATA"</Command>
+      <Command>Xcopy /E /I /Y "$(SolutionDir)plugins" "$(SolutionDir)$(OutDir)plugins"
+Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"
+copy "$(SolutionDir)freeimage\x32\FreeImage.dll" "$(SolutionDir)$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -205,14 +224,18 @@ Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"</Command>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>freeimage/x64;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>freeimage/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freeimage/x64/FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>Xcopy /E /I /Y "$(SolutionDir)plugins" "$(SolutionDir)$(OutDir)plugins"
-Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"</Command>
+Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"
+copy "$(SolutionDir)freeimage\x64\FreeImage.dll" "$(SolutionDir)$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

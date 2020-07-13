@@ -47,6 +47,6 @@ PS_INPUT VS( VS_INPUT input )
 //Base Pixel Shader
 float4 PS( PS_INPUT input) : SV_Target
 {
-	float4 colouredTex = colourTint;
+	float4 colouredTex = (txDiffuse.Sample( samLinear, input.Tex ) * colourTint);
     return saturate((ambientLight * colouredTex) + (saturate((input.Norm.x + input.Norm.y + input.Norm.z)/3)*ambientLight));
 }
