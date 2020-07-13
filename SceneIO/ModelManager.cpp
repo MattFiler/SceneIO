@@ -199,15 +199,25 @@ void ModelManager::ModelMaterialUI()
 void ModelManager::MaterialDropdownUI(Model* model, int submeshID)
 {
 	DynamicMaterial* thisMaterial = model->GetSubmeshMaterial(submeshID);
+	if (thisMaterial->GetParameterCount() == 0) return;
 
-	//TODO: allow user to select material type here
-	//TODO: don't immediately save config changes - provide a save button (will avoid fuck-ups with changing strings that are filepaths, etc)
-	//TODO: yoou can call SetSubmeshMaterial on the model to save a new one
+	//Allow change of material type
+	if (ImGui::BeginCombo(("S" + std::to_string(submeshID) + " MaterialType").c_str(), thisMaterial->GetName().c_str())) {
+		for (int x = 0; x < Shared::materialManager->GetMaterialCount(); x++) {
+			DynamicMaterial ddMat = Shared::materialManager->GetMaterial(x);
+			const bool is_selected = (ddMat.GetName() == thisMaterial->GetName());
+			if (ImGui::Selectable(ddMat.GetName().c_str(), is_selected)) {
+				model->SetSubmeshMaterial(submeshID, ddMat);
+				thisMaterial = model->GetSubmeshMaterial(submeshID);
+			}
 
-	if (thisMaterial->GetParameterCount() != 0) { //Should never be zero, else what's the point!
-		ImGui::Text(thisMaterial->GetName().c_str());
-		ImGui::Separator();
+			if (is_selected) ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndCombo();
 	}
+	ImGui::Separator();
+
+	//Allow parameter tweaks
 	for (int i = 0; i < thisMaterial->GetParameterCount(); i++) {
 		MaterialParameter* thisParam = thisMaterial->GetParameter(i);
 		std::string inputLabel = ("S" + std::to_string(submeshID) + " " + thisParam->name);
@@ -273,8 +283,8 @@ void ModelManager::MaterialDropdownUI(Model* model, int submeshID)
 		if (i == thisMaterial->GetParameterCount() - 1) ImGui::Separator();
 	}
 
-	ImGui::Separator();
-	if (ImGui::Button(("RELOAD TEXTURE FOR SUBMESH " + std::to_string(submeshID)).c_str())) {
+	//Allow reload of texture (TODO: this needs to be done dynamically based on shader data)
+	if (ImGui::Button(("RELOAD TEXTURE FOR S" + std::to_string(submeshID)).c_str())) {
 		DataTypeString* tempTest = static_cast<DataTypeString*>(model->GetSubmeshMaterial(submeshID)->GetParameter("Albedo Texture")->value);
 		model->SetSubmeshRenderable(submeshID, Utilities::LoadTexture(tempTest->value));
 	}

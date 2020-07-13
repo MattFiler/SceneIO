@@ -158,11 +158,15 @@ struct Face
 struct Texture {
 	~Texture() {
 		Memory::SafeRelease(textureView);
+		Memory::SafeDelete(textureView);
 		Memory::SafeRelease(texture);
+		Memory::SafeDelete(texture);
+		Memory::SafeDelete(textureBuffer);
 	}
 	ID3D11Texture2D* texture = nullptr;
 	ID3D11ShaderResourceView* textureView = nullptr;
 	XMFLOAT2 dimensions;
+	char* textureBuffer = nullptr;
 };
 
 /* Debug logger */
@@ -278,8 +282,8 @@ public:
 
 		thisTex->dimensions = XMFLOAT2(FreeImage_GetWidth(image), FreeImage_GetHeight(image));
 		int imgLength = thisTex->dimensions.x * thisTex->dimensions.y * 4;
-		char* buffer = new char[imgLength];
-		memcpy(buffer, FreeImage_GetBits(image), imgLength);
+		thisTex->textureBuffer = new char[imgLength];
+		memcpy(thisTex->textureBuffer, FreeImage_GetBits(image), imgLength);
 		FreeImage_Unload(image);
 
 		D3D11_TEXTURE2D_DESC desc;
@@ -297,7 +301,7 @@ public:
 		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 
 		D3D11_SUBRESOURCE_DATA initData;
-		initData.pSysMem = buffer;
+		initData.pSysMem = thisTex->textureBuffer;
 		initData.SysMemPitch = thisTex->dimensions.x * 4;
 		initData.SysMemSlicePitch = imgLength;
 		HR(Shared::m_pDevice->CreateTexture2D(&desc, &initData, &thisTex->texture));
