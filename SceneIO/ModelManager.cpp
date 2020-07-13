@@ -272,6 +272,12 @@ void ModelManager::MaterialDropdownUI(Model* model, int submeshID)
 
 		if (i == thisMaterial->GetParameterCount() - 1) ImGui::Separator();
 	}
+
+	ImGui::Separator();
+	if (ImGui::Button(("RELOAD TEXTURE FOR SUBMESH " + std::to_string(submeshID)).c_str())) {
+		DataTypeString* tempTest = static_cast<DataTypeString*>(model->GetSubmeshMaterial(submeshID)->GetParameter("Albedo Texture")->value);
+		model->SetSubmeshRenderable(submeshID, Utilities::LoadTexture(tempTest->value));
+	}
 }
 
 /* Select a model given a ray through the scene */

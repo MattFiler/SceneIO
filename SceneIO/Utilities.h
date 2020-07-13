@@ -264,6 +264,7 @@ public:
 		const char* filename = filepath.c_str();
 
 		FREE_IMAGE_FORMAT format = FreeImage_GetFileType(filename, 0);
+		if (format == FREE_IMAGE_FORMAT::FIF_UNKNOWN) return nullptr;
 		FIBITMAP* image = FreeImage_Load(format, filename);
 
 		int BPP = FreeImage_GetBPP(image);

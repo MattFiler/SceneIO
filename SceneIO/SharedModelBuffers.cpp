@@ -84,7 +84,7 @@ SharedModelBuffers::~SharedModelBuffers()
 }
 
 /* Render the model parts */
-void SharedModelBuffers::Render(XMMATRIX mWorld, std::vector<DynamicMaterial>* materials)
+void SharedModelBuffers::Render(XMMATRIX mWorld, std::vector<DynamicMaterial>* materials, std::vector<Texture*>* renderables)
 {
 	//Validate: this will cause an error spam - and for good reason!
 	if (vertexCount == 0) {
@@ -117,6 +117,8 @@ void SharedModelBuffers::Render(XMMATRIX mWorld, std::vector<DynamicMaterial>* m
 
 	//Render each model part
 	for (int i = 0; i < allModels.size(); i++) {
+		if (renderables->at(i) != nullptr && renderables->at(i)->textureView != nullptr) Shared::m_pImmediateContext->PSSetShaderResources(0, 1, &renderables->at(i)->textureView);
+		else Shared::m_pImmediateContext->PSSetShaderResources(0, 1, &nullSRV);
 		allModels[i]->Render(mWorld, &materials->at(i));
 	}
 }

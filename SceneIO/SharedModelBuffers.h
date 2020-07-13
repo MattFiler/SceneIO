@@ -10,7 +10,7 @@ public:
 	SharedModelBuffers(std::string filepath);
 	~SharedModelBuffers();
 
-	void Render(XMMATRIX mWorld, std::vector<DynamicMaterial>* materials);
+	void Render(XMMATRIX mWorld, std::vector<DynamicMaterial>* materials, std::vector<Texture*>* renderables);
 
 	int GetVertCount() {
 		return vertexCount;
@@ -72,6 +72,8 @@ private:
 
 	std::vector<SharedModelPart*> allModels = std::vector<SharedModelPart*>();
 	std::vector<SimpleVertex> allVerts = std::vector<SimpleVertex>();
+
+	ID3D11ShaderResourceView* nullSRV = nullptr; //As odd as this may seem - always keep this value null!
 
 	std::string objPath = "";
 	int vertexCount = 0;

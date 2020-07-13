@@ -63,9 +63,6 @@ void SharedModelPart::Render(XMMATRIX world, DynamicMaterial* material)
 	Shared::m_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
 	Shared::m_pImmediateContext->PSSetConstantBuffers(0, 1, &g_pConstantBuffer);
 
-	//Set texture
-	Shared::m_pImmediateContext->PSSetShaderResources(0, 1, &texture->textureView);
-
 	//Set index buffer and draw
 	Shared::m_pImmediateContext->IASetIndexBuffer(g_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
 	Shared::m_pImmediateContext->DrawIndexed(indexCount, 0, 0);
