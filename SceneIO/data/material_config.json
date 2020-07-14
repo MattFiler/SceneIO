@@ -22,7 +22,6 @@
 				{
 					"name": "TEST OPTIONS!",
 					"type": "options",
-					"binding": "e1",
 					"values": ["TEST1", "TEST2"]
 				}
 			],
@@ -42,13 +41,11 @@
 				},
 				{
 					"name": "Exponent",
-					"type": "float",
-					"binding": "b1"
+					"type": "float"
 				},
 				{
 					"name": "Diffuse Weight",
-					"type": "float",
-					"binding": "b2"
+					"type": "float"
 				},
 				{
 					"name": "Albedo Texture",

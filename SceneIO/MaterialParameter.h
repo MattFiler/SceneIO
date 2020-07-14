@@ -13,7 +13,8 @@ public:
 		name = config["name"].get<std::string>();
 		DataTypes type = DataType::TypeStringToEnum(config["type"].get<std::string>());
 		ChangeValueType(type);
-		bind = config["binding"].get<std::string>();
+		isBound = config.contains("binding");
+		if (isBound) bind = config["binding"].get<std::string>();
 
 		//The options parameter takes in its options from the definition
 		if (type == DataTypes::OPTIONS_LIST) {
@@ -63,7 +64,8 @@ public:
 		value->type = newType;
 	}
 
-	std::string name;
+	std::string name = "";
 	DataType* value = nullptr;
-	std::string bind;
+	bool isBound = false;
+	std::string bind = "";
 };

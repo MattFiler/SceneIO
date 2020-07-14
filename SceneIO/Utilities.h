@@ -21,6 +21,8 @@
 #include <time.h>
 #include <random>
 
+typedef HRESULT(CALLBACK* LPFNDLLFUNC1)(DWORD, UINT*);
+
 using namespace DirectX;
 
 /* Handle DX HRESULT errors nicely in debug */
@@ -315,6 +317,40 @@ public:
 
 		return thisTex;
 	}
+
+	/*
+	TODO: load a model using a linked library plugin
+	static LoadedModel LoadModel(std::string path) {
+		LoadedModel newModel = LoadedModel();
+
+		HINSTANCE hDLL;               // Handle to DLL
+		LPFNDLLFUNC1 lpfnDllFunc1;    // Function pointer
+		HRESULT hrReturnVal;
+
+		hDLL = LoadLibrary("MyDLL");
+		if (NULL != hDLL)
+		{
+			lpfnDllFunc1 = (LPFNDLLFUNC1)GetProcAddress(hDLL, "DLLFunc1");
+			if (NULL != lpfnDllFunc1)
+			{
+				// call the function
+				hrReturnVal = lpfnDllFunc1(dwParam1, puParam2);
+			}
+			else
+			{
+				// report the error
+				hrReturnVal = ERROR_DELAY_LOAD_FAILED;
+			}
+			FreeLibrary(hDLL);
+		}
+		else
+		{
+			hrReturnVal = ERROR_DELAY_LOAD_FAILED;
+		}
+
+		return newModel;
+	}
+	*/
 
 	/* Load a model from an OBJ file and return its indices and vertexes (todo: make it condense the vertex array) */
 	static LoadedModel LoadModelFromOBJ(std::string path)

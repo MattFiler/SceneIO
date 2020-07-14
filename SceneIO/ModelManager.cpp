@@ -34,8 +34,7 @@ void ModelManager::Update(double dt)
 	if (timeSinceDeallocCheck >= deallocCheckAfter) {
 		modelBuffersSanity.clear();
 		for (int i = 0; i < modelBuffers.size(); i++) {
-			if (modelBuffers[i]->GetUsageCount() <= 0) 
-			{
+			if (modelBuffers[i]->GetUsageCount() <= 0) {
 				Memory::SafeDelete(modelBuffers[i]);
 			}
 			else
@@ -210,7 +209,6 @@ void ModelManager::MaterialDropdownUI(Model* model, int submeshID)
 				model->SetSubmeshMaterial(submeshID, ddMat);
 				thisMaterial = model->GetSubmeshMaterial(submeshID);
 			}
-
 			if (is_selected) ImGui::SetItemDefaultFocus();
 		}
 		ImGui::EndCombo();
@@ -263,16 +261,11 @@ void ModelManager::MaterialDropdownUI(Model* model, int submeshID)
 			}
 			case DataTypes::OPTIONS_LIST: {
 				DataTypeOptionsList* param = static_cast<DataTypeOptionsList*>(thisParam->value);
-				if (ImGui::BeginCombo(inputLabel.c_str(), param->options[param->value].c_str()))
-				{
-					for (int x = 0; x < param->options.size(); x++)
-					{
+				if (ImGui::BeginCombo(inputLabel.c_str(), param->options[param->value].c_str())) {
+					for (int x = 0; x < param->options.size(); x++) {
 						const bool is_selected = (param->value == x);
-						if (ImGui::Selectable(param->options[x].c_str(), is_selected))
-							param->value = x;
-
-						if (is_selected)
-							ImGui::SetItemDefaultFocus();
+						if (ImGui::Selectable(param->options[x].c_str(), is_selected)) param->value = x;
+						if (is_selected) ImGui::SetItemDefaultFocus();
 					}
 					ImGui::EndCombo();
 				}
