@@ -8,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -86,6 +87,18 @@ namespace MaterialEditor
             parameterName.Text = thisParamData["name"].Value<string>();
             parameterType.SelectedItem = thisParamData["type"].Value<string>().ToUpper();
             parameterIsBound.Checked = (thisParamData["binding"] != null);
+            if (parameterType.SelectedItem.ToString() == "OPTIONS_LIST")
+            {
+                optionsListLabel.Visible = true;
+                parameterOptionsList.Visible = true;
+                parameterOptionsList.Text = "";
+                JArray optionsVals = (JArray)thisParamData["values"];
+                for (int i = 0; i < optionsVals.Count; i++)
+                {
+                    parameterOptionsList.Text += optionsVals[i] + ",";
+                }
+                parameterOptionsList.Text = parameterOptionsList.Text.Substring(0, parameterOptionsList.Text.Length - 1);
+            }
         }
 
         /* Delete selected parameter */
@@ -105,7 +118,24 @@ namespace MaterialEditor
         /* Save the selected parameter properties */
         private void saveParameter_Click(object sender, EventArgs e)
         {
-            if (parameterName.Text == "") return;
+            if (parameterName.Text == "")
+            {
+                MessageBox.Show("Parameter requires a name.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (parameterType.SelectedItem.ToString() == "OPTIONS_LIST" && parameterOptionsList.Text == "")
+            {
+                MessageBox.Show("Options list requires pre-set options.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            for (int i = 0; i < materialParameters.Items.Count; i++)
+            {
+                if (materialParameters.Items[i].ToString() == parameterName.Text)
+                {
+                    MessageBox.Show("Parameter name must be unique in material.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
 
             if (creating_param)
             {
@@ -117,8 +147,23 @@ namespace MaterialEditor
             JObject thisParamData = (JObject)config["materials"][config_index]["parameters"][edit_param_index];
             thisParamData["name"] = parameterName.Text;
             thisParamData["type"] = parameterType.SelectedItem.ToString();
-            if (parameterIsBound.Checked) thisParamData["binding"] = parameterBindVariable.Text;
-            else thisParamData["binding"] = null;
+            if (parameterIsBound.Visible && parameterIsBound.Checked) thisParamData["binding"] = parameterBindVariable.Text;
+            else if (thisParamData["binding"] != null) thisParamData.Remove("binding");
+
+            if (thisParamData["type"].Value<string>() == "OPTIONS_LIST")
+            {
+                JArray optionsVals = new JArray();
+                string[] splitString = parameterOptionsList.Text.Split(',');
+                for (int i = 0; i < splitString.Length; i++)
+                {
+                    optionsVals.Add(splitString[i]);
+                }
+                thisParamData["values"] = optionsVals;
+            }
+            else if (thisParamData["values"] != null)
+            {
+                thisParamData.Remove("values");
+            }
 
             parameterEditWindow.Visible = false;
             RefreshParamList();
@@ -132,6 +177,9 @@ namespace MaterialEditor
             parameterIsBound.Visible = (parameterType.SelectedItem.ToString() == "RGB" || parameterType.SelectedItem.ToString() == "STRING");
             bindVariableText.Visible = false;
             parameterBindVariable.Visible = false;
+            parameterOptionsList.Text = "";
+            parameterOptionsList.Visible = parameterType.SelectedItem.ToString() == "OPTIONS_LIST";
+            optionsListLabel.Visible = parameterOptionsList.Visible;
         }
 
         /* Only show bind if checked */
@@ -180,9 +228,46 @@ namespace MaterialEditor
             thisMatData["type"] = materialType.SelectedItem.ToString();
             thisMatData["pixel_shader"]["code"] = pixelShaderCode.Text;
 
+            if (!CreateShader())
+            {
+                MessageBox.Show("Couldn't generate shader.\nPlease check pixel shader code.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             File.WriteAllText("data/material_config.json", config.ToString(Formatting.Indented));
             MessageBox.Show("Material saved!", "Saved.", MessageBoxButtons.OK, MessageBoxIcon.Information);
             this.Close();
+        }
+
+        /* Create the shader for this material in-editor */
+        private bool CreateShader()
+        {
+            string shaderPath = "data/" + config["materials"][config_index]["name"].Value<string>() + ".fx";
+
+            string baseShader = Properties.Resources.shader_template.ToString();
+            List<string> baseShaderList = new List<string>(Regex.Split(baseShader, Environment.NewLine));
+            List<string> finalShaderList = new List<string>();
+
+            for (int i = 0; i < baseShaderList.Count; i++)
+            {
+                if (baseShaderList[i] == "%CUSTOM_PARAMS%")
+                {
+                    //add in custom param code here
+                    
+                    continue;
+                }
+                if (baseShaderList[i] == "%CUSTOM_PIXEL_SHADER%")
+                {
+                    //add in custom param code here
+
+                    continue;
+                }
+                finalShaderList.Add(baseShaderList[i]);
+            }
+
+            if (File.Exists(shaderPath)) File.Delete(shaderPath);
+            File.WriteAllLines(shaderPath, finalShaderList);
+            return true;
         }
     }
 }

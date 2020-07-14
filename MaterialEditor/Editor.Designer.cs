@@ -50,6 +50,8 @@
             this.saveMaterial = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.pixelShaderCode = new System.Windows.Forms.RichTextBox();
+            this.optionsListLabel = new System.Windows.Forms.Label();
+            this.parameterOptionsList = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.parameterEditWindow.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -154,6 +156,8 @@
             // 
             // parameterEditWindow
             // 
+            this.parameterEditWindow.Controls.Add(this.optionsListLabel);
+            this.parameterEditWindow.Controls.Add(this.parameterOptionsList);
             this.parameterEditWindow.Controls.Add(this.bindVariableText);
             this.parameterEditWindow.Controls.Add(this.parameterBindVariable);
             this.parameterEditWindow.Controls.Add(this.saveParameter);
@@ -275,6 +279,23 @@
             this.pixelShaderCode.TabIndex = 0;
             this.pixelShaderCode.Text = "";
             // 
+            // optionsListLabel
+            // 
+            this.optionsListLabel.AutoSize = true;
+            this.optionsListLabel.Location = new System.Drawing.Point(6, 99);
+            this.optionsListLabel.Name = "optionsListLabel";
+            this.optionsListLabel.Size = new System.Drawing.Size(211, 13);
+            this.optionsListLabel.TabIndex = 16;
+            this.optionsListLabel.Text = "Options (split options by comma - no space)";
+            // 
+            // parameterOptionsList
+            // 
+            this.parameterOptionsList.CharacterCasing = System.Windows.Forms.CharacterCasing.Lower;
+            this.parameterOptionsList.Location = new System.Drawing.Point(9, 115);
+            this.parameterOptionsList.Name = "parameterOptionsList";
+            this.parameterOptionsList.Size = new System.Drawing.Size(255, 20);
+            this.parameterOptionsList.TabIndex = 15;
+            // 
             // Editor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -322,5 +343,7 @@
         private System.Windows.Forms.Button saveMaterial;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.RichTextBox pixelShaderCode;
+        private System.Windows.Forms.Label optionsListLabel;
+        private System.Windows.Forms.TextBox parameterOptionsList;
     }
 }

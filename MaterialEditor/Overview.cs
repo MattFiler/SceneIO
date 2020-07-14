@@ -62,6 +62,8 @@ namespace MaterialEditor
             if (materialList.SelectedIndex == -1) return;
             DialogResult shouldDo = MessageBox.Show("Are you sure you wish to delete this material?", "Confirmation...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (shouldDo != DialogResult.Yes) return;
+            string shaderPath = "data/" + comp_json_config["materials"][materialList.SelectedIndex]["name"].Value<string>() + ".fx";
+            if (File.Exists(shaderPath)) File.Delete(shaderPath);
             comp_json_config["materials"][materialList.SelectedIndex].Remove();
             File.WriteAllText("data/material_config.json", comp_json_config.ToString(Formatting.Indented));
             ReloadList();
