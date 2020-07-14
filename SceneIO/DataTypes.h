@@ -21,14 +21,14 @@ enum class DataTypes {
 class DataType {
 public:
 	static DataTypes TypeStringToEnum(std::string _t) {
-		if (_t == "rgb") return DataTypes::RGB;
-		if (_t == "string") return DataTypes::STRING;
-		if (_t == "float") return DataTypes::FLOAT;
-		if (_t == "int") return DataTypes::INTEGER;
-		if (_t == "uint") return DataTypes::UNSIGNED_INTEGER;
-		if (_t == "bool") return DataTypes::BOOLEAN;
-		if (_t == "array") return DataTypes::FLOAT_ARRAY;
-		if (_t == "options") return DataTypes::OPTIONS_LIST;
+		if (_t == "RGB") return DataTypes::RGB;
+		if (_t == "STRING") return DataTypes::STRING;
+		if (_t == "FLOAT") return DataTypes::FLOAT;
+		if (_t == "INTEGER") return DataTypes::INTEGER;
+		if (_t == "UNSIGNED_INTEGER") return DataTypes::UNSIGNED_INTEGER;
+		if (_t == "BOOLEAN") return DataTypes::BOOLEAN;
+		if (_t == "FLOAT_ARRAY") return DataTypes::FLOAT_ARRAY;
+		if (_t == "OPTIONS_LIST") return DataTypes::OPTIONS_LIST;
 		throw new std::invalid_argument("Could not match type string to enum value!");
 	}
 	DataTypes type;

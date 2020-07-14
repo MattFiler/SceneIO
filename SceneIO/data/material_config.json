@@ -2,26 +2,26 @@
 	"materials": [
 		{
 			"name": "diffuse",
-			"type": "surface",
+			"type": "SURFACE",
 			"parameters": [
 				{
 					"name": "Albedo",
-					"type": "rgb",
+					"type": "RGB",
 					"binding": "b0"
 				},
 				{
 					"name": "Albedo Texture",
-					"type": "string",
+					"type": "STRING",
 					"binding": "t0"
 				},
 				{
 					"name": "Normal Map",
-					"type": "string",
+					"type": "STRING",
 					"binding": "t1"
 				},
 				{
 					"name": "TEST OPTIONS!",
-					"type": "options",
+					"type": "OPTIONS_LIST",
 					"values": ["TEST1", "TEST2"]
 				}
 			],
@@ -32,29 +32,29 @@
 		},
 		{
 			"name": "diffuse_alt",
-			"type": "surface",
+			"type": "SURFACE",
 			"parameters": [
 				{
 					"name": "Albedo",
-					"type": "rgb",
+					"type": "RGB",
 					"binding": "b0"
 				},
 				{
 					"name": "Exponent",
-					"type": "float"
+					"type": "FLOAT"
 				},
 				{
 					"name": "Diffuse Weight",
-					"type": "float"
+					"type": "FLOAT"
 				},
 				{
 					"name": "Albedo Texture",
-					"type": "string",
+					"type": "STRING",
 					"binding": "t0"
 				},
 				{
 					"name": "Normal Map",
-					"type": "string",
+					"type": "STRING",
 					"binding": "t1"
 				}
 			],
