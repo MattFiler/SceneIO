@@ -36,6 +36,7 @@ namespace MaterialEditor
             {
                 materialList.Items.Add(config_entry["name"]);
             }
+            this.BringToFront();
         }
 
         /* Create a new material */
@@ -64,6 +65,7 @@ namespace MaterialEditor
             comp_json_config["materials"][materialList.SelectedIndex].Remove();
             File.WriteAllText("data/material_config.json", comp_json_config.ToString(Formatting.Indented));
             ReloadList();
+            MessageBox.Show("Deleted material!", "Deleted.", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

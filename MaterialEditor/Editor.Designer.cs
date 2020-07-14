@@ -42,7 +42,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.parameterType = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
+            this.bindVariableText = new System.Windows.Forms.Label();
             this.parameterBindVariable = new System.Windows.Forms.TextBox();
             this.deleteParam = new System.Windows.Forms.Button();
             this.createParam = new System.Windows.Forms.Button();
@@ -82,6 +82,7 @@
             this.parameterIsBound.TabIndex = 2;
             this.parameterIsBound.Text = "Is Bound To Shader";
             this.parameterIsBound.UseVisualStyleBackColor = true;
+            this.parameterIsBound.CheckedChanged += new System.EventHandler(this.parameterIsBound_CheckedChanged);
             // 
             // materialName
             // 
@@ -153,7 +154,7 @@
             // 
             // parameterEditWindow
             // 
-            this.parameterEditWindow.Controls.Add(this.label6);
+            this.parameterEditWindow.Controls.Add(this.bindVariableText);
             this.parameterEditWindow.Controls.Add(this.parameterBindVariable);
             this.parameterEditWindow.Controls.Add(this.saveParameter);
             this.parameterEditWindow.Controls.Add(this.parameterType);
@@ -186,6 +187,7 @@
             this.parameterType.Name = "parameterType";
             this.parameterType.Size = new System.Drawing.Size(255, 21);
             this.parameterType.TabIndex = 12;
+            this.parameterType.SelectedIndexChanged += new System.EventHandler(this.parameterType_SelectedIndexChanged);
             // 
             // label5
             // 
@@ -196,14 +198,14 @@
             this.label5.TabIndex = 11;
             this.label5.Text = "Type";
             // 
-            // label6
+            // bindVariableText
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 122);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(69, 13);
-            this.label6.TabIndex = 14;
-            this.label6.Text = "Bind Variable";
+            this.bindVariableText.AutoSize = true;
+            this.bindVariableText.Location = new System.Drawing.Point(6, 122);
+            this.bindVariableText.Name = "bindVariableText";
+            this.bindVariableText.Size = new System.Drawing.Size(69, 13);
+            this.bindVariableText.TabIndex = 14;
+            this.bindVariableText.Text = "Bind Variable";
             // 
             // parameterBindVariable
             // 
@@ -312,7 +314,7 @@
         private System.Windows.Forms.Button createParam;
         private System.Windows.Forms.Button deleteParam;
         private System.Windows.Forms.GroupBox parameterEditWindow;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label bindVariableText;
         private System.Windows.Forms.TextBox parameterBindVariable;
         private System.Windows.Forms.ComboBox parameterType;
         private System.Windows.Forms.Label label5;

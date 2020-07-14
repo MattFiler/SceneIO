@@ -1,9 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -94,9 +96,10 @@ namespace MaterialEditor
             DialogResult shouldDo = MessageBox.Show("Are you sure you wish to delete this parameter?", "Confirmation...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (shouldDo != DialogResult.Yes) return;
 
-            config["materials"][config_index]["parameters"][edit_param_index].Remove();
+            config["materials"][config_index]["parameters"][materialParameters.SelectedIndex].Remove();
 
             RefreshParamList();
+            MessageBox.Show("Deleted parameter!", "Deleted.", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         /* Save the selected parameter properties */
@@ -114,23 +117,72 @@ namespace MaterialEditor
             JObject thisParamData = (JObject)config["materials"][config_index]["parameters"][edit_param_index];
             thisParamData["name"] = parameterName.Text;
             thisParamData["type"] = parameterType.SelectedItem.ToString();
-            if (parameterIsBound.Checked)
-            {
-                thisParamData["binding"] = "tbd";
-            }
-            else
-            {
-                thisParamData["binding"] = null;
-            }
+            if (parameterIsBound.Checked) thisParamData["binding"] = parameterBindVariable.Text;
+            else thisParamData["binding"] = null;
 
             parameterEditWindow.Visible = false;
             RefreshParamList();
+            MessageBox.Show("Saved parameter!", "Saved.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        /* Change available options based on type selection */
+        private void parameterType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            parameterIsBound.Checked = false;
+            parameterIsBound.Visible = (parameterType.SelectedItem.ToString() == "RGB" || parameterType.SelectedItem.ToString() == "STRING");
+            bindVariableText.Visible = false;
+            parameterBindVariable.Visible = false;
+        }
+
+        /* Only show bind if checked */
+        private void parameterIsBound_CheckedChanged(object sender, EventArgs e)
+        {
+            parameterBindVariable.Visible = parameterIsBound.Checked;
+            bindVariableText.Visible = parameterBindVariable.Visible;
+            //TODO: Calculate variable name
         }
 
         /* Save the config back out if valid */
         private void saveMaterial_Click(object sender, EventArgs e)
         {
-            //todo
+            if (materialParameters.Items.Count == 0)
+            {
+                MessageBox.Show("Material must have at least one parameter.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            bool hasBindable = false;
+            for (int i = 0; i < materialParameters.Items.Count; i++)
+            {
+                if (config["materials"][config_index]["parameters"][i]["binding"] != null)
+                {
+                    hasBindable = true;
+                    break;
+                }
+            }
+            if (!hasBindable)
+            {
+                MessageBox.Show("Material must have at least one bound parameter.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (materialName.Text == "")
+            {
+                MessageBox.Show("Material must have a name.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (pixelShaderCode.Text == "")
+            {
+                MessageBox.Show("Material must have pixel shader code.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            JObject thisMatData = (JObject)config["materials"][config_index];
+            thisMatData["name"] = materialName.Text;
+            thisMatData["type"] = materialType.SelectedItem.ToString();
+            thisMatData["pixel_shader"]["code"] = pixelShaderCode.Text;
+
+            File.WriteAllText("data/material_config.json", config.ToString(Formatting.Indented));
+            MessageBox.Show("Material saved!", "Saved.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.Close();
         }
     }
 }
