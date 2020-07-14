@@ -188,12 +188,13 @@ void DebugCube::SetTexture(std::string filename)
 	setTex = false;
 	Debug::Log("Setting DebugCube texture to " + filename);
 
-	//Load texture file
-	ID3D11ShaderResourceView* newTex;
-	std::string texPath = "data/" + filename + ".dds";
-	std::wstring widestr = std::wstring(texPath.begin(), texPath.end());
-	HR(CreateDDSTextureFromFile(Shared::m_pDevice, widestr.c_str(), nullptr, &newTex));
-	materialTexture = newTex;
+	thisTexture = Utilities::LoadTexture(filename);
+	if (thisTexture != nullptr) {
+		materialTexture = thisTexture->textureView;
+	}
+	else {
+		materialTexture = nullptr;
+	}
 
 	setTex = true;
 #endif

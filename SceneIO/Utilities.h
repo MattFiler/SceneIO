@@ -76,6 +76,12 @@ struct SimpleVertex
 	XMFLOAT3 Normal;
 };
 
+struct SimpleVertexAlt
+{
+	XMFLOAT3 Pos;
+	XMFLOAT2 Tex;
+};
+
 struct Ray {
 	XMFLOAT3 origin;
 	XMFLOAT3 direction;

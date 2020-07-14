@@ -29,7 +29,8 @@ private:
 	ID3D11Buffer* GO_VertexBuffer = nullptr;
 	ID3D11Buffer* GO_IndexBuffer = nullptr;
 	ID3D11SamplerState* g_pSamplerLinear = nullptr;
-	ID3D11ShaderResourceView* materialTexture = nullptr;
+	ID3D11ShaderResourceView* materialTexture = nullptr; 
+	Texture* thisTexture = nullptr;
 	ID3D11VertexShader* GO_VertexShader = nullptr;
 	ID3D11PixelShader* GO_PixelShader = nullptr;
 	ID3D11InputLayout* GO_VertLayout = nullptr;
