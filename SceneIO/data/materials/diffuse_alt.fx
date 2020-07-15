@@ -1,4 +1,5 @@
-%CUSTOM_TEXTURES%
+Texture2D albedoTexture : register(t0);
+Texture2D normalMap : register(t1);
 SamplerState samLinear : register(s0);
 
 cbuffer ConstantBuffer : register(b0)
@@ -8,7 +9,9 @@ cbuffer ConstantBuffer : register(b0)
 	matrix Projection;
 }
 
-%CUSTOM_CBUFFERS%
+cbuffer ConstantBuffer1 : register(b1) {
+    float4 albedoColour;
+}
 
 struct VS_INPUT
 {
@@ -40,5 +43,5 @@ PS_INPUT VS( VS_INPUT input )
 
 float4 PS( PS_INPUT input) : SV_Target
 {
-%CUSTOM_PIXEL_SHADER%
+	return saturate((albedoTexture.Sample( samLinear, input.Tex ) * albedoColour) + (saturate((input.Norm.x + input.Norm.y + input.Norm.z)/3)));
 }

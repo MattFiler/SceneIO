@@ -40,43 +40,12 @@ SharedModelBuffers::SharedModelBuffers(std::string filepath)
 	sampDesc.MinLOD = 0;
 	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 	HR(Shared::m_pDevice->CreateSamplerState(&sampDesc, &g_pSamplerLinear));
-
-	//Compile the vertex shader
-	ID3DBlob* pVSBlob = nullptr;
-	HR(Utilities::CompileShaderFromFile(L"data/ObjectShader.fx", "VS", "vs_4_0", &pVSBlob));
-
-	//Create the vertex shader
-	HR(Shared::m_pDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &m_vertexShader));
-
-	//Define the input layout
-	D3D11_INPUT_ELEMENT_DESC layout[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-	UINT numElements = ARRAYSIZE(layout);
-
-	//Create the input layout
-	HR(Shared::m_pDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &m_vertexLayout));
-	pVSBlob->Release();
-
-	//Compile the pixel shader
-	ID3DBlob* pPSBlob = nullptr;
-	HR(Utilities::CompileShaderFromFile(L"data/ObjectShader.fx", "PS", "ps_4_0", &pPSBlob));
-
-	//Create the pixel shader
-	HR(Shared::m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &m_pixelShader));
-	pPSBlob->Release();
 }
 
 /* Clear all buffers */
 SharedModelBuffers::~SharedModelBuffers()
 {
 	Memory::SafeRelease(g_pVertexBuffer);
-	Memory::SafeRelease(m_vertexShader);
-	Memory::SafeRelease(m_pixelShader);
-
 	for (int i = 0; i < allModels.size(); i++) {
 		delete allModels[i];
 	}
@@ -100,10 +69,6 @@ void SharedModelBuffers::Render(XMMATRIX mWorld, std::vector<DynamicMaterial>* m
 		return;
 	}
 
-	//Set shaders to use
-	Shared::m_pImmediateContext->VSSetShader(m_vertexShader, nullptr, 0);
-	Shared::m_pImmediateContext->PSSetShader(m_pixelShader, nullptr, 0);
-
 	//Set vertex buffer 
 	UINT stride = sizeof(SimpleVertex);
 	UINT offset = 0;
@@ -112,11 +77,9 @@ void SharedModelBuffers::Render(XMMATRIX mWorld, std::vector<DynamicMaterial>* m
 	//Set sampler
 	Shared::m_pImmediateContext->PSSetSamplers(0, 1, &g_pSamplerLinear);
 
-	//Set input layout (submeshes don't use GO render state, so we can do this here)
-	Shared::m_pImmediateContext->IASetInputLayout(m_vertexLayout);
-
 	//Render each model part
 	for (int i = 0; i < allModels.size(); i++) {
+		materials->at(i).SetShader();
 		allModels[i]->Render(mWorld, &materials->at(i));
 	}
 }

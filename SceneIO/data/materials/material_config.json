@@ -1,0 +1,71 @@
+{
+  "materials": [
+    {
+      "name": "diffuse",
+      "type": "SURFACE",
+      "parameters": [
+        {
+          "name": "albedoColour",
+          "type": "RGB",
+          "is_bound": true
+        },
+        {
+          "name": "albedoTexture",
+          "type": "TEXTURE_FILEPATH",
+          "is_bound": true
+        },
+        {
+          "name": "normalMap",
+          "type": "TEXTURE_FILEPATH",
+          "is_bound": true
+        },
+        {
+          "name": "testOptions",
+          "type": "OPTIONS_LIST",
+          "is_bound": false,
+          "values": [
+            "TEST1",
+            "TEST2"
+          ]
+        }
+      ],
+      "pixel_shader": {
+        "code": "return saturate((txDiffuse2.Sample( samLinear, input.Tex ) * colourTint) + (saturate((input.Norm.x + input.Norm.y + input.Norm.z)/3)));"
+      }
+    },
+    {
+      "name": "diffuse_alt",
+      "type": "SURFACE",
+      "parameters": [
+        {
+          "name": "albedoColour",
+          "type": "RGB",
+          "is_bound": true
+        },
+        {
+          "name": "exponent",
+          "type": "FLOAT",
+          "is_bound": false
+        },
+        {
+          "name": "diffuseWeight",
+          "type": "FLOAT",
+          "is_bound": false
+        },
+        {
+          "name": "albedoTexture",
+          "type": "TEXTURE_FILEPATH",
+          "is_bound": true
+        },
+        {
+          "name": "normalMap",
+          "type": "TEXTURE_FILEPATH",
+          "is_bound": true
+        }
+      ],
+      "pixel_shader": {
+        "code": "return saturate((albedoTexture.Sample( samLinear, input.Tex ) * albedoColour) + (saturate((input.Norm.x + input.Norm.y + input.Norm.z)/3)));"
+      }
+    }
+  ]
+}

@@ -30,7 +30,7 @@ namespace MaterialEditor
         }
         private void ReloadList()
         {
-            comp_json_config = JObject.Parse(File.ReadAllText("data/material_config.json"));
+            comp_json_config = JObject.Parse(File.ReadAllText("data/materials/material_config.json"));
             materialList.Items.Clear();
             foreach (JObject config_entry in comp_json_config["materials"])
             {
@@ -65,7 +65,7 @@ namespace MaterialEditor
             string shaderPath = "data/" + comp_json_config["materials"][materialList.SelectedIndex]["name"].Value<string>() + ".fx";
             if (File.Exists(shaderPath)) File.Delete(shaderPath);
             comp_json_config["materials"][materialList.SelectedIndex].Remove();
-            File.WriteAllText("data/material_config.json", comp_json_config.ToString(Formatting.Indented));
+            File.WriteAllText("data/materials/material_config.json", comp_json_config.ToString(Formatting.Indented));
             ReloadList();
             MessageBox.Show("Deleted material!", "Deleted.", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }

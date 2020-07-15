@@ -63,15 +63,15 @@ void ModelManager::ModelManagerUI()
 	ImGui::PopStyleVar();
 
 	if (ImGui::Button("Add Suzanne")) {
-		LoadTestModel("data/test.obj");
+		LoadTestModel("data/test_models/test.obj");
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Add Grid")) {
-		LoadTestModel("data/test_grid.obj");
+		LoadTestModel("data/test_models/test_grid.obj");
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Add Boltgun")) {
-		LoadTestModel("data/boltgun_test_triangulated.obj");
+		LoadTestModel("data/test_models/boltgun_test_triangulated.obj");
 	}
 
 	/*

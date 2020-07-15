@@ -87,7 +87,7 @@ namespace MaterialEditor
             JObject thisParamData = (JObject)config["materials"][config_index]["parameters"][edit_param_index];
             parameterName.Text = thisParamData["name"].Value<string>();
             parameterType.SelectedItem = thisParamData["type"].Value<string>().ToUpper();
-            parameterIsBound.Checked = (thisParamData["binding"] != null);
+            parameterIsBound.Checked = thisParamData["is_bound"].Value<bool>();
             if (parameterType.SelectedItem.ToString() == "OPTIONS_LIST")
             {
                 optionsListLabel.Visible = true;
@@ -124,6 +124,11 @@ namespace MaterialEditor
                 MessageBox.Show("Parameter requires a name.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            if (parameterName.Text.Contains(" "))
+            {
+                MessageBox.Show("Parameter name cannot contain spaces.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             if (parameterType.SelectedItem.ToString() == "OPTIONS_LIST" && parameterOptionsList.Text == "")
             {
                 MessageBox.Show("Options list requires pre-set options.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -148,8 +153,7 @@ namespace MaterialEditor
             JObject thisParamData = (JObject)config["materials"][config_index]["parameters"][edit_param_index];
             thisParamData["name"] = parameterName.Text;
             thisParamData["type"] = parameterType.SelectedItem.ToString();
-            if (parameterIsBound.Visible && parameterIsBound.Checked) thisParamData["binding"] = parameterBindVariable.Text;
-            else if (thisParamData["binding"] != null) thisParamData.Remove("binding");
+            thisParamData["is_bound"] = (parameterIsBound.Visible && parameterIsBound.Checked);
 
             if (thisParamData["type"].Value<string>() == "OPTIONS_LIST")
             {
@@ -176,19 +180,9 @@ namespace MaterialEditor
         {
             parameterIsBound.Checked = false;
             parameterIsBound.Visible = (parameterType.SelectedItem.ToString() == "RGB" || parameterType.SelectedItem.ToString() == "TEXTURE_FILEPATH");
-            bindVariableText.Visible = false;
-            parameterBindVariable.Visible = false;
             parameterOptionsList.Text = "";
             parameterOptionsList.Visible = parameterType.SelectedItem.ToString() == "OPTIONS_LIST";
             optionsListLabel.Visible = parameterOptionsList.Visible;
-        }
-
-        /* Only show bind if checked */
-        private void parameterIsBound_CheckedChanged(object sender, EventArgs e)
-        {
-            parameterBindVariable.Visible = parameterIsBound.Checked;
-            bindVariableText.Visible = parameterBindVariable.Visible;
-            //TODO: Calculate variable name
         }
 
         /* Save the config back out if valid */
@@ -202,11 +196,8 @@ namespace MaterialEditor
             bool hasBindable = false;
             for (int i = 0; i < materialParameters.Items.Count; i++)
             {
-                if (config["materials"][config_index]["parameters"][i]["binding"] != null)
-                {
-                    hasBindable = true;
-                    break;
-                }
+                hasBindable = config["materials"][config_index]["parameters"][i]["is_bound"].Value<bool>();
+                break;
             }
             if (!hasBindable)
             {
@@ -235,7 +226,7 @@ namespace MaterialEditor
                 return;
             }
 
-            File.WriteAllText("data/material_config.json", config.ToString(Formatting.Indented));
+            File.WriteAllText("data/materials/material_config.json", config.ToString(Formatting.Indented));
             MessageBox.Show("Material saved!", "Saved.", MessageBoxButtons.OK, MessageBoxIcon.Information);
             this.Close();
         }
@@ -243,23 +234,50 @@ namespace MaterialEditor
         /* Create the shader for this material in-editor */
         private bool CreateShader(JObject thisMatData)
         {
-            string shaderPath = "data/" + config["materials"][config_index]["name"].Value<string>() + ".fx";
+            string shaderPath = "data/materials/" + config["materials"][config_index]["name"].Value<string>() + ".fx";
 
             string baseShader = Properties.Resources.shader_template.ToString();
             List<string> baseShaderList = new List<string>(Regex.Split(baseShader, Environment.NewLine));
             List<string> finalShaderList = new List<string>();
 
+            JArray allParams = (JArray)thisMatData["parameters"];
+            int texBuffCount = 0;
+            int cBuffCount = 1; //We have one base constant buffer
+
             for (int i = 0; i < baseShaderList.Count; i++)
             {
-                if (baseShaderList[i] == "%CUSTOM_PARAMS%")
+                if (baseShaderList[i] == "%CUSTOM_TEXTURES%")
                 {
-                    //add in custom param code here
-                    
+                    for (int x = 0; x < allParams.Count; x++) {
+                        if (allParams[x]["type"].Value<string>() == "TEXTURE_FILEPATH")
+                        {
+                            finalShaderList.Add("Texture2D " + allParams[x]["name"].Value<string>() + " : register(t" + texBuffCount + ");");
+                            texBuffCount++;
+                        }
+                    }
+                    continue;
+                }
+                if (baseShaderList[i] == "%CUSTOM_CBUFFERS%")
+                {
+                    for (int x = 0; x < allParams.Count; x++)
+                    {
+                        if (allParams[x]["type"].Value<string>() == "RGB")
+                        {
+                            finalShaderList.Add("cbuffer ConstantBuffer" + cBuffCount + " : register(b" + cBuffCount + ") {");
+                            finalShaderList.Add("    float4 " + allParams[x]["name"].Value<string>() + ";");
+                            finalShaderList.Add("}");
+                            cBuffCount++;
+                        }
+                    }
                     continue;
                 }
                 if (baseShaderList[i] == "%CUSTOM_PIXEL_SHADER%")
                 {
-                    finalShaderList.AddRange(new List<string>(Regex.Split(thisMatData["pixel_shader"]["code"].Value<string>(), Environment.NewLine)));
+                    List<string> pixelCode = new List<string>(Regex.Split(thisMatData["pixel_shader"]["code"].Value<string>(), Environment.NewLine));
+                    for (int x = 0; x < pixelCode.Count; x++)
+                    {
+                        finalShaderList.Add("\t" + pixelCode[x]);
+                    }
                     continue;
                 }
                 finalShaderList.Add(baseShaderList[i]);

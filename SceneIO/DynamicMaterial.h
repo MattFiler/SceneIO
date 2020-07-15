@@ -14,7 +14,10 @@ class DynamicMaterial {
 public:
 	DynamicMaterial(json _config);
 	DynamicMaterial(const DynamicMaterial& cpy);
-	~DynamicMaterial() = default;
+	~DynamicMaterial() {
+		Memory::SafeRelease(m_vertexShader);
+		Memory::SafeRelease(m_pixelShader);
+	}
 
 	std::string GetName() {
 		return name;
@@ -45,6 +48,12 @@ public:
 		return &parameters;
 	}
 
+	void SetShader() {
+		Shared::m_pImmediateContext->VSSetShader(m_vertexShader, nullptr, 0);
+		Shared::m_pImmediateContext->PSSetShader(m_pixelShader, nullptr, 0);
+		Shared::m_pImmediateContext->IASetInputLayout(m_vertexLayout);
+	}
+
 private:
 	void Setup();
 
@@ -52,4 +61,8 @@ private:
 	MaterialSurfaceTypes type = MaterialSurfaceTypes::SURFACE;
 	std::vector<MaterialParameter> parameters = std::vector<MaterialParameter>();
 	json config;
+
+	ID3D11VertexShader* m_vertexShader = nullptr;
+	ID3D11PixelShader* m_pixelShader = nullptr;
+	ID3D11InputLayout* m_vertexLayout = nullptr;
 };

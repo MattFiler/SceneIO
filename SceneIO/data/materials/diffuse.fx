@@ -1,18 +1,16 @@
-//NEW NON POINT LIGHT OBJECT SHADER
-//STILL TAKES IN POINT LIGHT B/C REASONS
+Texture2D albedoTexture : register(t0);
+Texture2D normalMap : register(t1);
+SamplerState samLinear : register(s0);
 
-Texture2D txDiffuse : register( t0 );
-SamplerState samLinear : register( s0 );
-
-cbuffer ConstantBuffer : register( b0 )
+cbuffer ConstantBuffer : register(b0)
 {
 	matrix World;
 	matrix View;
 	matrix Projection;
-	float4 colourTint;
-	float4 ambientLight;
-	float4 pointlightPosition; //W is used for intensity here
-	float4 pointlightColour;
+}
+
+cbuffer ConstantBuffer1 : register(b1) {
+    float4 albedoColour;
 }
 
 struct VS_INPUT
@@ -30,7 +28,6 @@ struct PS_INPUT
     float3 Norm : NORMAL;
 };
 
-//Base Vertex Shader
 PS_INPUT VS( VS_INPUT input )
 {
     PS_INPUT output = (PS_INPUT)0;
@@ -44,9 +41,7 @@ PS_INPUT VS( VS_INPUT input )
     return output;
 }
 
-//Base Pixel Shader
 float4 PS( PS_INPUT input) : SV_Target
 {
-	float4 colouredTex = colourTint;
-    return saturate((ambientLight * colouredTex) + (saturate((input.Norm.x + input.Norm.y + input.Norm.z)/3)*ambientLight));
+	return saturate((albedoTexture.Sample( samLinear, input.Tex ) * albedoColour) + (saturate((input.Norm.x + input.Norm.y + input.Norm.z)/3)));
 }

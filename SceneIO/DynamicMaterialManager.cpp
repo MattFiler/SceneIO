@@ -7,7 +7,7 @@
 DynamicMaterialManager::DynamicMaterialManager()
 {
 	json config;
-	std::fstream cmd_js("data/material_config.json");
+	std::fstream cmd_js("data/materials/material_config.json");
 	cmd_js >> config;
 
 	for (int i = 0; i < config["materials"].size(); i++) {

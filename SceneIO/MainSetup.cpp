@@ -306,10 +306,10 @@ bool MainSetup::InitImGUI()
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	io.Fonts->AddFontFromFileTTF("data\\Ruda-Bold.ttf", 14);
-	io.Fonts->AddFontFromFileTTF("data\\Ruda-Bold.ttf", 12);
-	io.Fonts->AddFontFromFileTTF("data\\Ruda-Bold.ttf", 16);
-	io.Fonts->AddFontFromFileTTF("data\\Ruda-Bold.ttf", 20);
+	io.Fonts->AddFontFromFileTTF("data\\ui_resources\\Ruda-Bold.ttf", 14);
+	io.Fonts->AddFontFromFileTTF("data\\ui_resources\\Ruda-Bold.ttf", 12);
+	io.Fonts->AddFontFromFileTTF("data\\ui_resources\\Ruda-Bold.ttf", 16);
+	io.Fonts->AddFontFromFileTTF("data\\ui_resources\\Ruda-Bold.ttf", 20);
 
 	InputHandler::Setup();
 

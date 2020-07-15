@@ -17,6 +17,7 @@ DynamicMaterial::DynamicMaterial(const DynamicMaterial& cpy)
 /* Initialise the dynamic material */
 void DynamicMaterial::Setup()
 {
+	//Setup base material values
 	name = config["name"].get<std::string>();
 	
 	std::string typeString = config["type"].get<std::string>();
@@ -27,4 +28,34 @@ void DynamicMaterial::Setup()
 	for (int i = 0; i < config["parameters"].size(); i++) {
 		parameters.emplace_back(config["parameters"][i]);
 	}
+
+	//Compile the vertex shader
+	ID3DBlob* pVSBlob = nullptr;
+	std::string s = "data/materials/" + name + ".fx";
+	std::wstring stemp = std::wstring(s.begin(), s.end());
+	HR(Utilities::CompileShaderFromFile(stemp.c_str(), "VS", "vs_4_0", &pVSBlob));
+
+	//Create the vertex shader
+	HR(Shared::m_pDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &m_vertexShader));
+
+	//Define the input layout
+	D3D11_INPUT_ELEMENT_DESC layout[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+	UINT numElements = ARRAYSIZE(layout);
+
+	//Create the input layout
+	HR(Shared::m_pDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &m_vertexLayout));
+	pVSBlob->Release();
+
+	//Compile the pixel shader
+	ID3DBlob* pPSBlob = nullptr;
+	HR(Utilities::CompileShaderFromFile(stemp.c_str(), "PS", "ps_4_0", &pPSBlob));
+
+	//Create the pixel shader
+	HR(Shared::m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &m_pixelShader));
+	pPSBlob->Release();
 }

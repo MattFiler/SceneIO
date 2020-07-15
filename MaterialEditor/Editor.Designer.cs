@@ -42,8 +42,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.parameterType = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.bindVariableText = new System.Windows.Forms.Label();
-            this.parameterBindVariable = new System.Windows.Forms.TextBox();
             this.deleteParam = new System.Windows.Forms.Button();
             this.createParam = new System.Windows.Forms.Button();
             this.editParam = new System.Windows.Forms.Button();
@@ -59,7 +57,7 @@
             // 
             // saveParameter
             // 
-            this.saveParameter.Location = new System.Drawing.Point(147, 164);
+            this.saveParameter.Location = new System.Drawing.Point(147, 141);
             this.saveParameter.Name = "saveParameter";
             this.saveParameter.Size = new System.Drawing.Size(117, 28);
             this.saveParameter.TabIndex = 0;
@@ -84,7 +82,6 @@
             this.parameterIsBound.TabIndex = 2;
             this.parameterIsBound.Text = "Is Bound To Shader";
             this.parameterIsBound.UseVisualStyleBackColor = true;
-            this.parameterIsBound.CheckedChanged += new System.EventHandler(this.parameterIsBound_CheckedChanged);
             // 
             // materialName
             // 
@@ -158,8 +155,6 @@
             // 
             this.parameterEditWindow.Controls.Add(this.optionsListLabel);
             this.parameterEditWindow.Controls.Add(this.parameterOptionsList);
-            this.parameterEditWindow.Controls.Add(this.bindVariableText);
-            this.parameterEditWindow.Controls.Add(this.parameterBindVariable);
             this.parameterEditWindow.Controls.Add(this.saveParameter);
             this.parameterEditWindow.Controls.Add(this.parameterType);
             this.parameterEditWindow.Controls.Add(this.label5);
@@ -168,7 +163,7 @@
             this.parameterEditWindow.Controls.Add(this.parameterName);
             this.parameterEditWindow.Location = new System.Drawing.Point(12, 364);
             this.parameterEditWindow.Name = "parameterEditWindow";
-            this.parameterEditWindow.Size = new System.Drawing.Size(274, 201);
+            this.parameterEditWindow.Size = new System.Drawing.Size(274, 178);
             this.parameterEditWindow.TabIndex = 11;
             this.parameterEditWindow.TabStop = false;
             this.parameterEditWindow.Text = "Parameter";
@@ -202,24 +197,6 @@
             this.label5.TabIndex = 11;
             this.label5.Text = "Type";
             // 
-            // bindVariableText
-            // 
-            this.bindVariableText.AutoSize = true;
-            this.bindVariableText.Location = new System.Drawing.Point(6, 122);
-            this.bindVariableText.Name = "bindVariableText";
-            this.bindVariableText.Size = new System.Drawing.Size(69, 13);
-            this.bindVariableText.TabIndex = 14;
-            this.bindVariableText.Text = "Bind Variable";
-            // 
-            // parameterBindVariable
-            // 
-            this.parameterBindVariable.CharacterCasing = System.Windows.Forms.CharacterCasing.Lower;
-            this.parameterBindVariable.Location = new System.Drawing.Point(9, 138);
-            this.parameterBindVariable.Name = "parameterBindVariable";
-            this.parameterBindVariable.ReadOnly = true;
-            this.parameterBindVariable.Size = new System.Drawing.Size(255, 20);
-            this.parameterBindVariable.TabIndex = 13;
-            // 
             // deleteParam
             // 
             this.deleteParam.Location = new System.Drawing.Point(9, 307);
@@ -252,9 +229,9 @@
             // 
             // saveMaterial
             // 
-            this.saveMaterial.Location = new System.Drawing.Point(826, 517);
+            this.saveMaterial.Location = new System.Drawing.Point(1006, 498);
             this.saveMaterial.Name = "saveMaterial";
-            this.saveMaterial.Size = new System.Drawing.Size(127, 48);
+            this.saveMaterial.Size = new System.Drawing.Size(149, 44);
             this.saveMaterial.TabIndex = 12;
             this.saveMaterial.Text = "Save";
             this.saveMaterial.UseVisualStyleBackColor = true;
@@ -265,7 +242,7 @@
             this.groupBox3.Controls.Add(this.pixelShaderCode);
             this.groupBox3.Location = new System.Drawing.Point(292, 12);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(661, 499);
+            this.groupBox3.Size = new System.Drawing.Size(863, 480);
             this.groupBox3.TabIndex = 13;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Pixel Shader Code";
@@ -275,7 +252,7 @@
             this.pixelShaderCode.DetectUrls = false;
             this.pixelShaderCode.Location = new System.Drawing.Point(6, 20);
             this.pixelShaderCode.Name = "pixelShaderCode";
-            this.pixelShaderCode.Size = new System.Drawing.Size(649, 467);
+            this.pixelShaderCode.Size = new System.Drawing.Size(851, 451);
             this.pixelShaderCode.TabIndex = 0;
             this.pixelShaderCode.Text = "";
             // 
@@ -300,7 +277,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(965, 576);
+            this.ClientSize = new System.Drawing.Size(1167, 552);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.saveMaterial);
             this.Controls.Add(this.parameterEditWindow);
@@ -335,8 +312,6 @@
         private System.Windows.Forms.Button createParam;
         private System.Windows.Forms.Button deleteParam;
         private System.Windows.Forms.GroupBox parameterEditWindow;
-        private System.Windows.Forms.Label bindVariableText;
-        private System.Windows.Forms.TextBox parameterBindVariable;
         private System.Windows.Forms.ComboBox parameterType;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
