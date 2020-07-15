@@ -9,8 +9,6 @@ public:
 	DynamicMaterialManager();
 	~DynamicMaterialManager() = default;
 
-	void Update();
-
 	//We don't return materials as pointers, as to create clones of their instances for per-Model useage
 	DynamicMaterial GetMaterial(std::string name) {
 		for (int i = 0; i < materials.size(); i++) {
@@ -34,9 +32,5 @@ public:
 	}
 
 private:
-	void MaterialManagerUI();
-	void MaterialConfigUI();
-
 	std::vector<DynamicMaterial> materials = std::vector<DynamicMaterial>();
-	int selectedMaterialUI = -1;
 };

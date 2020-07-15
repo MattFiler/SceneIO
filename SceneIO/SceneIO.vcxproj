@@ -166,7 +166,8 @@
     <PostBuildEvent>
       <Command>Xcopy /E /I /Y "$(SolutionDir)plugins" "$(SolutionDir)$(OutDir)plugins"
 Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"
-copy "$(SolutionDir)freeimage\x32\FreeImage.dll" "$(SolutionDir)$(OutDir)"</Command>
+copy "$(SolutionDir)freeimage\x32\FreeImage.dll" "$(SolutionDir)$(OutDir)"
+copy "$(SolutionDir)imgui.ini" "$(SolutionDir)$(OutDir)"</Command>
     </PostBuildEvent>
     <Link>
       <AdditionalLibraryDirectories>freeimage/x32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -185,7 +186,8 @@ copy "$(SolutionDir)freeimage\x32\FreeImage.dll" "$(SolutionDir)$(OutDir)"</Comm
     <PostBuildEvent>
       <Command>Xcopy /E /I /Y "$(SolutionDir)plugins" "$(SolutionDir)$(OutDir)plugins"
 Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"
-copy "$(SolutionDir)freeimage\x64\FreeImage.dll" "$(SolutionDir)$(OutDir)"</Command>
+copy "$(SolutionDir)freeimage\x64\FreeImage.dll" "$(SolutionDir)$(OutDir)"
+copy "$(SolutionDir)imgui.ini" "$(SolutionDir)$(OutDir)"</Command>
     </PostBuildEvent>
     <Link>
       <AdditionalLibraryDirectories>freeimage/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -212,7 +214,8 @@ copy "$(SolutionDir)freeimage\x64\FreeImage.dll" "$(SolutionDir)$(OutDir)"</Comm
     <PostBuildEvent>
       <Command>Xcopy /E /I /Y "$(SolutionDir)plugins" "$(SolutionDir)$(OutDir)plugins"
 Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"
-copy "$(SolutionDir)freeimage\x32\FreeImage.dll" "$(SolutionDir)$(OutDir)"</Command>
+copy "$(SolutionDir)freeimage\x32\FreeImage.dll" "$(SolutionDir)$(OutDir)"
+copy "$(SolutionDir)imgui.ini" "$(SolutionDir)$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -235,7 +238,8 @@ copy "$(SolutionDir)freeimage\x32\FreeImage.dll" "$(SolutionDir)$(OutDir)"</Comm
     <PostBuildEvent>
       <Command>Xcopy /E /I /Y "$(SolutionDir)plugins" "$(SolutionDir)$(OutDir)plugins"
 Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"
-copy "$(SolutionDir)freeimage\x64\FreeImage.dll" "$(SolutionDir)$(OutDir)"</Command>
+copy "$(SolutionDir)freeimage\x64\FreeImage.dll" "$(SolutionDir)$(OutDir)"
+copy "$(SolutionDir)imgui.ini" "$(SolutionDir)$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -59,7 +59,6 @@ bool EditorScene::Update(double dt)
 	ImGui::End();
 
 	modelManager->Update(dt);
-	Shared::materialManager->Update();
 
 	GameObjectManager::Update(dt);
 
