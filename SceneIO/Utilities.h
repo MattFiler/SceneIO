@@ -200,7 +200,6 @@ struct Texture {
 		Memory::SafeRelease(texture);
 		Memory::SafeDelete(texture);
 		Memory::SafeDelete(textureBuffer);
-		Debug::Log("unloading tex");
 	}
 	ID3D11Texture2D* texture = nullptr;
 	ID3D11ShaderResourceView* textureView = nullptr;
