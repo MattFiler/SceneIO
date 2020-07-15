@@ -61,12 +61,39 @@ namespace MaterialEditor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
+        ///   Looks up a localized string similar to Texture2D txDiffuse : register( t0 );
+        ///SamplerState samLinear : register( s0 );
+        ///
+        ///cbuffer ConstantBuffer : register( b0 )
+        ///{
+        ///	matrix World;
+        ///	matrix View;
+        ///	matrix Projection;
+        ///%CUSTOM_PARAMS%
+        ///}
+        ///
+        ///struct VS_INPUT
+        ///{
+        ///    float4 Pos : POSITION;
+        ///    float2 Tex : TEXCOORD0;
+        ///    float3 Norm : NORMAL;
+        ///};
+        ///
+        ///struct PS_INPUT
+        ///{
+        ///    float4 Pos : SV_POSITION;
+        ///    float4 WorldPos : POSITION;
+        ///    float2 Tex : TEXCOORD0;
+        ///    float3 Norm : NORMAL;
+        ///};
+        ///
+        ///PS_INPUT VS( VS_INPUT input )
+        ///{
+        ///    PS_INPUT output = [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static byte[] shader_template {
+        internal static string shader_template {
             get {
-                object obj = ResourceManager.GetObject("shader_template", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetString("shader_template", resourceCulture);
             }
         }
     }

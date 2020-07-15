@@ -11,12 +11,12 @@
         },
         {
           "name": "Albedo Texture",
-          "type": "STRING",
+          "type": "TEXTURE_FILEPATH",
           "binding": "t0"
         },
         {
           "name": "Normal Map",
-          "type": "STRING",
+          "type": "TEXTURE_FILEPATH",
           "binding": "t1"
         },
         {
@@ -51,12 +51,12 @@
         },
         {
           "name": "Albedo Texture",
-          "type": "STRING",
+          "type": "TEXTURE_FILEPATH",
           "binding": "t0"
         },
         {
           "name": "Normal Map",
-          "type": "STRING",
+          "type": "TEXTURE_FILEPATH",
           "binding": "t1"
         }
       ],

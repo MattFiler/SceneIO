@@ -32,6 +32,10 @@ public:
 				value = new DataTypeRGB();
 				break;
 			}
+			case DataTypes::TEXTURE_FILEPATH: {
+				value = new DataTypeTextureFilepath();
+				break;
+			}
 			case DataTypes::STRING: {
 				value = new DataTypeString();
 				break;
@@ -62,6 +66,7 @@ public:
 			}
 		}
 		value->type = newType;
+		value->SetupBindable(); //Not all datatypes are bindable, but this is safe to call for any for ease of use.
 	}
 
 	std::string name = "";

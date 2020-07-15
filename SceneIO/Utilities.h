@@ -102,10 +102,6 @@ struct ConstantBuffer
 	XMMATRIX mWorld;
 	XMMATRIX mView;
 	XMMATRIX mProjection;
-	XMFLOAT4 colourTint;
-	XMFLOAT4 ambientLight;
-	XMFLOAT4 pointlightPosition; //W is used for intensity
-	XMFLOAT4 pointlightColour;
 };
 
 struct ConstantBufferAlt

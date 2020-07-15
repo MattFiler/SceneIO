@@ -226,6 +226,11 @@ void ModelManager::MaterialDropdownUI(Model* model, int submeshID)
 				ImGui::InputFloat3(inputLabel.c_str(), param->value.AsFloatArray());
 				break;
 			}
+			case DataTypes::TEXTURE_FILEPATH: {
+				DataTypeTextureFilepath* param = static_cast<DataTypeTextureFilepath*>(thisParam->value);
+				ImGui::InputText(inputLabel.c_str(), &param->value);
+				break;
+			}
 			case DataTypes::STRING: {
 				DataTypeString* param = static_cast<DataTypeString*>(thisParam->value);
 				ImGui::InputText(inputLabel.c_str(), &param->value);
@@ -278,7 +283,7 @@ void ModelManager::MaterialDropdownUI(Model* model, int submeshID)
 
 	//Allow reload of texture (TODO: this needs to be done dynamically based on shader data)
 	if (ImGui::Button(("RELOAD TEXTURE FOR S" + std::to_string(submeshID)).c_str())) {
-		DataTypeString* tempTest = static_cast<DataTypeString*>(model->GetSubmeshMaterial(submeshID)->GetParameter("Albedo Texture")->value);
+		DataTypeTextureFilepath* tempTest = static_cast<DataTypeTextureFilepath*>(model->GetSubmeshMaterial(submeshID)->GetParameter("Albedo Texture")->value);
 		model->SetSubmeshRenderable(submeshID, Utilities::LoadTexture(tempTest->value));
 	}
 }

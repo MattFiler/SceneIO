@@ -25,8 +25,6 @@ SharedModelPart::SharedModelPart(LoadedModelPart _m)
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	bd.CPUAccessFlags = 0;
 	HR(Shared::m_pDevice->CreateBuffer(&bd, nullptr, &g_pConstantBuffer));
-
-	texture = Utilities::LoadTexture("F://test.PNG"); //TESTING ONLY
 }
 
 /* Destroy our model part */
@@ -34,34 +32,32 @@ SharedModelPart::~SharedModelPart()
 {
 	Memory::SafeRelease(g_pIndexBuffer);
 	Memory::SafeRelease(g_pConstantBuffer);
-	Memory::SafeDelete(texture);
 }
 
 /* Render our model part */
 void SharedModelPart::Render(XMMATRIX world, DynamicMaterial* material)
 {
-	//TODO: This will need reworking to be dynamic to the content in the Dynamic Material - just pulling Albedo colour for now
-	//Remember wherever the texture ends up getting defined to use Memory::SafeRelease to release it on texture change/unload (probably in Model)
-
-	//Update and set constant buffer
+	//Update and main constant buffer with world info
+	int cbCount = 0;
 	ConstantBuffer cb;
 	cb.mWorld = XMMatrixTranspose(world);
 	cb.mView = XMMatrixTranspose(Shared::mView);
 	cb.mProjection = XMMatrixTranspose(Shared::mProjection);
-	DataTypeRGB* rgbVal = static_cast<DataTypeRGB*>(material->GetParameter("Albedo")->value);
-	//Debug::Log(XMFLOAT3(rgbVal->value.R, rgbVal->value.G, rgbVal->value.B));
-	cb.colourTint = XMFLOAT4(rgbVal->value.R, rgbVal->value.G, rgbVal->value.B, 1.0f);
-	//cb.numOfLights = (LightManager::GetLightCount() > 10) ? 10 : LightManager::GetLightCount();
-	//for (int i = 0; i < 10; i++) {
-		//if (i >= LightManager::GetLightCount()) break;
-		XMFLOAT3 pos = GameObjectManager::GetLights()[0]->GetPosition();
-		cb.pointlightPosition = XMFLOAT4(pos.x, pos.y, pos.z, GameObjectManager::GetLights()[0]->GetIntensity());
-		cb.pointlightColour = GameObjectManager::GetLights()[0]->GetColour();
-	//}
-	cb.ambientLight = Shared::ambientLightColour;
 	Shared::m_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 	Shared::m_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
 	Shared::m_pImmediateContext->PSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+	cbCount++;
+
+	//Update dynamic material constant buffers
+	for (int i = 0; i < material->GetParameterCount(); i++) {
+		if (material->GetParameter(i)->isBound) {
+			ID3D11Buffer* g_pConstantBuffer = material->GetParameter(i)->value->GetBindable();
+			if (g_pConstantBuffer == nullptr) continue;
+			Shared::m_pImmediateContext->VSSetConstantBuffers(cbCount, 1, &g_pConstantBuffer);
+			Shared::m_pImmediateContext->PSSetConstantBuffers(cbCount, 1, &g_pConstantBuffer);
+			cbCount++;
+		}
+	}
 
 	//Set index buffer and draw
 	Shared::m_pImmediateContext->IASetIndexBuffer(g_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);

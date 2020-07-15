@@ -35,6 +35,7 @@ namespace MaterialEditor
 
             /* POPULATE PARAMETER TYPES (should match DataTypes enum in DataTypes.h) */
             parameterType.Items.Add("RGB");
+            parameterType.Items.Add("TEXTURE_FILEPATH");
             parameterType.Items.Add("STRING");
             parameterType.Items.Add("FLOAT");
             parameterType.Items.Add("INTEGER");
@@ -174,7 +175,7 @@ namespace MaterialEditor
         private void parameterType_SelectedIndexChanged(object sender, EventArgs e)
         {
             parameterIsBound.Checked = false;
-            parameterIsBound.Visible = (parameterType.SelectedItem.ToString() == "RGB" || parameterType.SelectedItem.ToString() == "STRING");
+            parameterIsBound.Visible = (parameterType.SelectedItem.ToString() == "RGB" || parameterType.SelectedItem.ToString() == "TEXTURE_FILEPATH");
             bindVariableText.Visible = false;
             parameterBindVariable.Visible = false;
             parameterOptionsList.Text = "";
@@ -228,7 +229,7 @@ namespace MaterialEditor
             thisMatData["type"] = materialType.SelectedItem.ToString();
             thisMatData["pixel_shader"]["code"] = pixelShaderCode.Text;
 
-            if (!CreateShader())
+            if (!CreateShader(thisMatData))
             {
                 MessageBox.Show("Couldn't generate shader.\nPlease check pixel shader code.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -240,7 +241,7 @@ namespace MaterialEditor
         }
 
         /* Create the shader for this material in-editor */
-        private bool CreateShader()
+        private bool CreateShader(JObject thisMatData)
         {
             string shaderPath = "data/" + config["materials"][config_index]["name"].Value<string>() + ".fx";
 
@@ -258,8 +259,7 @@ namespace MaterialEditor
                 }
                 if (baseShaderList[i] == "%CUSTOM_PIXEL_SHADER%")
                 {
-                    //add in custom param code here
-
+                    finalShaderList.AddRange(new List<string>(Regex.Split(thisMatData["pixel_shader"]["code"].Value<string>(), Environment.NewLine)));
                     continue;
                 }
                 finalShaderList.Add(baseShaderList[i]);

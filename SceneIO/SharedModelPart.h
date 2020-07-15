@@ -16,8 +16,6 @@ private:
 	ID3D11Buffer* g_pConstantBuffer = nullptr;
 	ID3D11Buffer* g_pIndexBuffer = nullptr;
 
-	Texture* texture = nullptr;
-
 	LoadedModelPart modelMetaData = LoadedModelPart();
 
 	int indexCount = 0;

@@ -1,14 +1,14 @@
 #pragma once
 
-#include <vector>
-#include <string>
 #include <stdexcept>
+#include "Utilities.h"
 
 /* Inheritable datatypes for dynamic casting */
 
 //This should match the values and order in Shared.cpp
 enum class DataTypes {
 	RGB,
+	TEXTURE_FILEPATH,
 	STRING,
 	FLOAT,
 	INTEGER,
@@ -16,22 +16,6 @@ enum class DataTypes {
 	BOOLEAN,
 	FLOAT_ARRAY,
 	OPTIONS_LIST,
-};
-
-class DataType {
-public:
-	static DataTypes TypeStringToEnum(std::string _t) {
-		if (_t == "RGB") return DataTypes::RGB;
-		if (_t == "STRING") return DataTypes::STRING;
-		if (_t == "FLOAT") return DataTypes::FLOAT;
-		if (_t == "INTEGER") return DataTypes::INTEGER;
-		if (_t == "UNSIGNED_INTEGER") return DataTypes::UNSIGNED_INTEGER;
-		if (_t == "BOOLEAN") return DataTypes::BOOLEAN;
-		if (_t == "FLOAT_ARRAY") return DataTypes::FLOAT_ARRAY;
-		if (_t == "OPTIONS_LIST") return DataTypes::OPTIONS_LIST;
-		throw new std::invalid_argument("Could not match type string to enum value!");
-	}
-	DataTypes type;
 };
 
 class RGBValue
@@ -47,11 +31,86 @@ public:
 	float B = 0.0f;
 };
 
-class DataTypeRGB : public DataType {
+class ConstantBufferRGB {
 public:
-	RGBValue value = RGBValue();
+	XMFLOAT4 colourVal = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 };
 
+/* Base datatype with static string to enum helper function for type conversion */
+class DataType {
+public:
+	static DataTypes TypeStringToEnum(std::string _t) {
+		if (_t == "RGB") return DataTypes::RGB;
+		if (_t == "TEXTURE_FILEPATH") return DataTypes::TEXTURE_FILEPATH;
+		if (_t == "STRING") return DataTypes::STRING;
+		if (_t == "FLOAT") return DataTypes::FLOAT;
+		if (_t == "INTEGER") return DataTypes::INTEGER;
+		if (_t == "UNSIGNED_INTEGER") return DataTypes::UNSIGNED_INTEGER;
+		if (_t == "BOOLEAN") return DataTypes::BOOLEAN;
+		if (_t == "FLOAT_ARRAY") return DataTypes::FLOAT_ARRAY;
+		if (_t == "OPTIONS_LIST") return DataTypes::OPTIONS_LIST;
+		throw new std::invalid_argument("Could not match type string to enum value!");
+	}
+	DataTypes type;
+
+	const bool canBeBound = false;
+	virtual void SetupBindable() {}; //This can be called for any type, but will only effect canBeBound types
+	virtual ID3D11Buffer* GetBindable() { return nullptr; }; //This will return nullptr for non-bindables
+};
+
+/* These datatypes can be bound to our shader, so they hold their own constant buffer resources */
+class DataTypeRGB : public DataType {
+public:
+	~DataTypeRGB() {
+		Memory::SafeRelease(g_pConstantBuffer);
+	}
+
+	RGBValue value = RGBValue();
+	const bool canBeBound = true;
+
+	void SetupBindable() override {
+		D3D11_BUFFER_DESC bd;
+		ZeroMemory(&bd, sizeof(bd));
+		bd.Usage = D3D11_USAGE_DEFAULT;
+		bd.ByteWidth = sizeof(ConstantBufferRGB);
+		bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		bd.CPUAccessFlags = 0;
+		Shared::m_pDevice->CreateBuffer(&bd, nullptr, &g_pConstantBuffer);
+	}
+	ID3D11Buffer* GetBindable() override {
+		rgbConstant.colourVal.x = value.R;
+		rgbConstant.colourVal.y = value.G;
+		rgbConstant.colourVal.z = value.B;
+		Shared::m_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, nullptr, &rgbConstant, 0, 0);
+		return g_pConstantBuffer;
+	}
+
+private:
+	ConstantBufferRGB rgbConstant = ConstantBufferRGB();
+	ID3D11Buffer* g_pConstantBuffer = nullptr;
+};
+
+class DataTypeTextureFilepath : public DataType {
+public:
+	~DataTypeTextureFilepath() {
+		Memory::SafeRelease(g_pConstantBuffer);
+	}
+
+	std::string value = "";
+	const bool canBeBound = true;
+
+	void SetupBindable() override {
+
+	}
+	ID3D11Buffer* GetBindable() override {
+		return nullptr;
+	}
+
+private:
+	ID3D11Buffer* g_pConstantBuffer = nullptr;
+};
+
+/* Any following datatypes cannot be bound to our shader, and are used purely for the API */
 class DataTypeString : public DataType {
 public:
 	std::string value = "";
