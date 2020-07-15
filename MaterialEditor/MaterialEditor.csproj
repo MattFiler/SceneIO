@@ -61,6 +61,12 @@
     <Compile Include="Editor.Designer.cs">
       <DependentUpon>Editor.cs</DependentUpon>
     </Compile>
+    <Compile Include="OtherShaderVariablesWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OtherShaderVariablesWindow.Designer.cs">
+      <DependentUpon>OtherShaderVariablesWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Overview.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -71,6 +77,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Editor.resx">
       <DependentUpon>Editor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OtherShaderVariablesWindow.resx">
+      <DependentUpon>OtherShaderVariablesWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Overview.resx">
       <DependentUpon>Overview.cs</DependentUpon>

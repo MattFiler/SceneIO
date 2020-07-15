@@ -30,11 +30,11 @@
         }
       ],
       "pixel_shader": {
-        "code": "return saturate((txDiffuse2.Sample( samLinear, input.Tex ) * colourTint) + (saturate((input.Norm.x + input.Norm.y + input.Norm.z)/3)));"
+        "code": "return saturate((albedoTexture.Sample( samLinear, input.Tex ) * albedoColour) + (saturate((input.Norm.x + input.Norm.y + input.Norm.z)/3)));"
       }
     },
     {
-      "name": "diffuse_alt",
+      "name": "diffuseAlt",
       "type": "SURFACE",
       "parameters": [
         {

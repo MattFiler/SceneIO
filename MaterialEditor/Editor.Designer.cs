@@ -38,18 +38,19 @@
             this.materialType = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.editParam = new System.Windows.Forms.Button();
+            this.createParam = new System.Windows.Forms.Button();
+            this.deleteParam = new System.Windows.Forms.Button();
             this.parameterEditWindow = new System.Windows.Forms.GroupBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.optionsListLabel = new System.Windows.Forms.Label();
+            this.parameterOptionsList = new System.Windows.Forms.TextBox();
             this.parameterType = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.deleteParam = new System.Windows.Forms.Button();
-            this.createParam = new System.Windows.Forms.Button();
-            this.editParam = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
             this.saveMaterial = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.pixelShaderCode = new System.Windows.Forms.RichTextBox();
-            this.optionsListLabel = new System.Windows.Forms.Label();
-            this.parameterOptionsList = new System.Windows.Forms.TextBox();
+            this.showOtherVars = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.parameterEditWindow.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -151,6 +152,36 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Material Core";
             // 
+            // editParam
+            // 
+            this.editParam.Location = new System.Drawing.Point(96, 307);
+            this.editParam.Name = "editParam";
+            this.editParam.Size = new System.Drawing.Size(81, 28);
+            this.editParam.TabIndex = 18;
+            this.editParam.Text = "Edit";
+            this.editParam.UseVisualStyleBackColor = true;
+            this.editParam.Click += new System.EventHandler(this.editParam_Click);
+            // 
+            // createParam
+            // 
+            this.createParam.Location = new System.Drawing.Point(183, 307);
+            this.createParam.Name = "createParam";
+            this.createParam.Size = new System.Drawing.Size(81, 28);
+            this.createParam.TabIndex = 17;
+            this.createParam.Text = "New";
+            this.createParam.UseVisualStyleBackColor = true;
+            this.createParam.Click += new System.EventHandler(this.createParam_Click);
+            // 
+            // deleteParam
+            // 
+            this.deleteParam.Location = new System.Drawing.Point(9, 307);
+            this.deleteParam.Name = "deleteParam";
+            this.deleteParam.Size = new System.Drawing.Size(81, 28);
+            this.deleteParam.TabIndex = 16;
+            this.deleteParam.Text = "Delete";
+            this.deleteParam.UseVisualStyleBackColor = true;
+            this.deleteParam.Click += new System.EventHandler(this.deleteParam_Click);
+            // 
             // parameterEditWindow
             // 
             this.parameterEditWindow.Controls.Add(this.optionsListLabel);
@@ -169,14 +200,22 @@
             this.parameterEditWindow.Text = "Parameter";
             this.parameterEditWindow.Visible = false;
             // 
-            // label4
+            // optionsListLabel
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 20);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(35, 13);
-            this.label4.TabIndex = 10;
-            this.label4.Text = "Name";
+            this.optionsListLabel.AutoSize = true;
+            this.optionsListLabel.Location = new System.Drawing.Point(6, 99);
+            this.optionsListLabel.Name = "optionsListLabel";
+            this.optionsListLabel.Size = new System.Drawing.Size(211, 13);
+            this.optionsListLabel.TabIndex = 16;
+            this.optionsListLabel.Text = "Options (split options by comma - no space)";
+            // 
+            // parameterOptionsList
+            // 
+            this.parameterOptionsList.CharacterCasing = System.Windows.Forms.CharacterCasing.Lower;
+            this.parameterOptionsList.Location = new System.Drawing.Point(9, 115);
+            this.parameterOptionsList.Name = "parameterOptionsList";
+            this.parameterOptionsList.Size = new System.Drawing.Size(255, 20);
+            this.parameterOptionsList.TabIndex = 15;
             // 
             // parameterType
             // 
@@ -197,35 +236,14 @@
             this.label5.TabIndex = 11;
             this.label5.Text = "Type";
             // 
-            // deleteParam
+            // label4
             // 
-            this.deleteParam.Location = new System.Drawing.Point(9, 307);
-            this.deleteParam.Name = "deleteParam";
-            this.deleteParam.Size = new System.Drawing.Size(81, 28);
-            this.deleteParam.TabIndex = 16;
-            this.deleteParam.Text = "Delete";
-            this.deleteParam.UseVisualStyleBackColor = true;
-            this.deleteParam.Click += new System.EventHandler(this.deleteParam_Click);
-            // 
-            // createParam
-            // 
-            this.createParam.Location = new System.Drawing.Point(183, 307);
-            this.createParam.Name = "createParam";
-            this.createParam.Size = new System.Drawing.Size(81, 28);
-            this.createParam.TabIndex = 17;
-            this.createParam.Text = "New";
-            this.createParam.UseVisualStyleBackColor = true;
-            this.createParam.Click += new System.EventHandler(this.createParam_Click);
-            // 
-            // editParam
-            // 
-            this.editParam.Location = new System.Drawing.Point(96, 307);
-            this.editParam.Name = "editParam";
-            this.editParam.Size = new System.Drawing.Size(81, 28);
-            this.editParam.TabIndex = 18;
-            this.editParam.Text = "Edit";
-            this.editParam.UseVisualStyleBackColor = true;
-            this.editParam.Click += new System.EventHandler(this.editParam_Click);
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 20);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(35, 13);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "Name";
             // 
             // saveMaterial
             // 
@@ -239,6 +257,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.showOtherVars);
             this.groupBox3.Controls.Add(this.pixelShaderCode);
             this.groupBox3.Location = new System.Drawing.Point(292, 12);
             this.groupBox3.Name = "groupBox3";
@@ -250,28 +269,22 @@
             // pixelShaderCode
             // 
             this.pixelShaderCode.DetectUrls = false;
+            this.pixelShaderCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pixelShaderCode.Location = new System.Drawing.Point(6, 20);
             this.pixelShaderCode.Name = "pixelShaderCode";
-            this.pixelShaderCode.Size = new System.Drawing.Size(851, 451);
+            this.pixelShaderCode.Size = new System.Drawing.Size(851, 428);
             this.pixelShaderCode.TabIndex = 0;
             this.pixelShaderCode.Text = "";
             // 
-            // optionsListLabel
+            // showOtherVars
             // 
-            this.optionsListLabel.AutoSize = true;
-            this.optionsListLabel.Location = new System.Drawing.Point(6, 99);
-            this.optionsListLabel.Name = "optionsListLabel";
-            this.optionsListLabel.Size = new System.Drawing.Size(211, 13);
-            this.optionsListLabel.TabIndex = 16;
-            this.optionsListLabel.Text = "Options (split options by comma - no space)";
-            // 
-            // parameterOptionsList
-            // 
-            this.parameterOptionsList.CharacterCasing = System.Windows.Forms.CharacterCasing.Lower;
-            this.parameterOptionsList.Location = new System.Drawing.Point(9, 115);
-            this.parameterOptionsList.Name = "parameterOptionsList";
-            this.parameterOptionsList.Size = new System.Drawing.Size(255, 20);
-            this.parameterOptionsList.TabIndex = 15;
+            this.showOtherVars.Location = new System.Drawing.Point(6, 451);
+            this.showOtherVars.Name = "showOtherVars";
+            this.showOtherVars.Size = new System.Drawing.Size(188, 23);
+            this.showOtherVars.TabIndex = 1;
+            this.showOtherVars.Text = "Other Shader Variables";
+            this.showOtherVars.UseVisualStyleBackColor = true;
+            this.showOtherVars.Click += new System.EventHandler(this.showOtherVars_Click);
             // 
             // Editor
             // 
@@ -320,5 +333,6 @@
         private System.Windows.Forms.RichTextBox pixelShaderCode;
         private System.Windows.Forms.Label optionsListLabel;
         private System.Windows.Forms.TextBox parameterOptionsList;
+        private System.Windows.Forms.Button showOtherVars;
     }
 }

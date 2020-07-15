@@ -129,6 +129,11 @@ namespace MaterialEditor
                 MessageBox.Show("Parameter name cannot contain spaces.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            if (!Regex.IsMatch(materialName.Text, @"^[a-zA-Z]+$"))
+            {
+                MessageBox.Show("Parameter name cannot contain numbers or special characters.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             if (parameterType.SelectedItem.ToString() == "OPTIONS_LIST" && parameterOptionsList.Text == "")
             {
                 MessageBox.Show("Options list requires pre-set options.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -209,6 +214,16 @@ namespace MaterialEditor
                 MessageBox.Show("Material must have a name.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            if (materialName.Text.Contains(" "))
+            {
+                MessageBox.Show("Material name cannot contain spaces.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (!Regex.IsMatch(materialName.Text, @"^[a-zA-Z]+$"))
+            {
+                MessageBox.Show("Material name cannot contain numbers or special characters.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             if (pixelShaderCode.Text == "")
             {
                 MessageBox.Show("Material must have pixel shader code.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -286,6 +301,13 @@ namespace MaterialEditor
             if (File.Exists(shaderPath)) File.Delete(shaderPath);
             File.WriteAllLines(shaderPath, finalShaderList);
             return true;
+        }
+
+        /* Show other variables available in shader code */
+        private void showOtherVars_Click(object sender, EventArgs e)
+        {
+            OtherShaderVariablesWindow win = new OtherShaderVariablesWindow();
+            win.Show();
         }
     }
 }
