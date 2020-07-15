@@ -18,12 +18,6 @@ enum class DataTypes {
 	OPTIONS_LIST,
 };
 
-enum class BindableType {
-	NONE,
-	SHADER_TEXTURE_RESOURCE,
-	SHADER_DATA_RESOURCE,
-};
-
 class RGBValue
 {
 public:
@@ -99,6 +93,7 @@ class DataTypeTextureFilepath : public DataType {
 public:
 	~DataTypeTextureFilepath() {
 		Memory::SafeRelease(g_pConstantBuffer);
+		Memory::SafeDelete(internalTex);
 	}
 
 	std::string value = "";
@@ -106,7 +101,10 @@ public:
 	ID3D11ShaderResourceView* GetTextureBindable() override {
 		if (internalTex == nullptr) internalTex = Utilities::LoadTexture(value);
 		if (internalTex == nullptr) return nullptr;
-		if (internalTex->texturePath != value) internalTex = Utilities::LoadTexture(value);
+		if (internalTex->texturePath != value) {
+			Memory::SafeDelete(internalTex);
+			internalTex = Utilities::LoadTexture(value);
+		}
 		if (internalTex == nullptr) return nullptr;
 		return internalTex->textureView;
 	}

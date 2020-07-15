@@ -23,9 +23,13 @@ public:
 			}
 		}
 	}
+	~MaterialParameter() {
+		Release();
+	}
 
 	/* Change the datatype of this parameter (WILL RESET THE VALUE) */
 	void ChangeValueType(DataTypes newType) {
+		Release();
 		switch (newType) {
 			case DataTypes::RGB: {
 				value = new DataTypeRGB();
@@ -71,5 +75,25 @@ public:
 	std::string name = "";
 	DataType* value = nullptr;
 	bool isBound = false;
-	BindableType boundType;
+
+private:
+	void Release() {
+		if (value == nullptr) return;
+		switch (value->type) {
+			case DataTypes::RGB: {
+				DataTypeRGB* valueCast = static_cast<DataTypeRGB*>(value);
+				Memory::SafeDelete(valueCast);
+				break;
+			}
+			case DataTypes::TEXTURE_FILEPATH: {
+				DataTypeTextureFilepath* valueCast = static_cast<DataTypeTextureFilepath*>(value);
+				Memory::SafeDelete(valueCast);
+				break;
+			}
+			default: {
+				Memory::SafeDelete(value);
+				break;
+			}
+		}
+	}
 };

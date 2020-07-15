@@ -20,7 +20,6 @@ public:
 	void SetData(SharedModelBuffers* _m) {
 		modelData = _m;
 		for (int i = 0; i < modelData->GetSubmeshCount(); i++) {
-			//Currently we default to index 0, but potentially in future this will be pre-assigned.
 			materials.push_back(nullptr);
 			SetSubmeshMaterial(i, 0);
 		}
@@ -32,7 +31,7 @@ public:
 
 	//Set & get material data which is important to our API and editor
 	void SetSubmeshMaterial(int submeshIndex, int materialIndex) {
-		//This leads to a memory leak because we aren't clearing up the old DynamicMaterial - TODO: work out what the hell this issue is
+		Memory::SafeDelete(materials[submeshIndex]);
 		DynamicMaterial* materialTemplate = Shared::materialManager->GetMaterial(materialIndex);
 		materials[submeshIndex] = new DynamicMaterial(*materialTemplate);
 	}

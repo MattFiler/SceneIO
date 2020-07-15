@@ -69,6 +69,40 @@ namespace Memory
 	}
 };
 
+/* Debug logger */
+class Debug
+{
+public:
+	static void Log(std::string msg) {
+		OutputDebugString(msg.c_str());
+		OutputDebugString("\n");
+	}
+	static void Log(int msg) {
+		OutputDebugString(std::to_string(msg).c_str());
+		OutputDebugString("\n");
+	}
+	static void Log(float msg) {
+		OutputDebugString(std::to_string(msg).c_str());
+		OutputDebugString("\n");
+	}
+	static void Log(double msg) {
+		OutputDebugString(std::to_string(msg).c_str());
+		OutputDebugString("\n");
+	}
+	static void Log(unsigned long msg) {
+		OutputDebugString(std::to_string(msg).c_str());
+		OutputDebugString("\n");
+	}
+	static void Log(size_t msg) {
+		OutputDebugString(std::to_string(msg).c_str());
+		OutputDebugString("\n");
+	}
+	static void Log(DirectX::XMFLOAT3 msg) {
+		OutputDebugString(("(X: " + std::to_string(msg.x) + ", Y: " + std::to_string(msg.y) + ", Z: " + std::to_string(msg.z) + ")").c_str());
+		OutputDebugString("\n");
+	}
+};
+
 struct SimpleVertex
 {
 	XMFLOAT3 Pos;
@@ -166,46 +200,13 @@ struct Texture {
 		Memory::SafeRelease(texture);
 		Memory::SafeDelete(texture);
 		Memory::SafeDelete(textureBuffer);
+		Debug::Log("unloading tex");
 	}
 	ID3D11Texture2D* texture = nullptr;
 	ID3D11ShaderResourceView* textureView = nullptr;
 	XMFLOAT2 dimensions;
 	char* textureBuffer = nullptr;
 	std::string texturePath = "";
-};
-
-/* Debug logger */
-class Debug
-{
-public:
-	static void Log(std::string msg) {
-		OutputDebugString(msg.c_str());
-		OutputDebugString("\n");
-	}
-	static void Log(int msg) {
-		OutputDebugString(std::to_string(msg).c_str());
-		OutputDebugString("\n");
-	}
-	static void Log(float msg) {
-		OutputDebugString(std::to_string(msg).c_str());
-		OutputDebugString("\n");
-	}
-	static void Log(double msg) {
-		OutputDebugString(std::to_string(msg).c_str());
-		OutputDebugString("\n");
-	}
-	static void Log(unsigned long msg) {
-		OutputDebugString(std::to_string(msg).c_str());
-		OutputDebugString("\n");
-	}
-	static void Log(size_t msg) {
-		OutputDebugString(std::to_string(msg).c_str());
-		OutputDebugString("\n");
-	}
-	static void Log(DirectX::XMFLOAT3 msg) {
-		OutputDebugString(("(X: " + std::to_string(msg.x) + ", Y: " + std::to_string(msg.y) + ", Z: " + std::to_string(msg.z) + ")").c_str());
-		OutputDebugString("\n");
-	}
 };
 
 class Utilities

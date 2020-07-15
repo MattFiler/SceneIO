@@ -11,6 +11,11 @@ void Model::Create()
 /* Remove useage from model data */
 void Model::Release()
 {
+	for (int i = 0; i < materials.size(); i++) {
+		Memory::SafeDelete(materials[i]);
+	}
+	materials.clear();
+
 	GameObject::Release();
 	if (modelData) modelData->RemoveUsage();
 	modelData = nullptr;
