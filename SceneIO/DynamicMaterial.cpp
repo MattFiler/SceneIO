@@ -3,19 +3,24 @@
 /* Created organically */
 DynamicMaterial::DynamicMaterial(json _config)
 {
+	Debug::Log("orig construct");
 	config = _config;
-	Setup();
+	Setup(true);
 }
 
 /* Created from copy */
 DynamicMaterial::DynamicMaterial(const DynamicMaterial& cpy)
 {
+	Debug::Log("copy construct");
 	config = cpy.config;
-	Setup();
+	m_vertexLayout = cpy.m_vertexLayout;
+	m_vertexShader = cpy.m_vertexShader;
+	m_pixelShader = cpy.m_pixelShader;
+	Setup(false);
 }
 
 /* Initialise the dynamic material */
-void DynamicMaterial::Setup()
+void DynamicMaterial::Setup(bool setupShaders)
 {
 	//Setup base material values
 	name = config["name"].get<std::string>();
@@ -28,6 +33,9 @@ void DynamicMaterial::Setup()
 	for (int i = 0; i < config["parameters"].size(); i++) {
 		parameters.emplace_back(config["parameters"][i]);
 	}
+
+	if (!setupShaders) return;
+	Debug::Log("Setting up shaders for " + name);
 
 	//Compile the vertex shader
 	ID3DBlob* pVSBlob = nullptr;

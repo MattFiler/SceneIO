@@ -203,10 +203,11 @@ void ModelManager::MaterialDropdownUI(Model* model, int submeshID)
 	//Allow change of material type
 	if (ImGui::BeginCombo(("S" + std::to_string(submeshID) + " MaterialType").c_str(), thisMaterial->GetName().c_str())) {
 		for (int x = 0; x < Shared::materialManager->GetMaterialCount(); x++) {
-			DynamicMaterial ddMat = Shared::materialManager->GetMaterial(x);
-			const bool is_selected = (ddMat.GetName() == thisMaterial->GetName());
-			if (ImGui::Selectable(ddMat.GetName().c_str(), is_selected)) {
-				model->SetSubmeshMaterial(submeshID, ddMat);
+			const bool is_selected = (Shared::materialManager->GetMaterial(x)->GetName() == thisMaterial->GetName());
+			if (ImGui::Selectable(Shared::materialManager->GetMaterial(x)->GetName().c_str(), is_selected)) {
+				Debug::Log("Changing material.");
+				model->SetSubmeshMaterial(submeshID, x);
+				Debug::Log("Changed material.");
 				thisMaterial = model->GetSubmeshMaterial(submeshID);
 			}
 			if (is_selected) ImGui::SetItemDefaultFocus();

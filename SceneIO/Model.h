@@ -21,7 +21,8 @@ public:
 		modelData = _m;
 		for (int i = 0; i < modelData->GetSubmeshCount(); i++) {
 			//Currently we default to index 0, but potentially in future this will be pre-assigned.
-			materials.push_back(Shared::materialManager->GetMaterial(0));
+			materials.push_back(nullptr);
+			SetSubmeshMaterial(i, 0);
 		}
 	}
 
@@ -30,11 +31,13 @@ public:
 	}
 
 	//Set & get material data which is important to our API and editor
-	void SetSubmeshMaterial(int submeshIndex, DynamicMaterial materialType) {
-		materials[submeshIndex] = materialType;
+	void SetSubmeshMaterial(int submeshIndex, int materialIndex) {
+		//This leads to a memory leak because we aren't clearing up the old DynamicMaterial - TODO: work out what the hell this issue is
+		DynamicMaterial* materialTemplate = Shared::materialManager->GetMaterial(materialIndex);
+		materials[submeshIndex] = new DynamicMaterial(*materialTemplate);
 	}
 	DynamicMaterial* GetSubmeshMaterial(int submeshIndex) {
-		return &materials[submeshIndex];
+		return materials[submeshIndex];
 	}
 
 	bool DoesIntersect(Ray& _r, float& _d);
@@ -42,5 +45,5 @@ public:
 protected:
 	SharedModelBuffers* modelData = nullptr;
 	DirectX::BoundingOrientedBox boundingBox;
-	std::vector<DynamicMaterial> materials = std::vector<DynamicMaterial>();
+	std::vector<DynamicMaterial*> materials = std::vector<DynamicMaterial*>();
 };

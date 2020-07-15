@@ -15,6 +15,7 @@ public:
 	DynamicMaterial(json _config);
 	DynamicMaterial(const DynamicMaterial& cpy);
 	~DynamicMaterial() {
+		Debug::Log("Destructor called on " + name);
 		Memory::SafeRelease(m_vertexShader);
 		Memory::SafeRelease(m_pixelShader);
 	}
@@ -55,7 +56,7 @@ public:
 	}
 
 private:
-	void Setup();
+	void Setup(bool setupShaders);
 
 	std::string name = "";
 	MaterialSurfaceTypes type = MaterialSurfaceTypes::SURFACE;

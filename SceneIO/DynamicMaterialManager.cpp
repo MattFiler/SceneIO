@@ -11,7 +11,7 @@ DynamicMaterialManager::DynamicMaterialManager()
 	cmd_js >> config;
 
 	for (int i = 0; i < config["materials"].size(); i++) {
-		materials.emplace_back(config["materials"][i]);
+		materials.push_back(new DynamicMaterial(config["materials"][i]));
 	}
 
 	if (materials.size() == 0) {

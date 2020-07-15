@@ -10,7 +10,7 @@ public:
 	SharedModelBuffers(std::string filepath);
 	~SharedModelBuffers();
 
-	void Render(XMMATRIX mWorld, std::vector<DynamicMaterial>* materials);
+	void Render(XMMATRIX mWorld, std::vector<DynamicMaterial*> materials);
 
 	int GetVertCount() {
 		return vertexCount;
