@@ -16,6 +16,8 @@ private:
 	ID3D11Buffer* g_pConstantBuffer = nullptr;
 	ID3D11Buffer* g_pIndexBuffer = nullptr;
 
+	ID3D11ShaderResourceView* nullSRV = nullptr; //As odd as this may seem - always keep this value null!
+
 	LoadedModelPart modelMetaData = LoadedModelPart();
 
 	int indexCount = 0;

@@ -39,6 +39,7 @@ void SharedModelPart::Render(XMMATRIX world, DynamicMaterial* material)
 {
 	//Update and main constant buffer with world info
 	int cbCount = 0;
+	int texCount = 0;
 	ConstantBuffer cb;
 	cb.mWorld = XMMatrixTranspose(world);
 	cb.mView = XMMatrixTranspose(Shared::mView);
@@ -48,14 +49,20 @@ void SharedModelPart::Render(XMMATRIX world, DynamicMaterial* material)
 	Shared::m_pImmediateContext->PSSetConstantBuffers(0, 1, &g_pConstantBuffer);
 	cbCount++;
 
-	//Update dynamic material constant buffers
+	//Update dynamic material constant buffers & texture data
 	for (int i = 0; i < material->GetParameterCount(); i++) {
 		if (material->GetParameter(i)->isBound) {
-			ID3D11Buffer* g_pConstantBuffer = material->GetParameter(i)->value->GetBindable();
-			if (g_pConstantBuffer == nullptr) continue;
-			Shared::m_pImmediateContext->VSSetConstantBuffers(cbCount, 1, &g_pConstantBuffer);
-			Shared::m_pImmediateContext->PSSetConstantBuffers(cbCount, 1, &g_pConstantBuffer);
-			cbCount++;
+			ID3D11Buffer* cbRef = material->GetParameter(i)->value->GetDataBindable();
+			if (cbRef != nullptr) {
+				Shared::m_pImmediateContext->VSSetConstantBuffers(cbCount, 1, &cbRef);
+				Shared::m_pImmediateContext->PSSetConstantBuffers(cbCount, 1, &cbRef);
+				cbCount++;
+				continue;
+			}
+			//If the bound type wasn't data, it must be a shader resource view (we continue even if nullptr to keep the count correct)
+			ID3D11ShaderResourceView* texRef = material->GetParameter(i)->value->GetTextureBindable();
+			Shared::m_pImmediateContext->PSSetShaderResources(texCount, 1, &texRef);
+			texCount++;
 		}
 	}
 

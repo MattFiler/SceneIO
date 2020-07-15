@@ -35,7 +35,7 @@ void Model::Render(float dt)
 	if (!isActive) return;
 	if (isInvisible) return;
 	
-	if (modelData) modelData->Render(mWorld, &materials, &renderables);
+	if (modelData) modelData->Render(mWorld, &materials);
 }
 
 /* Check for an intersection with a ray and this model instance */

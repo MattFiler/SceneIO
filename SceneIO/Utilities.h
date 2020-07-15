@@ -171,6 +171,7 @@ struct Texture {
 	ID3D11ShaderResourceView* textureView = nullptr;
 	XMFLOAT2 dimensions;
 	char* textureBuffer = nullptr;
+	std::string texturePath = "";
 };
 
 /* Debug logger */
@@ -268,9 +269,7 @@ public:
 	/* Load an image to texture using FreeImage */
 	static Texture* LoadTexture(std::string filepath)
 	{
-		Texture* thisTex = new Texture();
 		const char* filename = filepath.c_str();
-
 		FREE_IMAGE_FORMAT format = FreeImage_GetFileType(filename, 0);
 		if (format == FREE_IMAGE_FORMAT::FIF_UNKNOWN) return nullptr;
 		FIBITMAP* image = FreeImage_Load(format, filename);
@@ -284,6 +283,8 @@ public:
 		BPP = FreeImage_GetBPP(image);
 		FreeImage_FlipVertical(image);
 
+		Texture* thisTex = new Texture();
+		thisTex->texturePath = filepath;
 		thisTex->dimensions = XMFLOAT2(FreeImage_GetWidth(image), FreeImage_GetHeight(image));
 		int imgLength = thisTex->dimensions.x * thisTex->dimensions.y * 4;
 		thisTex->textureBuffer = new char[imgLength];

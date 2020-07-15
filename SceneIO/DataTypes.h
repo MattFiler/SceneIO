@@ -18,6 +18,12 @@ enum class DataTypes {
 	OPTIONS_LIST,
 };
 
+enum class BindableType {
+	NONE,
+	SHADER_TEXTURE_RESOURCE,
+	SHADER_DATA_RESOURCE,
+};
+
 class RGBValue
 {
 public:
@@ -53,9 +59,9 @@ public:
 	}
 	DataTypes type;
 
-	const bool canBeBound = false;
 	virtual void SetupBindable() {}; //This can be called for any type, but will only effect canBeBound types
-	virtual ID3D11Buffer* GetBindable() { return nullptr; }; //This will return nullptr for non-bindables
+	virtual ID3D11Buffer* GetDataBindable() { return nullptr; }; //This will return nullptr if doesn't exist 
+	virtual ID3D11ShaderResourceView* GetTextureBindable() { return nullptr; }; //This will return nullptr if doesn't exist 
 };
 
 /* These datatypes can be bound to our shader, so they hold their own constant buffer resources */
@@ -66,7 +72,6 @@ public:
 	}
 
 	RGBValue value = RGBValue();
-	const bool canBeBound = true;
 
 	void SetupBindable() override {
 		D3D11_BUFFER_DESC bd;
@@ -77,7 +82,7 @@ public:
 		bd.CPUAccessFlags = 0;
 		Shared::m_pDevice->CreateBuffer(&bd, nullptr, &g_pConstantBuffer);
 	}
-	ID3D11Buffer* GetBindable() override {
+	ID3D11Buffer* GetDataBindable() override {
 		rgbConstant.colourVal.x = value.R;
 		rgbConstant.colourVal.y = value.G;
 		rgbConstant.colourVal.z = value.B;
@@ -97,17 +102,18 @@ public:
 	}
 
 	std::string value = "";
-	const bool canBeBound = true;
 
-	void SetupBindable() override {
-
-	}
-	ID3D11Buffer* GetBindable() override {
-		return nullptr;
+	ID3D11ShaderResourceView* GetTextureBindable() override {
+		if (internalTex == nullptr) internalTex = Utilities::LoadTexture(value);
+		if (internalTex == nullptr) return nullptr;
+		if (internalTex->texturePath != value) internalTex = Utilities::LoadTexture(value);
+		if (internalTex == nullptr) return nullptr;
+		return internalTex->textureView;
 	}
 
 private:
 	ID3D11Buffer* g_pConstantBuffer = nullptr;
+	Texture* internalTex = nullptr;
 };
 
 /* Any following datatypes cannot be bound to our shader, and are used purely for the API */

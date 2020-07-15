@@ -280,12 +280,6 @@ void ModelManager::MaterialDropdownUI(Model* model, int submeshID)
 
 		if (i == thisMaterial->GetParameterCount() - 1) ImGui::Separator();
 	}
-
-	//Allow reload of texture (TODO: this needs to be done dynamically based on shader data)
-	if (ImGui::Button(("RELOAD TEXTURE FOR S" + std::to_string(submeshID)).c_str())) {
-		DataTypeTextureFilepath* tempTest = static_cast<DataTypeTextureFilepath*>(model->GetSubmeshMaterial(submeshID)->GetParameter("Albedo Texture")->value);
-		model->SetSubmeshRenderable(submeshID, Utilities::LoadTexture(tempTest->value));
-	}
 }
 
 /* Select a model given a ray through the scene */

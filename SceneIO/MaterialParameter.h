@@ -72,5 +72,6 @@ public:
 	std::string name = "";
 	DataType* value = nullptr;
 	bool isBound = false;
+	BindableType boundType;
 	std::string bind = "";
 };

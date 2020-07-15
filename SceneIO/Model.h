@@ -22,7 +22,6 @@ public:
 		for (int i = 0; i < modelData->GetSubmeshCount(); i++) {
 			//Currently we default to index 0, but potentially in future this will be pre-assigned.
 			materials.push_back(Shared::materialManager->GetMaterial(0));
-			renderables.push_back(nullptr);
 		}
 	}
 
@@ -38,20 +37,10 @@ public:
 		return &materials[submeshIndex];
 	}
 
-	//Get & set renderable texture data which is important to the editor ONLY
-	void SetSubmeshRenderable(int submeshIndex, Texture* renderableTex) {
-		if (renderables[submeshIndex] != nullptr) Memory::SafeDelete(renderables[submeshIndex]);
-		renderables[submeshIndex] = renderableTex;
-	}
-	Texture* GetSubmeshRenderable(int submeshIndex) {
-		return renderables[submeshIndex];
-	}
-
 	bool DoesIntersect(Ray& _r, float& _d);
 
 protected:
 	SharedModelBuffers* modelData = nullptr;
 	DirectX::BoundingOrientedBox boundingBox;
 	std::vector<DynamicMaterial> materials = std::vector<DynamicMaterial>();
-	std::vector<Texture*> renderables = std::vector<Texture*>();
 };

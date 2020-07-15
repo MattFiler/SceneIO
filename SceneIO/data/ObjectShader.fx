@@ -1,7 +1,5 @@
-//NEW NON POINT LIGHT OBJECT SHADER
-//STILL TAKES IN POINT LIGHT B/C REASONS
-
 Texture2D txDiffuse : register( t0 );
+Texture2D txDiffuse2 : register( t1 );
 SamplerState samLinear : register( s0 );
 
 cbuffer ConstantBuffer : register( b0 )
@@ -48,5 +46,5 @@ PS_INPUT VS( VS_INPUT input )
 //Base Pixel Shader
 float4 PS( PS_INPUT input) : SV_Target
 {
-    return saturate((txDiffuse.Sample( samLinear, input.Tex ) * colourTint) + (saturate((input.Norm.x + input.Norm.y + input.Norm.z)/3)));
+    return saturate((txDiffuse2.Sample( samLinear, input.Tex ) * colourTint) + (saturate((input.Norm.x + input.Norm.y + input.Norm.z)/3)));
 }
