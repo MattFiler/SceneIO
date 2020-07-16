@@ -205,9 +205,7 @@ void ModelManager::MaterialDropdownUI(Model* model, int submeshID)
 		for (int x = 0; x < Shared::materialManager->GetMaterialCount(); x++) {
 			const bool is_selected = (Shared::materialManager->GetMaterial(x)->GetName() == thisMaterial->GetName());
 			if (ImGui::Selectable(Shared::materialManager->GetMaterial(x)->GetName().c_str(), is_selected)) {
-				Debug::Log("Changing material.");
 				model->SetSubmeshMaterial(submeshID, x);
-				Debug::Log("Changed material.");
 				thisMaterial = model->GetSubmeshMaterial(submeshID);
 			}
 			if (is_selected) ImGui::SetItemDefaultFocus();

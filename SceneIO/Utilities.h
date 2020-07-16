@@ -12,6 +12,8 @@
 #include "FreeImage.h"
 #include "InputHandler.h"
 
+#include "Common.h"
+
 #include <string>
 #include <vector>
 #include <fstream>
@@ -103,13 +105,6 @@ public:
 	}
 };
 
-struct SimpleVertex
-{
-	XMFLOAT3 Pos;
-	XMFLOAT2 Tex;
-	XMFLOAT3 Normal;
-};
-
 struct SimpleVertexAlt
 {
 	XMFLOAT3 Pos;
@@ -143,54 +138,6 @@ struct ConstantBufferAlt
 	XMMATRIX mWorld;
 	XMMATRIX mView;
 	XMMATRIX mProjection;
-};
-
-struct VertexGroup
-{
-	int v; //Vertex
-	int c; //Tex coord
-	int n; //Normal
-	bool set = false;
-};
-
-enum VertReaderType  
-{
-	VERTEX,
-	COORDINATE,
-	NORMAL,
-};
-
-struct Material
-{
-	std::string materialName = "";
-
-	float r, g, b, a = 1.0f;
-	std::string texturePath = "data/plastic_base.dds"; //placeholder blank texture
-};
-
-struct LoadedMaterial
-{
-	std::string materialName = "";
-	ID3D11ShaderResourceView* materialTexture = nullptr;
-	XMFLOAT4 materialColour = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-};
-
-struct LoadedModelPart
-{
-	std::vector<SimpleVertex> compVertices = std::vector<SimpleVertex>();
-	std::vector<WORD> compIndices = std::vector<WORD>();
-	std::string materialName = ""; //Old compatibility for OBJ importer (to be removed)
-};
-
-struct LoadedModel 
-{
-	std::vector<LoadedModelPart> modelParts = std::vector<LoadedModelPart>();
-};
-
-struct Face
-{
-	std::vector<VertexGroup> verts = std::vector<VertexGroup>(); //Vertices (SHOULD BE 3 - TRIANGULATED)
-	std::string materialName = ""; //Material name to link with MTL
 };
 
 struct Texture {
@@ -238,6 +185,25 @@ public:
 		if (pErrorBlob) pErrorBlob->Release();
 
 		return S_OK;
+	}
+
+	/* Load a model through a DLL */
+	typedef LoadedModel* (*modelLoaderPlugin)(std::string _filePath);
+	static LoadedModel* LoadModelFromPlugin(std::wstring pluginName, std::string filePath) {
+		LoadedModel* newModel = nullptr;
+
+		HMODULE hModule = LoadLibraryW(pluginName.c_str());
+		if (hModule != NULL)
+		{
+			modelLoaderPlugin CreatePlugin = (modelLoaderPlugin)GetProcAddress(hModule, "CreatePlugin");
+			if (CreatePlugin != NULL)
+			{
+				newModel = CreatePlugin(filePath);
+			}
+		}
+		FreeLibrary(hModule);
+
+		return newModel;
 	}
 
 	/* Convert a DirectX Matrix to Float4X4 */
@@ -321,350 +287,6 @@ public:
 		return thisTex;
 	}
 
-	/*
-	TODO: load a model using a linked library plugin
-	static LoadedModel LoadModel(std::string path) {
-		LoadedModel newModel = LoadedModel();
-
-		HINSTANCE hDLL;               // Handle to DLL
-		LPFNDLLFUNC1 lpfnDllFunc1;    // Function pointer
-		HRESULT hrReturnVal;
-
-		hDLL = LoadLibrary("MyDLL");
-		if (NULL != hDLL)
-		{
-			lpfnDllFunc1 = (LPFNDLLFUNC1)GetProcAddress(hDLL, "DLLFunc1");
-			if (NULL != lpfnDllFunc1)
-			{
-				// call the function
-				hrReturnVal = lpfnDllFunc1(dwParam1, puParam2);
-			}
-			else
-			{
-				// report the error
-				hrReturnVal = ERROR_DELAY_LOAD_FAILED;
-			}
-			FreeLibrary(hDLL);
-		}
-		else
-		{
-			hrReturnVal = ERROR_DELAY_LOAD_FAILED;
-		}
-
-		return newModel;
-	}
-	*/
-
-	/* Load a model from an OBJ file and return its indices and vertexes (todo: make it condense the vertex array) */
-	static LoadedModel LoadModelFromOBJ(std::string path)
-	{
-		//Open OBJ
-		std::ifstream in(path.c_str());
-		if (!in) Debug::Log("Failed to open model file!");
-
-		//Parse the OBJ to vertices/texcoords/normals
-		std::vector<XMFLOAT3> verts;
-		std::vector<XMFLOAT2> coords;
-		std::vector<XMFLOAT3> normals;
-		std::vector<Face> faces;
-		std::string str;
-		std::string materialLibrary = "";
-		std::string currentMaterial = "";
-		while (std::getline(in, str))
-		{
-			if (str.size() > 0)
-			{
-				if (str.length() > 7 && str.substr(0, 7) == "mtllib ")
-				{
-					materialLibrary = str.substr(7);
-				}
-				else if (str.length() > 2 && str.substr(0, 2) == "v ")
-				{
-					str = str.substr(2);
-					std::string thisPos = "";
-					XMFLOAT3 thisVertPos;
-					int vertPosIndex = 0;
-					for (int i = 0; i < str.length() + 1; i++)
-					{
-						if (str[i] == ' ' || i == str.length())
-						{
-							if (thisPos == "") continue;
-							if (vertPosIndex == 0) thisVertPos.x = std::stof(thisPos);
-							if (vertPosIndex == 1) thisVertPos.y = std::stof(thisPos);
-							if (vertPosIndex == 2) thisVertPos.z = std::stof(thisPos);
-							vertPosIndex++;
-							thisPos = "";
-							continue;
-						}
-						thisPos += str[i];
-					}
-					verts.push_back(thisVertPos);
-				}
-				else if (str.length() > 3 && str.substr(0, 3) == "vt ")
-				{
-					str = str.substr(3);
-					std::string thisPos = "";
-					XMFLOAT2 thisTexCoord;
-					int texCoordIndex = 0;
-					for (int i = 0; i < str.length() + 1; i++)
-					{
-						if (str[i] == ' ' || i == str.length())
-						{
-							if (thisPos == "") continue;
-							if (texCoordIndex == 0) thisTexCoord.x = std::stof(thisPos);
-							if (texCoordIndex == 1) thisTexCoord.y = std::stof(thisPos) * -1;
-							texCoordIndex++;
-							thisPos = "";
-							continue;
-						}
-						thisPos += str[i];
-					}
-					coords.push_back(thisTexCoord);
-				}
-				else if (str.length() > 3 && str.substr(0, 3) == "vn ")
-				{
-					str = str.substr(3);
-					std::string thisPos = "";
-					XMFLOAT3 thisNormal;
-					int normalIndex = 0;
-					for (int i = 0; i < str.length() + 1; i++)
-					{
-						if (str[i] == ' ' || i == str.length())
-						{
-							if (thisPos == "") continue;
-							if (normalIndex == 0) thisNormal.x = std::stof(thisPos);
-							if (normalIndex == 1) thisNormal.y = std::stof(thisPos);
-							if (normalIndex == 2) thisNormal.z = std::stof(thisPos);
-							normalIndex++;
-							thisPos = "";
-							continue;
-						}
-						thisPos += str[i];
-					}
-					normals.push_back(thisNormal);
-				}
-				else if (str.length() > 7 && str.substr(0, 7) == "usemtl ")
-				{
-					currentMaterial = str.substr(7);
-				}
-				else if (str.length() > 2 && str.substr(0, 2) == "f ")
-				{
-					str = str.substr(2);
-					Face thisFace = Face();
-					VertexGroup thisVert = VertexGroup();
-					VertReaderType next = VertReaderType::VERTEX;
-					std::string currentNumber = "";
-					for (int i = 0; i < str.length() + 1; i++) {
-						char thisChar = str[i];
-						if (thisChar == '/' || thisChar == ' ' || i == str.length())
-						{
-							if (currentNumber == "") {
-								if (verts.size() == 0) Debug::Log("This model has no vertices!");
-								if (coords.size() == 0) Debug::Log("This model has no UVs!");
-								if (normals.size() == 0) Debug::Log("This model has no normals!");
-								continue;
-							}
-							switch (next) {
-							case VertReaderType::VERTEX:
-								thisVert.v = std::stoi(currentNumber);
-								next = VertReaderType::COORDINATE;
-								break;
-							case VertReaderType::COORDINATE:
-								thisVert.c = std::stoi(currentNumber);
-								next = VertReaderType::NORMAL;
-								break;
-							case VertReaderType::NORMAL:
-								thisVert.n = std::stoi(currentNumber);
-								next = VertReaderType::VERTEX;
-								break;
-							}
-							thisVert.set = true;
-							currentNumber = "";
-
-							if (thisChar == '/') continue;
-							if (!thisVert.set) continue;
-							thisFace.verts.push_back(thisVert);
-							thisVert = VertexGroup();
-							continue;
-						}
-						currentNumber += thisChar;
-					}
-					if (thisFace.verts.size() != 3) Debug::Log("This model is not triangulated!");
-					thisFace.materialName = currentMaterial;
-					faces.push_back(thisFace);
-				}
-			}
-		}
-		in.close();
-
-		//Open and parse MTL if it exists
-		std::vector<Material> materials = std::vector<Material>();
-		if (materialLibrary != "")
-		{
-			//Get model path parts
-			std::vector<std::string> modelPath = std::vector<std::string>();
-			std::string currentPath = "";
-			for (int i = 0; i < path.length(); i++) 
-			{
-				if (path[i] == '/' || path[i] == '\\')
-				{
-					modelPath.push_back(currentPath);
-					currentPath = "";
-					continue;
-				}
-				currentPath += path[i];
-			}
-			modelPath.push_back(currentPath);
-
-			//Get material path parts
-			std::vector<std::string> mtlPath = std::vector<std::string>();
-			currentPath = "";
-			for (int i = 0; i < materialLibrary.length(); i++)
-			{
-				if (materialLibrary[i] == '/' || materialLibrary[i] == '\\')
-				{
-					mtlPath.push_back(currentPath);
-					currentPath = "";
-					continue;
-				}
-				currentPath += materialLibrary[i];
-			}
-			mtlPath.push_back(currentPath);
-
-			//Reconstruct a good path to MTL using model path
-			std::string pathToMtl = "";
-			if (mtlPath.size() == 1) 
-			{
-				if (modelPath.size() == 1) 
-				{
-					pathToMtl = mtlPath[0];
-				}
-				else
-				{
-					for (int i = 0; i < modelPath.size() - 1; i++) 
-					{
-						pathToMtl += modelPath[i] + "/";
-					}
-					pathToMtl += mtlPath[0];
-				}
-			}
-			else
-			{
-				pathToMtl = materialLibrary;
-			}
-
-			//Open MTL
-			std::ifstream in2(pathToMtl.c_str());
-			if (!in2) Debug::Log("Failed to open material file!"); 
-			
-			//Parse MTL into materials
-			std::string str;
-			Material currentMaterial = Material();
-			while (std::getline(in2, str))
-			{
-				if (str.size() > 0)
-				{
-					if (str.length() > 7 && str.substr(0, 7) == "newmtl ")
-					{
-						if (currentMaterial.materialName != "")
-						{
-							materials.push_back(currentMaterial);
-							currentMaterial = Material();
-						}
-						currentMaterial.materialName = str.substr(7);
-					}
-					else if (str.length() > 3 && str.substr(0, 3) == "Kd ")
-					{
-						str = str.substr(3);
-						std::string thisColour = "";
-						int thisColourIndex = 0;
-						for (int i = 0; i < str.length() + 1; i++)
-						{
-							if (str[i] == ' ' || i == str.length())
-							{
-								if (thisColour == "") continue;
-								if (thisColourIndex == 0) currentMaterial.r = std::stof(thisColour);
-								if (thisColourIndex == 1) currentMaterial.g = std::stof(thisColour);
-								if (thisColourIndex == 2) currentMaterial.b = std::stof(thisColour);
-								thisColourIndex++;
-								thisColour = "";
-								continue;
-							}
-							thisColour += str[i];
-						}
-					}
-					else if (str.length() > 2 && str.substr(0, 2) == "d ")
-					{
-						currentMaterial.a = std::stof(str.substr(2));
-					}
-					else if (str.length() > 7 && str.substr(0, 7) == "map_Kd ")
-					{
-						currentMaterial.texturePath = str.substr(7);
-						if (currentMaterial.texturePath[1] == ':') {
-							Debug::Log("Texture uses system path! " + currentMaterial.texturePath);
-						}
-						else
-						{
-							std::string texPrepend = "";
-							for (int i = pathToMtl.length(); i >= 0; i--)
-							{
-								if (pathToMtl[i] == '/' || pathToMtl[i] == '\\')
-								{
-									texPrepend = pathToMtl.substr(0, i);
-									break;
-								}
-							}
-							currentMaterial.texturePath = texPrepend + "/" + currentMaterial.texturePath;
-						}
-					}
-				}
-			}
-			if (currentMaterial.materialName != "")
-			{
-				materials.push_back(currentMaterial);
-			}
-		}
-
-		//Create vertex and index arrays from the data
-		LoadedModel thisModel = LoadedModel();
-		LoadedModelPart modelPart = LoadedModelPart();
-		int totalIndex = 0;
-		for (int i = 0; i < faces.size(); i++)
-		{
-			for (int x = 0; x < faces[i].verts.size(); x++)
-			{
-				SimpleVertex thisVertInfo = SimpleVertex();
-				thisVertInfo.Pos = verts[faces[i].verts[x].v - 1];
-				thisVertInfo.Tex = coords[faces[i].verts[x].c - 1];
-				thisVertInfo.Normal = normals[faces[i].verts[x].n - 1];
-
-				if (modelPart.materialName != faces[i].materialName) 
-				{
-					if (totalIndex != 0)
-					{
-						thisModel.modelParts.push_back(modelPart);
-						modelPart = LoadedModelPart();
-					}
-					for (int y = 0; y < materials.size(); y++)
-					{
-						if (materials[y].materialName == faces[i].materialName)
-						{
-							modelPart.materialName = materials[y].materialName;
-							break;
-						}
-					}
-				}
-
-				modelPart.compVertices.push_back(thisVertInfo);
-				modelPart.compIndices.push_back((WORD)totalIndex);
-
-				totalIndex++;
-			}
-		}
-		thisModel.modelParts.push_back(modelPart);
-		return thisModel;
-	}
-
 	/* Copy a file from one location to another */
 	static void CopyFile(std::string from, std::string to) {
 		std::ifstream  src(from, std::ios::binary);
@@ -701,8 +323,11 @@ public:
 			thisPart.materialName = model.modelParts[x].materialName;
 			for (int y = 0; y < model.modelParts[x].compVertices.size(); y++) {
 				SimpleVertex thisVertInfo = model.modelParts[x].compVertices[y];
-				XMStoreFloat3(&transformedVert, XMVector3Transform(XMLoadFloat3(&model.modelParts[x].compVertices[y].Pos), world));
-				thisVertInfo.Pos = transformedVert;
+				XMFLOAT3 originalVert = XMFLOAT3(model.modelParts[x].compVertices[y].Pos.x, model.modelParts[x].compVertices[y].Pos.y, model.modelParts[x].compVertices[y].Pos.z);
+				XMVECTOR transformedVert = XMVector3Transform(XMLoadFloat3(&originalVert), world);
+				XMFLOAT3 newVert;
+				XMStoreFloat3(&newVert, transformedVert);
+				thisVertInfo.Pos = Vector3(newVert.x, newVert.y, newVert.z);
 				thisPart.compVertices.push_back(thisVertInfo);
 			}
 			push_to.modelParts.push_back(thisPart);

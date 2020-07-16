@@ -263,5 +263,8 @@
     <ClInclude Include="imgui_stl.h">
       <Filter>Header Files\Libraries\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

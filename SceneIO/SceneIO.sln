@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaterialEditor", "..\Materi
 		{3C9E82ED-332F-46E8-BBF4-D85A1D000581} = {3C9E82ED-332F-46E8-BBF4-D85A1D000581}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SceneIO_ObjLoader", "..\SceneIO_ObjLoader\SceneIO_ObjLoader.vcxproj", "{8D9E8116-B549-4D34-A475-5B232FB45E30}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,16 @@ Global
 		{E1EC7FCD-77B1-4521-B30F-B7DAAE049EB2}.Release|x64.Build.0 = Release|Any CPU
 		{E1EC7FCD-77B1-4521-B30F-B7DAAE049EB2}.Release|x86.ActiveCfg = Release|Any CPU
 		{E1EC7FCD-77B1-4521-B30F-B7DAAE049EB2}.Release|x86.Build.0 = Release|Any CPU
+		{8D9E8116-B549-4D34-A475-5B232FB45E30}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{8D9E8116-B549-4D34-A475-5B232FB45E30}.Debug|x64.ActiveCfg = Debug|x64
+		{8D9E8116-B549-4D34-A475-5B232FB45E30}.Debug|x64.Build.0 = Debug|x64
+		{8D9E8116-B549-4D34-A475-5B232FB45E30}.Debug|x86.ActiveCfg = Debug|Win32
+		{8D9E8116-B549-4D34-A475-5B232FB45E30}.Debug|x86.Build.0 = Debug|Win32
+		{8D9E8116-B549-4D34-A475-5B232FB45E30}.Release|Any CPU.ActiveCfg = Release|Win32
+		{8D9E8116-B549-4D34-A475-5B232FB45E30}.Release|x64.ActiveCfg = Release|x64
+		{8D9E8116-B549-4D34-A475-5B232FB45E30}.Release|x64.Build.0 = Release|x64
+		{8D9E8116-B549-4D34-A475-5B232FB45E30}.Release|x86.ActiveCfg = Release|Win32
+		{8D9E8116-B549-4D34-A475-5B232FB45E30}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

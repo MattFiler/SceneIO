@@ -6,13 +6,13 @@ SharedModelBuffers::SharedModelBuffers(std::string filepath)
 	//Push data for our vertex buffer, and create children index buffers
 	Debug::Log("Loading model from disk.");
 	objPath = filepath;
-	LoadedModel _m = Utilities::LoadModelFromOBJ(filepath);
-	for (int i = 0; i < _m.modelParts.size(); i++) {
-		for (int x = 0; x < _m.modelParts[i].compVertices.size(); x++) {
-			CheckAgainstBoundingPoints(_m.modelParts[i].compVertices[x].Pos);
-			allVerts.push_back(_m.modelParts[i].compVertices[x]);
+	LoadedModel* _m = Utilities::LoadModelFromPlugin(L"SceneIO_ObjLoader.dll", filepath);
+	for (int i = 0; i < _m->modelParts.size(); i++) {
+		for (int x = 0; x < _m->modelParts[i].compVertices.size(); x++) {
+			CheckAgainstBoundingPoints(XMFLOAT3(_m->modelParts[i].compVertices[x].Pos.x, _m->modelParts[i].compVertices[x].Pos.y, _m->modelParts[i].compVertices[x].Pos.z));
+			allVerts.push_back(_m->modelParts[i].compVertices[x]);
 		}
-		allModels.push_back(new SharedModelPart(_m.modelParts[i]));
+		allModels.push_back(new SharedModelPart(_m->modelParts[i]));
 	}
 	CalculateFinalExtents();
 

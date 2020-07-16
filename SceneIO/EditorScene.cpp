@@ -59,7 +59,6 @@ bool EditorScene::Update(double dt)
 	ImGui::End();
 
 	modelManager->Update(dt);
-
 	GameObjectManager::Update(dt);
 
 	//Allow user to click on a mesh
