@@ -1,9 +1,10 @@
 #include "DynamicMaterial.h"
 
 /* Created organically */
-DynamicMaterial::DynamicMaterial(json _config)
+DynamicMaterial::DynamicMaterial(json _config, int _index)
 {
 	config = _config;
+	matIndex = _index;
 	Setup(false);
 }
 
@@ -14,6 +15,7 @@ DynamicMaterial::DynamicMaterial(const DynamicMaterial& cpy)
 	m_vertexLayout = cpy.m_vertexLayout;
 	m_vertexShader = cpy.m_vertexShader;
 	m_pixelShader = cpy.m_pixelShader;
+	matIndex = cpy.matIndex;
 	Setup(true);
 }
 

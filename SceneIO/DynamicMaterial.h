@@ -12,7 +12,7 @@ enum class MaterialSurfaceTypes {
 /* A material which can be defined by JSON */
 class DynamicMaterial {
 public:
-	DynamicMaterial(json _config);
+	DynamicMaterial(json _config, int _index);
 	DynamicMaterial(const DynamicMaterial& cpy);
 	~DynamicMaterial() {
 		for (int i = 0; i < parameters.size(); i++) {
@@ -28,7 +28,9 @@ public:
 	std::string GetName() {
 		return name;
 	}
-
+	int GetIndex() {
+		return matIndex;
+	}
 	MaterialSurfaceTypes GetSurfaceType() {
 		return type;
 	}
@@ -67,6 +69,8 @@ private:
 	ID3D11VertexShader* m_vertexShader = nullptr;
 	ID3D11PixelShader* m_pixelShader = nullptr;
 	ID3D11InputLayout* m_vertexLayout = nullptr;
+
+	int matIndex = 0;
 
 	bool isCopy = false;
 };

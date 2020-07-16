@@ -12,7 +12,8 @@
 #include "FreeImage.h"
 #include "InputHandler.h"
 
-#include "Common.h"
+#include "CommonMesh.h"
+#include "CommonMaterial.h"
 
 #include <string>
 #include <vector>

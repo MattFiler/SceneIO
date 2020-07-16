@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <string>
 
-#include "../../SceneIO/Common.h"
+#include "../../SceneIO/CommonMesh.h"
+#include "../../SceneIO/CommonMaterial.h"
 
 extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath);

@@ -155,7 +155,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\SceneIO\Common.h" />
+    <ClInclude Include="..\..\SceneIO\CommonMaterial.h" />
+    <ClInclude Include="..\..\SceneIO\CommonMesh.h" />
     <ClInclude Include="ObjImporter.h" />
   </ItemGroup>
   <ItemGroup>

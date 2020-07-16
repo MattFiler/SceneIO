@@ -21,8 +21,11 @@ public:
 		modelData = _m;
 		for (int i = 0; i < modelData->GetSubmeshCount(); i++) {
 			materials.push_back(nullptr);
-			SetSubmeshMaterial(i, 0); //This index will be provided through the API eventually
+			SetSubmeshMaterial(i, _m->GetDefaultMaterialIndexes()[i]);
 		}
+	}
+	SharedModelBuffers* GetData() {
+		return modelData;
 	}
 
 	int GetSubmeshCount() {

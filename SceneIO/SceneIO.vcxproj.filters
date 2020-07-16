@@ -64,6 +64,9 @@
     <Filter Include="Source Files\Libraries\ImGuizmo">
       <UniqueIdentifier>{be34651f-f4a8-49d8-8838-cc362ed691c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Common">
+      <UniqueIdentifier>{580a3f0f-7f93-495a-8407-bab9c3f5f882}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui_impl_dx11.cpp">
@@ -263,8 +266,11 @@
     <ClInclude Include="imgui_stl.h">
       <Filter>Header Files\Libraries\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Common.h">
-      <Filter>Header Files\Utilities</Filter>
+    <ClInclude Include="CommonMesh.h">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonMaterial.h">
+      <Filter>Header Files\Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

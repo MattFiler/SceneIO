@@ -17,6 +17,7 @@ SharedModelBuffers::SharedModelBuffers(std::wstring plugin, std::string filepath
 			allVerts.push_back(_m->modelParts[i].compVertices[x]);
 		}
 		allModels.push_back(new SharedModelPart(_m->modelParts[i]));
+		defaultMatIndexes.push_back(_m->modelParts[i].materialIndex);
 	}
 	Memory::SafeDelete(_m);
 	CalculateFinalExtents();

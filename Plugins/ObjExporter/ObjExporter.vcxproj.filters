@@ -15,10 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\SceneIO\Common.h">
+    <ClInclude Include="ObjExporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ObjExporter.h">
+    <ClInclude Include="..\..\SceneIO\CommonMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SceneIO\CommonMaterial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

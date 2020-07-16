@@ -84,8 +84,12 @@ void ModelManager::ModelManagerUI()
 		for (int i = 0; i < allPlugins.size(); i++) {
 			if (ImGui::Button(("Export using " + allPlugins[i]).c_str())) {
 				if (selectedModelUI != -1) {
-					//Utilities::SaveModelWithPlugin(conv.from_bytes(allPlugins[i]), models.at(selectedModelUI)->get, requestedSavePath);
-					//requestedSavePath = "";
+					SharedModelBuffers* modelBuffer = models.at(selectedModelUI)->GetData();
+					LoadedModel* loadedModel = new LoadedModel();
+					//TODO: populate loadedmodel based on modelbuffer and material indexes in Model
+					Utilities::SaveModelWithPlugin(conv.from_bytes(allPlugins[i]), loadedModel, requestedSavePath);
+					Memory::SafeDelete(loadedModel);
+					requestedSavePath = "";
 				}
 			}
 		}

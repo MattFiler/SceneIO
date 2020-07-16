@@ -50,7 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Common.h" />
+    <ClInclude Include="CommonMaterial.h" />
+    <ClInclude Include="CommonMesh.h" />
     <ClInclude Include="DataTypes.h" />
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="DebugCube.h" />

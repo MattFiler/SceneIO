@@ -45,6 +45,7 @@ struct LoadedModelPart
 	std::vector<SimpleVertex> compVertices = std::vector<SimpleVertex>();
 	std::vector<WORD> compIndices = std::vector<WORD>();
 	std::string materialName = ""; //Old compatibility for OBJ importer (to be removed)
+	int materialIndex = 0;
 };
 
 /* A definition of a mesh object */
