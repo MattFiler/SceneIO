@@ -4,6 +4,7 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <codecvt>
 
 /* Free all model instances */
 ModelManager::~ModelManager()
@@ -62,30 +63,15 @@ void ModelManager::ModelManagerUI()
 	ImGui::Begin("Model Controls", nullptr);
 	ImGui::PopStyleVar();
 
-	if (ImGui::Button("Add Suzanne")) {
-		LoadTestModel("data/test_models/test.obj");
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("Add Grid")) {
-		LoadTestModel("data/test_models/test_grid.obj");
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("Add Boltgun")) {
-		LoadTestModel("data/test_models/boltgun_test_triangulated.obj");
-	}
+	ImGui::InputText("Model to load", &requestedLoadPath);
 
-	/*
-	if (didRequestLoad) {
-		if (requestedLoadPath != "") {
-			LoadTestModel(requestedLoadPath);
+	std::vector<std::string> allPlugins = Utilities::GetAllPlugins();
+	for (int i = 0; i < allPlugins.size(); i++) {
+		if (ImGui::Button(("Load using " + allPlugins[i]).c_str())) {
+			LoadModel(allPlugins[i], requestedLoadPath);
+			requestedLoadPath = "";
 		}
-		didRequestLoad = false;
 	}
-	if (ImGui::Button("Select Model To Add")) {
-		requestedLoadPath = Utilities::OpenFile();
-		didRequestLoad = true;
-	}
-	*/
 
 	ImGui::Separator();
 
@@ -292,11 +278,11 @@ void ModelManager::SelectModel(Ray& _r)
 	selectedModelUI = closestHit.entityIndex;
 }
 
-/* Testing: this will be reworked once the plugins are in place */
-void ModelManager::LoadTestModel(std::string name, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot)
+/* Create a model instance using a plugin */
+void ModelManager::LoadModel(std::string plugin, std::string name, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot)
 {
 	Model* new_model = new Model();
-	new_model->SetData(LoadModelToLevel(name));
+	new_model->SetData(LoadModelToLevel(plugin, name));
 	new_model->SetPosition(pos);
 	new_model->SetRotation(rot, true);
 	new_model->Create();
@@ -307,7 +293,7 @@ void ModelManager::LoadTestModel(std::string name, DirectX::XMFLOAT3 pos, Direct
 }
 
 /* Requested load of model: check our existing loaded data, and if not already loaded, load it */
-SharedModelBuffers* ModelManager::LoadModelToLevel(std::string filename)
+SharedModelBuffers* ModelManager::LoadModelToLevel(std::string plugin, std::string filename)
 {
 	//Return an already loaded model buffer, if it exists
 	for (int i = 0; i < modelBuffers.size(); i++) {
@@ -318,7 +304,8 @@ SharedModelBuffers* ModelManager::LoadModelToLevel(std::string filename)
 	}
 
 	//Model isn't already loaded - load it
-	SharedModelBuffers* newLoadedModel = new SharedModelBuffers(filename);
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
+	SharedModelBuffers* newLoadedModel = new SharedModelBuffers(conv.from_bytes(plugin), filename);
 	modelBuffers.push_back(newLoadedModel);
 	return newLoadedModel;
 }

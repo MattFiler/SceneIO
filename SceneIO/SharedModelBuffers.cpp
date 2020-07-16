@@ -1,12 +1,16 @@
 #include "SharedModelBuffers.h"
 
 /* Load a model and create the buffers */
-SharedModelBuffers::SharedModelBuffers(std::string filepath)
+SharedModelBuffers::SharedModelBuffers(std::wstring plugin, std::string filepath)
 {
 	//Push data for our vertex buffer, and create children index buffers
 	Debug::Log("Loading model from disk.");
 	objPath = filepath;
-	LoadedModel* _m = Utilities::LoadModelFromPlugin(L"SceneIO_ObjLoader.dll", filepath);
+	LoadedModel* _m = Utilities::LoadModelFromPlugin(plugin, filepath);
+	if (_m == nullptr) {
+		Debug::Log("Failed to load model! May be a plugin error, or file could not exist.");
+		return;
+	}
 	for (int i = 0; i < _m->modelParts.size(); i++) {
 		for (int x = 0; x < _m->modelParts[i].compVertices.size(); x++) {
 			CheckAgainstBoundingPoints(XMFLOAT3(_m->modelParts[i].compVertices[x].Pos.x, _m->modelParts[i].compVertices[x].Pos.y, _m->modelParts[i].compVertices[x].Pos.z));
@@ -14,6 +18,7 @@ SharedModelBuffers::SharedModelBuffers(std::string filepath)
 		}
 		allModels.push_back(new SharedModelPart(_m->modelParts[i]));
 	}
+	Memory::SafeDelete(_m);
 	CalculateFinalExtents();
 
 	//Create vertex buffer 
@@ -29,7 +34,7 @@ SharedModelBuffers::SharedModelBuffers(std::string filepath)
 	InitData.pSysMem = allVerts.data();
 	HR(Shared::m_pDevice->CreateBuffer(&bd, &InitData, &g_pVertexBuffer));
 
-	// Create the sample state
+	//Create the sample state
 	D3D11_SAMPLER_DESC sampDesc;
 	ZeroMemory(&sampDesc, sizeof(sampDesc));
 	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -47,9 +52,10 @@ SharedModelBuffers::~SharedModelBuffers()
 {
 	Memory::SafeRelease(g_pVertexBuffer);
 	for (int i = 0; i < allModels.size(); i++) {
-		delete allModels[i];
+		Memory::SafeDelete(allModels[i]);
 	}
 	allModels.clear();
+	allVerts.clear();
 }
 
 /* Render the model parts */

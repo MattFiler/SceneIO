@@ -31,7 +31,7 @@ struct Material
 	std::string texturePath = "data/plastic_base.dds"; //placeholder blank texture
 };
 
-extern "C" __declspec(dllexport) LoadedModel* CreatePlugin(std::string filePath)
+extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath)
 {
 	//Open OBJ
 	std::ifstream in(filePath.c_str());

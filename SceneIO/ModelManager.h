@@ -33,9 +33,9 @@ private:
 	void ModelMaterialUI();
 	void MaterialDropdownUI(Model* model, int submeshID);
 
-	void LoadTestModel(std::string name, DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3 rot = DirectX::XMFLOAT3(0, 0, 0));
+	void LoadModel(std::string plugin, std::string name, DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3 rot = DirectX::XMFLOAT3(0, 0, 0));
 
-	SharedModelBuffers* LoadModelToLevel(std::string filename);
+	SharedModelBuffers* LoadModelToLevel(std::string plugin, std::string filename);
 	std::vector<SharedModelBuffers*> modelBuffers = std::vector<SharedModelBuffers*>();
 	std::vector<Model*> models = std::vector<Model*>();
 

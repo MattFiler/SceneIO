@@ -7,7 +7,7 @@
 /* A model data buffer which can be shared between multiple model instances to save memory */
 class SharedModelBuffers {
 public:
-	SharedModelBuffers(std::string filepath);
+	SharedModelBuffers(std::wstring plugin, std::string filepath);
 	~SharedModelBuffers();
 
 	void Render(XMMATRIX mWorld, std::vector<DynamicMaterial*> materials);

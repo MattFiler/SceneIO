@@ -19,9 +19,10 @@
 #include <fstream>
 #include <thread>
 #include <mutex>
-
 #include <time.h>
 #include <random>
+#include <iostream>
+#include <filesystem>
 
 typedef HRESULT(CALLBACK* LPFNDLLFUNC1)(DWORD, UINT*);
 
@@ -189,21 +190,35 @@ public:
 
 	/* Load a model through a DLL */
 	typedef LoadedModel* (*modelLoaderPlugin)(std::string _filePath);
-	static LoadedModel* LoadModelFromPlugin(std::wstring pluginName, std::string filePath) {
+	static LoadedModel* LoadModelFromPlugin(std::wstring pluginName, std::string filePath) 
+	{
 		LoadedModel* newModel = nullptr;
 
 		HMODULE hModule = LoadLibraryW(pluginName.c_str());
 		if (hModule != NULL)
 		{
-			modelLoaderPlugin CreatePlugin = (modelLoaderPlugin)GetProcAddress(hModule, "CreatePlugin");
-			if (CreatePlugin != NULL)
+			modelLoaderPlugin LoadModel = (modelLoaderPlugin)GetProcAddress(hModule, "LoadModel");
+			if (LoadModel != NULL)
 			{
-				newModel = CreatePlugin(filePath);
+				newModel = LoadModel(filePath);
 			}
 		}
 		FreeLibrary(hModule);
 
 		return newModel;
+	}
+
+	/* Get a list of all DLLs for loading */
+	static std::vector<std::string> GetAllPlugins()
+	{
+		std::vector<std::string> allPlugins = std::vector<std::string>();
+		for (const auto& entry : std::filesystem::directory_iterator("plugins/")) {
+			std::string thisFilepath = entry.path().u8string();
+			if (thisFilepath.length() < 4) continue;
+			if (thisFilepath.substr(thisFilepath.length() - 4) != ".dll") continue;
+			allPlugins.push_back(thisFilepath);
+		}
+		return allPlugins;
 	}
 
 	/* Convert a DirectX Matrix to Float4X4 */

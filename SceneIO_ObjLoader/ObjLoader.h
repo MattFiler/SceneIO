@@ -6,4 +6,4 @@
 
 #include "../SceneIO/Common.h"
 
-extern "C" __declspec(dllexport) LoadedModel* CreatePlugin(std::string filePath);
+extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath);
