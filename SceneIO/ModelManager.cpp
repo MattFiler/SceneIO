@@ -63,19 +63,37 @@ void ModelManager::ModelManagerUI()
 	ImGui::Begin("Model Controls", nullptr);
 	ImGui::PopStyleVar();
 
-	ImGui::InputText("Model to load", &requestedLoadPath);
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
 
-	std::vector<std::string> allPlugins = Utilities::GetAllPlugins();
-	for (int i = 0; i < allPlugins.size(); i++) {
-		if (ImGui::Button(("Load using " + allPlugins[i]).c_str())) {
-			LoadModel(allPlugins[i], requestedLoadPath);
-			requestedLoadPath = "";
+	//Model loading through plugin
+	if (ImGui::CollapsingHeader("Load New Model", ImGuiTreeNodeFlags_DefaultOpen)) {
+		ImGui::InputText("Model load path", &requestedLoadPath);
+		std::vector<std::string> allPlugins = Utilities::GetImporterPlugins();
+		for (int i = 0; i < allPlugins.size(); i++) {
+			if (ImGui::Button(("Load using " + allPlugins[i]).c_str())) {
+				LoadModel(conv.from_bytes(allPlugins[i]), requestedLoadPath);
+				requestedLoadPath = "";
+			}
+		}
+	}
+
+	//Model exporting through plugin
+	if (ImGui::CollapsingHeader("Export Selected Model", ImGuiTreeNodeFlags_DefaultOpen)) {
+		ImGui::InputText("Model save path", &requestedSavePath);
+		std::vector<std::string> allPlugins = Utilities::GetExporterPlugins();
+		for (int i = 0; i < allPlugins.size(); i++) {
+			if (ImGui::Button(("Export using " + allPlugins[i]).c_str())) {
+				if (selectedModelUI != -1) {
+					//Utilities::SaveModelWithPlugin(conv.from_bytes(allPlugins[i]), models.at(selectedModelUI)->get, requestedSavePath);
+					//requestedSavePath = "";
+				}
+			}
 		}
 	}
 
 	ImGui::Separator();
 
-	if (ImGui::Button("Delete Selected") && selectedModelUI != -1) {
+	if (ImGui::Button("Delete Selected Model") && selectedModelUI != -1) {
 		GameObjectManager::RemoveObject(models.at(selectedModelUI));
 		delete models.at(selectedModelUI);
 		models.erase(models.begin() + selectedModelUI);
@@ -279,7 +297,7 @@ void ModelManager::SelectModel(Ray& _r)
 }
 
 /* Create a model instance using a plugin */
-void ModelManager::LoadModel(std::string plugin, std::string name, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot)
+void ModelManager::LoadModel(std::wstring plugin, std::string name, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot)
 {
 	Model* new_model = new Model();
 	new_model->SetData(LoadModelToLevel(plugin, name));
@@ -293,7 +311,7 @@ void ModelManager::LoadModel(std::string plugin, std::string name, DirectX::XMFL
 }
 
 /* Requested load of model: check our existing loaded data, and if not already loaded, load it */
-SharedModelBuffers* ModelManager::LoadModelToLevel(std::string plugin, std::string filename)
+SharedModelBuffers* ModelManager::LoadModelToLevel(std::wstring plugin, std::string filename)
 {
 	//Return an already loaded model buffer, if it exists
 	for (int i = 0; i < modelBuffers.size(); i++) {
@@ -304,8 +322,7 @@ SharedModelBuffers* ModelManager::LoadModelToLevel(std::string plugin, std::stri
 	}
 
 	//Model isn't already loaded - load it
-	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
-	SharedModelBuffers* newLoadedModel = new SharedModelBuffers(conv.from_bytes(plugin), filename);
+	SharedModelBuffers* newLoadedModel = new SharedModelBuffers(plugin, filename);
 	modelBuffers.push_back(newLoadedModel);
 	return newLoadedModel;
 }

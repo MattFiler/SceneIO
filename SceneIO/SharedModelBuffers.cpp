@@ -6,7 +6,7 @@ SharedModelBuffers::SharedModelBuffers(std::wstring plugin, std::string filepath
 	//Push data for our vertex buffer, and create children index buffers
 	Debug::Log("Loading model from disk.");
 	objPath = filepath;
-	LoadedModel* _m = Utilities::LoadModelFromPlugin(plugin, filepath);
+	LoadedModel* _m = Utilities::LoadModelWithPlugin(plugin, filepath);
 	if (_m == nullptr) {
 		Debug::Log("Failed to load model! May be a plugin error, or file could not exist.");
 		return;

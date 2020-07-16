@@ -330,6 +330,7 @@ ASALocalRun/
 .mfractor/
 
 
-!SceneIO/plugins/*
+!SceneIO/export_plugins/*
+!SceneIO/import_plugins/*
 !SceneIO/data/*
 !SceneIO/freeimage/*

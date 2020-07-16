@@ -189,30 +189,57 @@ public:
 	}
 
 	/* Load a model through a DLL */
-	typedef LoadedModel* (*modelLoaderPlugin)(std::string _filePath);
-	static LoadedModel* LoadModelFromPlugin(std::wstring pluginName, std::string filePath) 
+	typedef LoadedModel* (*modelImporterPlugin)(std::string filepath);
+	static LoadedModel* LoadModelWithPlugin(std::wstring pluginName, std::string filePath) 
 	{
 		LoadedModel* newModel = nullptr;
-
 		HMODULE hModule = LoadLibraryW(pluginName.c_str());
 		if (hModule != NULL)
 		{
-			modelLoaderPlugin LoadModel = (modelLoaderPlugin)GetProcAddress(hModule, "LoadModel");
+			modelImporterPlugin LoadModel = (modelImporterPlugin)GetProcAddress(hModule, "LoadModel");
 			if (LoadModel != NULL)
 			{
 				newModel = LoadModel(filePath);
 			}
 		}
 		FreeLibrary(hModule);
-
 		return newModel;
 	}
 
+	/* Export a model through a DLL */
+	typedef void (*modelExporterPlugin)(LoadedModel* model, std::string filepath);
+	static void SaveModelWithPlugin(std::wstring pluginName, LoadedModel* model, std::string filepath)
+	{
+		HMODULE hModule = LoadLibraryW(pluginName.c_str());
+		if (hModule != NULL)
+		{
+			modelExporterPlugin SaveModel = (modelExporterPlugin)GetProcAddress(hModule, "SaveModel");
+			if (SaveModel != NULL)
+			{
+				SaveModel(model, filepath);
+			}
+		}
+		FreeLibrary(hModule);
+	}
+
 	/* Get a list of all DLLs for loading */
-	static std::vector<std::string> GetAllPlugins()
+	static std::vector<std::string> GetImporterPlugins()
 	{
 		std::vector<std::string> allPlugins = std::vector<std::string>();
-		for (const auto& entry : std::filesystem::directory_iterator("plugins/")) {
+		for (const auto& entry : std::filesystem::directory_iterator("import_plugins/")) {
+			std::string thisFilepath = entry.path().u8string();
+			if (thisFilepath.length() < 4) continue;
+			if (thisFilepath.substr(thisFilepath.length() - 4) != ".dll") continue;
+			allPlugins.push_back(thisFilepath);
+		}
+		return allPlugins;
+	}
+
+	/* Get a list of all DLLs for exporting */
+	static std::vector<std::string> GetExporterPlugins()
+	{
+		std::vector<std::string> allPlugins = std::vector<std::string>();
+		for (const auto& entry : std::filesystem::directory_iterator("export_plugins/")) {
 			std::string thisFilepath = entry.path().u8string();
 			if (thisFilepath.length() < 4) continue;
 			if (thisFilepath.substr(thisFilepath.length() - 4) != ".dll") continue;

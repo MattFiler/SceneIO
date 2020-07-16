@@ -166,7 +166,8 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <PostBuildEvent>
-      <Command>Xcopy /E /I /Y "$(SolutionDir)plugins" "$(SolutionDir)$(OutDir)plugins"
+      <Command>Xcopy /E /I /Y "$(SolutionDir)import_plugins" "$(SolutionDir)$(OutDir)import_plugins"
+Xcopy /E /I /Y "$(SolutionDir)export_plugins" "$(SolutionDir)$(OutDir)export_plugins"
 Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"
 copy "$(SolutionDir)freeimage\x32\FreeImage.dll" "$(SolutionDir)$(OutDir)"
 copy "$(SolutionDir)imgui.ini" "$(SolutionDir)$(OutDir)"</Command>
@@ -187,7 +188,8 @@ copy "$(SolutionDir)imgui.ini" "$(SolutionDir)$(OutDir)"</Command>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <PostBuildEvent>
-      <Command>Xcopy /E /I /Y "$(SolutionDir)plugins" "$(SolutionDir)$(OutDir)plugins"
+      <Command>Xcopy /E /I /Y "$(SolutionDir)import_plugins" "$(SolutionDir)$(OutDir)import_plugins"
+Xcopy /E /I /Y "$(SolutionDir)export_plugins" "$(SolutionDir)$(OutDir)export_plugins"
 Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"
 copy "$(SolutionDir)freeimage\x64\FreeImage.dll" "$(SolutionDir)$(OutDir)"
 copy "$(SolutionDir)imgui.ini" "$(SolutionDir)$(OutDir)"</Command>
@@ -216,7 +218,8 @@ copy "$(SolutionDir)imgui.ini" "$(SolutionDir)$(OutDir)"</Command>
       <AdditionalDependencies>freeimage/x32/FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>Xcopy /E /I /Y "$(SolutionDir)plugins" "$(SolutionDir)$(OutDir)plugins"
+      <Command>Xcopy /E /I /Y "$(SolutionDir)import_plugins" "$(SolutionDir)$(OutDir)import_plugins"
+Xcopy /E /I /Y "$(SolutionDir)export_plugins" "$(SolutionDir)$(OutDir)export_plugins"
 Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"
 copy "$(SolutionDir)freeimage\x32\FreeImage.dll" "$(SolutionDir)$(OutDir)"
 copy "$(SolutionDir)imgui.ini" "$(SolutionDir)$(OutDir)"</Command>
@@ -241,7 +244,8 @@ copy "$(SolutionDir)imgui.ini" "$(SolutionDir)$(OutDir)"</Command>
       <AdditionalDependencies>freeimage/x64/FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>Xcopy /E /I /Y "$(SolutionDir)plugins" "$(SolutionDir)$(OutDir)plugins"
+      <Command>Xcopy /E /I /Y "$(SolutionDir)import_plugins" "$(SolutionDir)$(OutDir)import_plugins"
+Xcopy /E /I /Y "$(SolutionDir)export_plugins" "$(SolutionDir)$(OutDir)export_plugins"
 Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"
 copy "$(SolutionDir)freeimage\x64\FreeImage.dll" "$(SolutionDir)$(OutDir)"
 copy "$(SolutionDir)imgui.ini" "$(SolutionDir)$(OutDir)"</Command>
