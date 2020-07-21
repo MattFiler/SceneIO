@@ -7,13 +7,13 @@
 /* A submesh within a SharedModelBuffers object (used per-material type) */
 class SharedModelPart {
 public:
-	SharedModelPart(LoadedModelPart& _m);
+	SharedModelPart(LoadedModelPart* _m);
 	~SharedModelPart();
 
 	void Render(XMMATRIX world, DynamicMaterial* material);
 
 	LoadedModelPart* GetAsLoadedModelPart() {
-		return &modelMetaData;
+		return modelMetaData;
 	}
 
 private:
@@ -22,7 +22,7 @@ private:
 
 	ID3D11ShaderResourceView* nullSRV = nullptr; //As odd as this may seem - always keep this value null!
 
-	LoadedModelPart modelMetaData = LoadedModelPart();
+	LoadedModelPart* modelMetaData = nullptr;
 
 	int indexCount = 0;
 };

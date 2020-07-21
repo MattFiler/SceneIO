@@ -2,21 +2,21 @@
 #include "DataTypes.h"
 
 /* Create the model part (a child to SharedModelBuffers) */
-SharedModelPart::SharedModelPart(LoadedModelPart& _m)
+SharedModelPart::SharedModelPart(LoadedModelPart* _m)
 {
-	modelMetaData = _m;
+	modelMetaData = new LoadedModelPart(*_m);
 
 	//Create index buffer 
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
-	indexCount = modelMetaData.compIndices.size();
+	indexCount = modelMetaData->compIndices.size();
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.ByteWidth = sizeof(WORD) * indexCount;
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	D3D11_SUBRESOURCE_DATA InitData;
 	ZeroMemory(&InitData, sizeof(InitData));
-	InitData.pSysMem = modelMetaData.compIndices.data();
+	InitData.pSysMem = modelMetaData->compIndices.data();
 	HR(Shared::m_pDevice->CreateBuffer(&bd, &InitData, &g_pIndexBuffer));
 
 	//Create the constant buffer 
@@ -32,6 +32,7 @@ SharedModelPart::~SharedModelPart()
 {
 	Memory::SafeRelease(g_pIndexBuffer);
 	Memory::SafeRelease(g_pConstantBuffer);
+	Memory::SafeDelete(modelMetaData);
 }
 
 /* Render our model part */

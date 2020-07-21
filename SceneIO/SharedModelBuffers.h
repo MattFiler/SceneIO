@@ -28,6 +28,10 @@ public:
 		useCount--;
 	}
 
+	bool DidLoadOK() {
+		return loadedOK;
+	}
+
 	std::string GetFilepath() {
 		return objPath;
 	}
@@ -81,4 +85,5 @@ private:
 	std::string objPath = "";
 	int vertexCount = 0;
 	int useCount = 0;
+	bool loadedOK = false;
 };

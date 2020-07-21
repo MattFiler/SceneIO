@@ -16,7 +16,7 @@ SharedModelBuffers::SharedModelBuffers(std::wstring plugin, std::string filepath
 			CheckAgainstBoundingPoints(XMFLOAT3(_m->modelParts[i].compVertices[x].Pos.x, _m->modelParts[i].compVertices[x].Pos.y, _m->modelParts[i].compVertices[x].Pos.z));
 			allVerts.push_back(_m->modelParts[i].compVertices[x]);
 		}
-		allModels.push_back(new SharedModelPart(_m->modelParts[i]));
+		allModels.push_back(new SharedModelPart(&_m->modelParts[i]));
 		defaultMatIndexes.push_back(_m->modelParts[i].materialIndex);
 	}
 	Memory::SafeDelete(_m);
@@ -46,6 +46,8 @@ SharedModelBuffers::SharedModelBuffers(std::wstring plugin, std::string filepath
 	sampDesc.MinLOD = 0;
 	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 	HR(Shared::m_pDevice->CreateSamplerState(&sampDesc, &g_pSamplerLinear));
+
+	loadedOK = true;
 }
 
 /* Clear all buffers */

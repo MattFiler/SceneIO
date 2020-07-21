@@ -71,8 +71,7 @@ void ModelManager::ModelManagerUI()
 		std::vector<std::string> allPlugins = Utilities::GetImporterPlugins();
 		for (int i = 0; i < allPlugins.size(); i++) {
 			if (ImGui::Button(("Load using " + allPlugins[i]).c_str())) {
-				LoadModel(conv.from_bytes(allPlugins[i]), requestedLoadPath);
-				requestedLoadPath = "";
+				if (LoadModel(conv.from_bytes(allPlugins[i]), requestedLoadPath)) requestedLoadPath = "";
 			}
 		}
 	}
@@ -306,17 +305,21 @@ void ModelManager::SelectModel(Ray& _r)
 }
 
 /* Create a model instance using a plugin */
-void ModelManager::LoadModel(std::wstring plugin, std::string name, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot)
+bool ModelManager::LoadModel(std::wstring plugin, std::string name, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot)
 {
-	Model* new_model = new Model();
-	new_model->SetSharedBuffers(LoadModelToLevel(plugin, name));
-	new_model->SetPosition(pos);
-	new_model->SetRotation(rot, true);
-	new_model->Create();
-	GameObjectManager::AddObject(new_model);
-	models.push_back(new_model);
+	SharedModelBuffers* sharedBuffer = LoadModelToLevel(plugin, name);
+	if (sharedBuffer == nullptr) return false;
+
+	Model* newModel = new Model();
+	newModel->SetSharedBuffers(sharedBuffer);
+	newModel->SetPosition(pos);
+	newModel->SetRotation(rot, true);
+	newModel->Create();
+	GameObjectManager::AddObject(newModel);
+	models.push_back(newModel);
 
 	selectedModelUI = models.size() - 1;
+	return true;
 }
 
 /* Requested load of model: check our existing loaded data, and if not already loaded, load it */
@@ -332,6 +335,7 @@ SharedModelBuffers* ModelManager::LoadModelToLevel(std::wstring plugin, std::str
 
 	//Model isn't already loaded - load it
 	SharedModelBuffers* newLoadedModel = new SharedModelBuffers(plugin, filename);
+	if (!newLoadedModel->DidLoadOK()) return nullptr;
 	modelBuffers.push_back(newLoadedModel);
 	return newLoadedModel;
 }
