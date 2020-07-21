@@ -91,6 +91,16 @@ void SharedModelBuffers::Render(XMMATRIX mWorld, std::vector<DynamicMaterial*> m
 	}
 }
 
+/* Return the shared model buffer as a LoadedModel object for I/O operations */
+LoadedModel* SharedModelBuffers::GetAsLoadedModel()
+{
+	LoadedModel* _m = new LoadedModel();
+	for (int i = 0; i < allModels.size(); i++) {
+		_m->modelParts.push_back(*allModels[i]->GetAsLoadedModelPart());
+	}
+	return _m;
+}
+
 /* Perform an expensive ray-triangle check */
 bool SharedModelBuffers::DoesRayIntersect(Ray& _r, DirectX::XMMATRIX _world, float& _d)
 {

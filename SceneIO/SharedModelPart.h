@@ -7,10 +7,14 @@
 /* A submesh within a SharedModelBuffers object (used per-material type) */
 class SharedModelPart {
 public:
-	SharedModelPart(LoadedModelPart _m);
+	SharedModelPart(LoadedModelPart& _m);
 	~SharedModelPart();
 
 	void Render(XMMATRIX world, DynamicMaterial* material);
+
+	LoadedModelPart* GetAsLoadedModelPart() {
+		return &modelMetaData;
+	}
 
 private:
 	ID3D11Buffer* g_pConstantBuffer = nullptr;

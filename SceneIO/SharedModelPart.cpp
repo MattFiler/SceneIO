@@ -2,7 +2,7 @@
 #include "DataTypes.h"
 
 /* Create the model part (a child to SharedModelBuffers) */
-SharedModelPart::SharedModelPart(LoadedModelPart _m)
+SharedModelPart::SharedModelPart(LoadedModelPart& _m)
 {
 	modelMetaData = _m;
 

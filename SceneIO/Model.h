@@ -17,14 +17,15 @@ public:
 	void Update(float dt) override;
 	void Render(float dt) override;
 
-	void SetData(SharedModelBuffers* _m) {
+	//Set and get the shared buffers used by this instance
+	void SetSharedBuffers(SharedModelBuffers* _m) {
 		modelData = _m;
 		for (int i = 0; i < modelData->GetSubmeshCount(); i++) {
 			materials.push_back(nullptr);
 			SetSubmeshMaterial(i, _m->GetDefaultMaterialIndexes()[i]);
 		}
 	}
-	SharedModelBuffers* GetData() {
+	SharedModelBuffers* GetSharedBuffers() {
 		return modelData;
 	}
 

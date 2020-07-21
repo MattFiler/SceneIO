@@ -43,6 +43,8 @@ public:
 		return allModels.size();
 	}
 
+	LoadedModel* GetAsLoadedModel();
+
 	//Returns a vector of default material indexes (linked to submeshes)
 	std::vector<int> GetDefaultMaterialIndexes() {
 		return defaultMatIndexes;

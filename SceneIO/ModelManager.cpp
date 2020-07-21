@@ -84,9 +84,14 @@ void ModelManager::ModelManagerUI()
 		for (int i = 0; i < allPlugins.size(); i++) {
 			if (ImGui::Button(("Export using " + allPlugins[i]).c_str())) {
 				if (selectedModelUI != -1) {
-					SharedModelBuffers* modelBuffer = models.at(selectedModelUI)->GetData();
-					LoadedModel* loadedModel = new LoadedModel();
-					//TODO: populate loadedmodel based on modelbuffer and material indexes in Model
+					//Get the model's shared buffers, then apply the instanced material information
+					Model* modelInstance = models.at(selectedModelUI);
+					LoadedModel* loadedModel = modelInstance->GetSharedBuffers()->GetAsLoadedModel();
+					for (int i = 0; i < modelInstance->GetSubmeshCount(); i++) {
+						loadedModel->modelParts[i].materialIndex = modelInstance->GetSubmeshMaterial(i)->GetIndex();
+					}
+
+					//Save it out
 					Utilities::SaveModelWithPlugin(conv.from_bytes(allPlugins[i]), loadedModel, requestedSavePath);
 					Memory::SafeDelete(loadedModel);
 					requestedSavePath = "";
@@ -304,7 +309,7 @@ void ModelManager::SelectModel(Ray& _r)
 void ModelManager::LoadModel(std::wstring plugin, std::string name, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot)
 {
 	Model* new_model = new Model();
-	new_model->SetData(LoadModelToLevel(plugin, name));
+	new_model->SetSharedBuffers(LoadModelToLevel(plugin, name));
 	new_model->SetPosition(pos);
 	new_model->SetRotation(rot, true);
 	new_model->Create();
