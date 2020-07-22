@@ -1,5 +1,5 @@
 #pragma once
-#include "ObjImporter.h"
+#include "../ImporterPlugin.h"
 #include <fstream>
 
 enum VertReaderType
