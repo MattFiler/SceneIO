@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 
+class DynamicMaterial;
+
 /* Functionality shared between the main application and DLLs */
 
 /* A vector of X and Y values */
@@ -44,8 +46,7 @@ struct LoadedModelPart
 {
 	std::vector<SimpleVertex> compVertices = std::vector<SimpleVertex>();
 	std::vector<WORD> compIndices = std::vector<WORD>();
-	std::string materialName = ""; //Old compatibility for OBJ importer (to be removed)
-	int materialIndex = 0;
+	DynamicMaterial* material = nullptr;
 };
 
 /* A definition of a mesh object */

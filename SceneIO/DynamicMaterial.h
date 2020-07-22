@@ -93,8 +93,8 @@ private:
 			parameters.push_back(newParam);
 		}
 
-#ifndef SCENEIO_PLUGIN
 		isCopy = _isCopy;
+#ifndef SCENEIO_PLUGIN
 		if (_isCopy) return;
 
 		//Compile the vertex shader

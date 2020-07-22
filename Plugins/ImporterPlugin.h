@@ -5,6 +5,7 @@
 #include <string>
 
 #include "../SceneIO/CommonMesh.h"
+#include "../SceneIO/DynamicMaterialManager.h"
 #include "../SceneIO/DynamicMaterial.h"
 
 extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath);

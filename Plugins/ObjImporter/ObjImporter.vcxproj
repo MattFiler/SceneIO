@@ -158,6 +158,7 @@
     <ClInclude Include="..\..\SceneIO\CommonMesh.h" />
     <ClInclude Include="..\..\SceneIO\DataTypes.h" />
     <ClInclude Include="..\..\SceneIO\DynamicMaterial.h" />
+    <ClInclude Include="..\..\SceneIO\DynamicMaterialManager.h" />
     <ClInclude Include="..\..\SceneIO\MaterialParameter.h" />
     <ClInclude Include="..\ImporterPlugin.h" />
   </ItemGroup>

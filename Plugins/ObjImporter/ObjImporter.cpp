@@ -1,6 +1,7 @@
 #pragma once
 #include "../ImporterPlugin.h"
 #include <fstream>
+#include <iostream>
 
 enum VertReaderType
 {
@@ -301,6 +302,7 @@ extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath)
 	}
 
 	//Create vertex and index arrays from the data
+	DynamicMaterialManager* materialManager = new DynamicMaterialManager();
 	LoadedModel* thisModel = new LoadedModel();
 	LoadedModelPart modelPart = LoadedModelPart();
 	int totalIndex = 0;
@@ -313,7 +315,7 @@ extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath)
 			thisVertInfo.Tex = coords[faces[i].verts[x].c - 1];
 			thisVertInfo.Normal = normals[faces[i].verts[x].n - 1];
 
-			if (modelPart.materialName != faces[i].materialName)
+			if (modelPart.material == nullptr || modelPart.material->GetName() != faces[i].materialName)
 			{
 				if (totalIndex != 0)
 				{
@@ -324,7 +326,9 @@ extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath)
 				{
 					if (materials[y].materialName == faces[i].materialName)
 					{
-						modelPart.materialName = materials[y].materialName;
+						modelPart.material = new DynamicMaterial(*materialManager->GetMaterial(materials[y].materialName));
+						static_cast<DataTypeString*>(modelPart.material->GetParameter("albedoTexture")->value)->value = materials[y].texturePath;
+						static_cast<DataTypeRGB*>(modelPart.material->GetParameter("albedoColour")->value)->value = RGBValue(materials[y].r, materials[y].g, materials[y].b);
 						break;
 					}
 				}

@@ -25,7 +25,6 @@
     <ClCompile Include="imgui_stl.cpp" />
     <ClCompile Include="MainSetup.cpp" />
     <ClCompile Include="Shared.cpp" />
-    <ClCompile Include="DynamicMaterialManager.cpp" />
     <ClCompile Include="EditorScene.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />

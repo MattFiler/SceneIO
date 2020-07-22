@@ -108,9 +108,6 @@
     <ClCompile Include="DebugCube.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="DynamicMaterialManager.cpp">
-      <Filter>Source Files\Models/Materials</Filter>
-    </ClCompile>
     <ClCompile Include="GameObjectManager.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>

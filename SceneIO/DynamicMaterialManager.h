@@ -2,11 +2,28 @@
 
 #include "DynamicMaterial.h"
 #include <vector>
+#include <fstream>
 
 /* Manages all defined material types from JSON, loaded in Shared persistently */
 class DynamicMaterialManager {
 public:
-	DynamicMaterialManager();
+	DynamicMaterialManager() {
+		json config;
+		std::string configPath = "data/materials/material_config.json";
+#ifdef SCENEIO_PLUGIN
+		//configPath = "../" + configPath;
+#endif
+		std::fstream cmd_js(configPath);
+		cmd_js >> config;
+
+		for (int i = 0; i < config["materials"].size(); i++) {
+			materials.push_back(new DynamicMaterial(config["materials"][i], i));
+		}
+
+		if (materials.size() == 0) {
+			throw std::out_of_range("ERROR! No materials provided in configuration JSON file. Fatal.");
+		}
+	}
 	~DynamicMaterialManager() = default;
 
 	DynamicMaterial* GetMaterial(std::string name) {

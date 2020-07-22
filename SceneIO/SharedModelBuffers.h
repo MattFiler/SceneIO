@@ -49,9 +49,9 @@ public:
 
 	LoadedModel* GetAsLoadedModel();
 
-	//Returns a vector of default material indexes (linked to submeshes)
-	std::vector<int> GetDefaultMaterialIndexes() {
-		return defaultMatIndexes;
+	//Returns a vector of default materials (linked to submeshes)
+	std::vector<DynamicMaterial*> GetDefaultMaterials() {
+		return defaultMaterials;
 	}
 
 	bool DoesRayIntersect(Ray& _r, DirectX::XMMATRIX _world, float& _d);
@@ -80,7 +80,7 @@ private:
 	std::vector<SharedModelPart*> allModels = std::vector<SharedModelPart*>();
 	std::vector<SimpleVertex> allVerts = std::vector<SimpleVertex>();
 
-	std::vector<int> defaultMatIndexes = std::vector<int>();
+	std::vector<DynamicMaterial*> defaultMaterials = std::vector<DynamicMaterial*>();
 
 	std::string objPath = "";
 	int vertexCount = 0;

@@ -23,6 +23,9 @@ enum class DataTypes {
 class RGBValue
 {
 public:
+	RGBValue() {};
+	RGBValue(float _r, float _g, float _b) : R(_r), G(_g), B(_b) {}
+
 	float* AsFloatArray() {
 		float* toReturn[3] = { &R, &G, &B };
 		return *toReturn;

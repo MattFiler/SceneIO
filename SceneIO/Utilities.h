@@ -175,7 +175,7 @@ public:
 				newModel = LoadModel(filePath);
 			}
 		}
-		FreeLibrary(hModule);
+		//FreeLibrary(hModule);
 		return newModel;
 	}
 
@@ -327,25 +327,5 @@ public:
 		if (GetOpenFileName(&ofn))
 			fileNameStr = fileName;
 		return fileNameStr;
-	}
-
-	/* Transform a loadedmodel by a world matrix, and push it to another loadedmodel */
-	static void TransformAndPush(XMMATRIX world, LoadedModel& model, LoadedModel& push_to) {
-		XMFLOAT3 transformedVert = XMFLOAT3(0.0f, 0.0f, 0.0f);
-		for (int x = 0; x < model.modelParts.size(); x++) {
-			LoadedModelPart thisPart = LoadedModelPart();
-			thisPart.compIndices = model.modelParts[x].compIndices;
-			thisPart.materialName = model.modelParts[x].materialName;
-			for (int y = 0; y < model.modelParts[x].compVertices.size(); y++) {
-				SimpleVertex thisVertInfo = model.modelParts[x].compVertices[y];
-				XMFLOAT3 originalVert = XMFLOAT3(model.modelParts[x].compVertices[y].Pos.x, model.modelParts[x].compVertices[y].Pos.y, model.modelParts[x].compVertices[y].Pos.z);
-				XMVECTOR transformedVert = XMVector3Transform(XMLoadFloat3(&originalVert), world);
-				XMFLOAT3 newVert;
-				XMStoreFloat3(&newVert, transformedVert);
-				thisVertInfo.Pos = Vector3(newVert.x, newVert.y, newVert.z);
-				thisPart.compVertices.push_back(thisVertInfo);
-			}
-			push_to.modelParts.push_back(thisPart);
-		}
 	}
 };

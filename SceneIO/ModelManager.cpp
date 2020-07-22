@@ -87,7 +87,7 @@ void ModelManager::ModelManagerUI()
 					Model* modelInstance = models.at(selectedModelUI);
 					LoadedModel* loadedModel = modelInstance->GetSharedBuffers()->GetAsLoadedModel();
 					for (int i = 0; i < modelInstance->GetSubmeshCount(); i++) {
-						loadedModel->modelParts[i].materialIndex = modelInstance->GetSubmeshMaterial(i)->GetIndex();
+						loadedModel->modelParts[i].material = modelInstance->GetSubmeshMaterial(i);
 					}
 
 					//Save it out

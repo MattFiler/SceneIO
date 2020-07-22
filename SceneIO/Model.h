@@ -21,8 +21,7 @@ public:
 	void SetSharedBuffers(SharedModelBuffers* _m) {
 		modelData = _m;
 		for (int i = 0; i < modelData->GetSubmeshCount(); i++) {
-			materials.push_back(nullptr);
-			SetSubmeshMaterial(i, _m->GetDefaultMaterialIndexes()[i]);
+			materials.push_back(new DynamicMaterial(*_m->GetDefaultMaterials()[i]));
 		}
 	}
 	SharedModelBuffers* GetSharedBuffers() {

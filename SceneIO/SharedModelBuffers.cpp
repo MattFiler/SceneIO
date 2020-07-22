@@ -1,4 +1,5 @@
 #include "SharedModelBuffers.h"
+#include "DynamicMaterialManager.h"
 
 /* Load a model and create the buffers */
 SharedModelBuffers::SharedModelBuffers(std::wstring plugin, std::string filepath)
@@ -17,7 +18,53 @@ SharedModelBuffers::SharedModelBuffers(std::wstring plugin, std::string filepath
 			allVerts.push_back(_m->modelParts[i].compVertices[x]);
 		}
 		allModels.push_back(new SharedModelPart(&_m->modelParts[i]));
-		defaultMatIndexes.push_back(_m->modelParts[i].materialIndex);
+
+		DynamicMaterial* materialTemplate = Shared::materialManager->GetMaterial(_m->modelParts[i].material->GetName());
+		defaultMaterials.push_back(new DynamicMaterial(*materialTemplate));
+		for (int x = 0; x < defaultMaterials[defaultMaterials.size() - 1]->GetParameterCount(); x++) {
+			MaterialParameter* newParam = defaultMaterials[defaultMaterials.size() - 1]->GetParameter(x);
+			MaterialParameter* oldParam = _m->modelParts[i].material->GetParameter(x);
+			newParam->ChangeValueType(oldParam->value->type);
+			switch (newParam->value->type) {
+				case DataTypes::RGB: {
+					static_cast<DataTypeRGB*>(newParam->value)->value = static_cast<DataTypeRGB*>(oldParam->value)->value;
+					break;
+				}
+				case DataTypes::TEXTURE_FILEPATH: {
+					static_cast<DataTypeTextureFilepath*>(newParam->value)->value = static_cast<DataTypeTextureFilepath*>(oldParam->value)->value;
+					break;
+				}
+				case DataTypes::STRING: {
+					static_cast<DataTypeString*>(newParam->value)->value = static_cast<DataTypeString*>(oldParam->value)->value;
+					break;
+				}
+				case DataTypes::FLOAT: {
+					static_cast<DataTypeFloat*>(newParam->value)->value = static_cast<DataTypeFloat*>(oldParam->value)->value;
+					break;
+				}
+				case DataTypes::INTEGER: {
+					static_cast<DataTypeInt*>(newParam->value)->value = static_cast<DataTypeInt*>(oldParam->value)->value;
+					break;
+				}
+				case DataTypes::UNSIGNED_INTEGER: {
+					static_cast<DataTypeUInt*>(newParam->value)->value = static_cast<DataTypeUInt*>(oldParam->value)->value;
+					break;
+				}
+				case DataTypes::BOOLEAN: {
+					static_cast<DataTypeBool*>(newParam->value)->value = static_cast<DataTypeBool*>(oldParam->value)->value;
+					break;
+				}
+				case DataTypes::FLOAT_ARRAY: {
+					//static_cast<DataTypeFloatArray*>(newParam->value)->value = static_cast<DataTypeFloatArray*>(oldParam->value)->value; - TODO
+					break;
+				}
+				case DataTypes::OPTIONS_LIST: {
+					static_cast<DataTypeOptionsList*>(newParam->value)->value = static_cast<DataTypeOptionsList*>(oldParam->value)->value;
+					static_cast<DataTypeOptionsList*>(newParam->value)->options = static_cast<DataTypeOptionsList*>(oldParam->value)->options;
+					break;
+				}
+			}
+		}
 	}
 	Memory::SafeDelete(_m);
 	CalculateFinalExtents();
