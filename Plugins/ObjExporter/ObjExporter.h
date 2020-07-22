@@ -4,7 +4,6 @@
 #include <windows.h>
 #include <string>
 
-#include "../../SceneIO/CommonMesh.h"
-#include "../../SceneIO/CommonMaterial.h"
+#include "../SceneIO_Common.h"
 
 extern "C" __declspec(dllexport) void SaveModel(LoadedModel* model, std::string filepath);

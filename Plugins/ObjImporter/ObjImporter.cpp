@@ -313,7 +313,7 @@ extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath)
 			thisVertInfo.Tex = coords[faces[i].verts[x].c - 1];
 			thisVertInfo.Normal = normals[faces[i].verts[x].n - 1];
 
-			if (modelPart.materialName != faces[i].materialName)
+			if (modelPart.material->GetName() != faces[i].materialName)
 			{
 				if (totalIndex != 0)
 				{
@@ -324,7 +324,7 @@ extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath)
 				{
 					if (materials[y].materialName == faces[i].materialName)
 					{
-						modelPart.materialName = materials[y].materialName;
+						modelPart.material->GetName() = materials[y].materialName;
 						break;
 					}
 				}

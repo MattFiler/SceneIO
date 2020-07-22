@@ -1,7 +1,7 @@
 #pragma once
 
 #include "DataTypes.h"
-
+#include "Memory.h"
 #include "nlohmann/json.hpp"
 using json = nlohmann::json;
 
@@ -69,7 +69,10 @@ public:
 			}
 		}
 		value->type = newType;
+
+		#ifndef SCENEIO_PLUGIN
 		value->SetupBindable(); //Not all datatypes are bindable, but this is safe to call for any for ease of use.
+		#endif
 	}
 
 	std::string name = "";
@@ -80,6 +83,7 @@ private:
 	void Release() {
 		if (value == nullptr) return;
 		switch (value->type) {
+			#ifndef SCENEIO_PLUGIN
 			case DataTypes::RGB: {
 				DataTypeRGB* valueCast = static_cast<DataTypeRGB*>(value);
 				Memory::SafeDelete(valueCast);
@@ -90,6 +94,7 @@ private:
 				Memory::SafeDelete(valueCast);
 				break;
 			}
+			#endif
 			default: {
 				Memory::SafeDelete(value);
 				break;

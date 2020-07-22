@@ -1,22 +1,18 @@
 #pragma once
 
-#include <windows.h>
 #include "Shared.h"
 #include <d3dcompiler.h>
 #pragma comment(lib, "D3DCompiler.lib")
 
-#include <DirectXMath.h>
 #include <DirectXColors.h>
 
+#include "Memory.h"
 #include "EXErr.h"
 #include "FreeImage.h"
 #include "InputHandler.h"
 
 #include "CommonMesh.h"
-#include "CommonMaterial.h"
 
-#include <string>
-#include <vector>
 #include <fstream>
 #include <thread>
 #include <mutex>
@@ -39,39 +35,6 @@ using namespace DirectX;
 		#define HR(x) x;
 	#endif
 #endif
-
-namespace Memory
-{
-	/* Safely delete a pointer */
-	template <class T> void SafeDelete(T& t)
-	{
-		if (t)
-		{
-			delete t;
-			t = nullptr;
-		}
-	}
-
-	/* Safely delete a pointer array */
-	template <class T> void SafeDeleteArray(T& t)
-	{
-		if (t)
-		{
-			delete[] t;
-			t = nullptr;
-		}
-	}
-
-	/* Safely release a d3d resource */
-	template <class T> void SafeRelease(T& t)
-	{
-		if (t)
-		{
-			t->Release();
-			t = nullptr;
-		}
-	}
-};
 
 /* Debug logger */
 class Debug
@@ -140,6 +103,11 @@ struct ConstantBufferAlt
 	XMMATRIX mWorld;
 	XMMATRIX mView;
 	XMMATRIX mProjection;
+};
+
+struct ConstantBufferRGB
+{
+	XMFLOAT4 colourVal = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 };
 
 struct Texture {
@@ -363,7 +331,7 @@ public:
 		for (int x = 0; x < model.modelParts.size(); x++) {
 			LoadedModelPart thisPart = LoadedModelPart();
 			thisPart.compIndices = model.modelParts[x].compIndices;
-			thisPart.materialName = model.modelParts[x].materialName;
+			thisPart.material->GetName() = model.modelParts[x].material->GetName();
 			for (int y = 0; y < model.modelParts[x].compVertices.size(); y++) {
 				SimpleVertex thisVertInfo = model.modelParts[x].compVertices[y];
 				XMFLOAT3 originalVert = XMFLOAT3(model.modelParts[x].compVertices[y].Pos.x, model.modelParts[x].compVertices[y].Pos.y, model.modelParts[x].compVertices[y].Pos.z);

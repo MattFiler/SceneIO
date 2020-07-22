@@ -25,8 +25,6 @@
     <ClCompile Include="imgui_stl.cpp" />
     <ClCompile Include="MainSetup.cpp" />
     <ClCompile Include="Shared.cpp" />
-    <ClCompile Include="DynamicMaterial.cpp" />
-    <ClCompile Include="DynamicMaterialManager.cpp" />
     <ClCompile Include="EditorScene.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
@@ -50,17 +48,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="CommonMaterial.h" />
     <ClInclude Include="CommonMesh.h" />
     <ClInclude Include="DataTypes.h" />
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="DebugCube.h" />
+    <ClInclude Include="DynamicMaterial.h" />
     <ClInclude Include="EXErr.h" />
     <ClInclude Include="imgui_stl.h" />
     <ClInclude Include="MainSetup.h" />
+    <ClInclude Include="Memory.h" />
     <ClInclude Include="Shared.h" />
     <ClInclude Include="Utilities.h" />
-    <ClInclude Include="DynamicMaterial.h" />
     <ClInclude Include="DynamicMaterialManager.h" />
     <ClInclude Include="EditorScene.h" />
     <ClInclude Include="GameObject.h" />

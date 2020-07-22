@@ -31,7 +31,7 @@ extern "C" __declspec(dllexport) void SaveModel(LoadedModel* model, std::string 
 			Vector3 thisNorm = model->modelParts[i].compVertices[x].Normal;
 			objFile << "vn " << std::to_string(thisNorm.x) << " " << std::to_string(thisNorm.y) << " " << std::to_string(thisNorm.z) << "\n";
 		}
-		objFile << "usemtl " << model->modelParts[i].materialName << "\n";
+		objFile << "usemtl " << model->modelParts[i].material->GetName() << "\n";
 		for (int x = 0; x < model->modelParts[i].compIndices.size(); x += 3) {
 			objFile << "f " << model->modelParts[i].compIndices[x] + 1 + offset << "/" << model->modelParts[i].compIndices[x] + 1 + offset << "/" << model->modelParts[i].compIndices[x] + 1 + offset << " ";
 			objFile << model->modelParts[i].compIndices[x + 1] + 1 + offset << "/" << model->modelParts[i].compIndices[x + 1] + 1 + offset << "/" << model->modelParts[i].compIndices[x + 1] + 1 + offset << " ";
@@ -42,17 +42,17 @@ extern "C" __declspec(dllexport) void SaveModel(LoadedModel* model, std::string 
 		//MTL
 		bool alreadyExported = false;
 		for (int x = 0; x < parsedMats.size(); x++) {
-			if (parsedMats[x] == model->modelParts[i].materialName) {
+			if (parsedMats[x] == model->modelParts[i].material->GetName()) {
 				alreadyExported = true;
 				break;
 			}
 		}
 		if (alreadyExported) continue;
-		parsedMats.push_back(model->modelParts[i].materialName);
-		mtlFile << "\nnewmtl " << model->modelParts[i].materialName << "\n";
+		parsedMats.push_back(model->modelParts[i].material->GetName());
+		mtlFile << "\nnewmtl " << model->modelParts[i].material->GetName() << "\n";
 		//mtlFile << "Kd " << model->modelParts[i].thisMaterial.r << " " << model->modelParts[i].thisMaterial.g << " " << model->modelParts[i].thisMaterial.b << "\n";
 		//mtlFile << "d " << model->modelParts[i].thisMaterial.a << "\n";
-		mtlFile << "map_Kd " << model->modelParts[i].materialName << ".dds\n";
+		mtlFile << "map_Kd " << model->modelParts[i].material->GetName() << ".dds\n";
 		mtlFile << "illum 2\n";
 	}
 	objFile.close();

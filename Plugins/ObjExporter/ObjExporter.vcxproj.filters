@@ -13,16 +13,31 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\SceneIO API">
+      <UniqueIdentifier>{8a7cf701-8add-4be0-911d-ba12c6768b55}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ObjExporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\SceneIO\CommonMesh.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\SceneIO API</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\SceneIO\CommonMaterial.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\SceneIO\DataTypes.h">
+      <Filter>Header Files\SceneIO API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SceneIO\DynamicMaterial.h">
+      <Filter>Header Files\SceneIO API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SceneIO\MaterialParameter.h">
+      <Filter>Header Files\SceneIO API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SceneIO\Memory.h">
+      <Filter>Header Files\SceneIO API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SceneIO_Common.h">
+      <Filter>Header Files\SceneIO API</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
