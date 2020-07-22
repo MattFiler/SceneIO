@@ -8,12 +8,12 @@
 #include <DirectXMath.h>
 #include <DirectXColors.h>
 
+#include "Memory.h"
 #include "EXErr.h"
 #include "FreeImage.h"
 #include "InputHandler.h"
 
 #include "CommonMesh.h"
-#include "CommonMaterial.h"
 
 #include <string>
 #include <vector>
@@ -39,39 +39,6 @@ using namespace DirectX;
 		#define HR(x) x;
 	#endif
 #endif
-
-namespace Memory
-{
-	/* Safely delete a pointer */
-	template <class T> void SafeDelete(T& t)
-	{
-		if (t)
-		{
-			delete t;
-			t = nullptr;
-		}
-	}
-
-	/* Safely delete a pointer array */
-	template <class T> void SafeDeleteArray(T& t)
-	{
-		if (t)
-		{
-			delete[] t;
-			t = nullptr;
-		}
-	}
-
-	/* Safely release a d3d resource */
-	template <class T> void SafeRelease(T& t)
-	{
-		if (t)
-		{
-			t->Release();
-			t = nullptr;
-		}
-	}
-};
 
 /* Debug logger */
 class Debug
@@ -140,6 +107,11 @@ struct ConstantBufferAlt
 	XMMATRIX mWorld;
 	XMMATRIX mView;
 	XMMATRIX mProjection;
+};
+
+class ConstantBufferRGB {
+public:
+	XMFLOAT4 colourVal = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 };
 
 struct Texture {

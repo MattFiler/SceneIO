@@ -5,6 +5,6 @@
 #include <string>
 
 #include "../../SceneIO/CommonMesh.h"
-#include "../../SceneIO/CommonMaterial.h"
+#include "../../SceneIO/DynamicMaterial.h"
 
 extern "C" __declspec(dllexport) void SaveModel(LoadedModel* model, std::string filepath);

@@ -64,9 +64,6 @@
     <Filter Include="Source Files\Libraries\ImGuizmo">
       <UniqueIdentifier>{be34651f-f4a8-49d8-8838-cc362ed691c4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Common">
-      <UniqueIdentifier>{580a3f0f-7f93-495a-8407-bab9c3f5f882}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui_impl_dx11.cpp">
@@ -110,9 +107,6 @@
     </ClCompile>
     <ClCompile Include="DebugCube.cpp">
       <Filter>Source Files\GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="DynamicMaterial.cpp">
-      <Filter>Source Files\Models/Materials</Filter>
     </ClCompile>
     <ClCompile Include="DynamicMaterialManager.cpp">
       <Filter>Source Files\Models/Materials</Filter>
@@ -267,10 +261,10 @@
       <Filter>Header Files\Libraries\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="CommonMesh.h">
-      <Filter>Header Files\Common</Filter>
+      <Filter>Header Files\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="CommonMaterial.h">
-      <Filter>Header Files\Common</Filter>
+    <ClInclude Include="Memory.h">
+      <Filter>Header Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

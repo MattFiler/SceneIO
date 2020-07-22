@@ -1,7 +1,9 @@
 #pragma once
 
 #include <stdexcept>
+#ifndef SCENEIO_PLUGIN
 #include "Utilities.h"
+#endif
 
 /* Inheritable datatypes for dynamic casting */
 
@@ -31,11 +33,6 @@ public:
 	float B = 0.0f;
 };
 
-class ConstantBufferRGB {
-public:
-	XMFLOAT4 colourVal = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-};
-
 /* Base datatype with static string to enum helper function for type conversion */
 class DataType {
 public:
@@ -53,20 +50,25 @@ public:
 	}
 	DataTypes type;
 
+#ifndef SCENEIO_PLUGIN
 	virtual void SetupBindable() {}; //This can be called for any type, but will only effect canBeBound types
 	virtual ID3D11Buffer* GetDataBindable() { return nullptr; }; //This will return nullptr if doesn't exist 
 	virtual ID3D11ShaderResourceView* GetTextureBindable() { return nullptr; }; //This will return nullptr if doesn't exist 
+#endif
 };
 
 /* These datatypes can be bound to our shader, so they hold their own constant buffer resources */
 class DataTypeRGB : public DataType {
 public:
+#ifndef SCENEIO_PLUGIN
 	~DataTypeRGB() {
 		Memory::SafeRelease(g_pConstantBuffer);
 	}
+#endif
 
 	RGBValue value = RGBValue();
 
+#ifndef SCENEIO_PLUGIN
 	void SetupBindable() override {
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory(&bd, sizeof(bd));
@@ -87,17 +89,21 @@ public:
 private:
 	ConstantBufferRGB rgbConstant = ConstantBufferRGB();
 	ID3D11Buffer* g_pConstantBuffer = nullptr;
+#endif
 };
 
 class DataTypeTextureFilepath : public DataType {
 public:
+#ifndef SCENEIO_PLUGIN
 	~DataTypeTextureFilepath() {
 		Memory::SafeRelease(g_pConstantBuffer);
 		Memory::SafeDelete(internalTex);
 	}
+#endif
 
 	std::string value = "";
 
+#ifndef SCENEIO_PLUGIN
 	ID3D11ShaderResourceView* GetTextureBindable() override {
 		if (internalTex == nullptr) internalTex = Utilities::LoadTexture(value);
 		if (internalTex == nullptr) return nullptr;
@@ -112,6 +118,7 @@ public:
 private:
 	ID3D11Buffer* g_pConstantBuffer = nullptr;
 	Texture* internalTex = nullptr;
+#endif
 };
 
 /* Any following datatypes cannot be bound to our shader, and are used purely for the API */
