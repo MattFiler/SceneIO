@@ -7,6 +7,10 @@
 
 /* Inheritable datatypes for dynamic casting */
 
+class ID3D11ShaderResourceView;
+class ID3D11Buffer;
+class Texture;
+
 //This should match the values and order in Shared.cpp
 enum class DataTypes {
 	RGB,
@@ -53,11 +57,10 @@ public:
 	}
 	DataTypes type;
 
-#ifndef SCENEIO_PLUGIN
+	/* NOT FOR USE IN DLLS */
 	virtual void SetupBindable() {}; //This can be called for any type, but will only effect canBeBound types
 	virtual ID3D11Buffer* GetDataBindable() { return nullptr; }; //This will return nullptr if doesn't exist 
 	virtual ID3D11ShaderResourceView* GetTextureBindable() { return nullptr; }; //This will return nullptr if doesn't exist 
-#endif
 };
 
 /* These datatypes can be bound to our shader, so they hold their own constant buffer resources */
@@ -82,17 +85,17 @@ public:
 		Shared::m_pDevice->CreateBuffer(&bd, nullptr, &g_pConstantBuffer);
 	}
 	ID3D11Buffer* GetDataBindable() override {
+		ConstantBufferRGB rgbConstant = ConstantBufferRGB();
 		rgbConstant.colourVal.x = value.R;
 		rgbConstant.colourVal.y = value.G;
 		rgbConstant.colourVal.z = value.B;
 		Shared::m_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, nullptr, &rgbConstant, 0, 0);
 		return g_pConstantBuffer;
 	}
+#endif
 
 private:
-	ConstantBufferRGB rgbConstant = ConstantBufferRGB();
 	ID3D11Buffer* g_pConstantBuffer = nullptr;
-#endif
 };
 
 class DataTypeTextureFilepath : public DataType {
@@ -117,11 +120,11 @@ public:
 		if (internalTex == nullptr) return nullptr;
 		return internalTex->textureView;
 	}
+#endif
 
 private:
 	ID3D11Buffer* g_pConstantBuffer = nullptr;
 	Texture* internalTex = nullptr;
-#endif
 };
 
 /* Any following datatypes cannot be bound to our shader, and are used purely for the API */
