@@ -29,7 +29,7 @@ struct Material
 	std::string materialName = "";
 
 	float r, g, b, a = 1.0f;
-	std::string texturePath = "data/plastic_base.dds"; //placeholder blank texture
+	std::string texturePath = "data/plastic_base.png"; //placeholder blank texture
 };
 
 extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath)

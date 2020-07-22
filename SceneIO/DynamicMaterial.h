@@ -26,6 +26,10 @@ public:
 		m_vertexShader = cpy.m_vertexShader;
 		m_pixelShader = cpy.m_pixelShader;
 #endif
+		parameters.clear();
+		for (int i = 0; i < cpy.parameters.size(); i++) {
+			parameters.push_back(new MaterialParameter(*cpy.parameters[i]));
+		}
 		matIndex = cpy.matIndex;
 		Setup(true);
 	}
@@ -88,15 +92,15 @@ private:
 		if (typeString == "VOLUME") type = MaterialSurfaceTypes::VOLUME;
 		if (typeString == "ENVIRONMENT") type = MaterialSurfaceTypes::ENVIRONMENT;
 
+		isCopy = _isCopy;
+		if (_isCopy) return;
+
 		for (int i = 0; i < config["parameters"].size(); i++) {
 			MaterialParameter* newParam = new MaterialParameter(config["parameters"][i]);
 			parameters.push_back(newParam);
 		}
 
-		isCopy = _isCopy;
 #ifndef SCENEIO_PLUGIN
-		if (_isCopy) return;
-
 		//Compile the vertex shader
 		ID3DBlob* pVSBlob = nullptr;
 		std::string s = "data/materials/" + name + ".fx";

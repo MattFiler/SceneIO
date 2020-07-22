@@ -95,8 +95,12 @@ private:
 			}
 #endif
 			default: {
+#ifndef SCENEIO_PLUGIN
+				Memory::SafeDelete(value);
+#else
 				delete value;
 				value = nullptr;
+#endif
 				break;
 			}
 		}
