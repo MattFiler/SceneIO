@@ -175,7 +175,7 @@ public:
 				newModel = LoadModel(filePath);
 			}
 		}
-		//FreeLibrary(hModule);
+		FreeLibrary(hModule);
 		return newModel;
 	}
 

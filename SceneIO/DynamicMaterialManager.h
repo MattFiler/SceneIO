@@ -9,11 +9,7 @@ class DynamicMaterialManager {
 public:
 	DynamicMaterialManager() {
 		json config;
-		std::string configPath = "data/materials/material_config.json";
-#ifdef SCENEIO_PLUGIN
-		//configPath = "../" + configPath;
-#endif
-		std::fstream cmd_js(configPath);
+		std::fstream cmd_js("data/materials/material_config.json");
 		cmd_js >> config;
 
 		for (int i = 0; i < config["materials"].size(); i++) {
