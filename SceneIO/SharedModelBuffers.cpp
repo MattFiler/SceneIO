@@ -19,7 +19,6 @@ SharedModelBuffers::SharedModelBuffers(std::wstring plugin, std::string filepath
 		}
 		allModels.push_back(new SharedModelPart(&_m->modelParts[i]));
 		defaultMaterials.push_back(new DynamicMaterial(*_m->modelParts[i].material));
-		Memory::SafeDelete(_m->modelParts[i].material);
 	}
 	Memory::SafeDelete(_m);
 	CalculateFinalExtents();
