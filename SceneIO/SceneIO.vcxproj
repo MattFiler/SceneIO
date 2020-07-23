@@ -169,6 +169,7 @@
 Xcopy /E /I /Y "$(SolutionDir)export_plugins" "$(SolutionDir)$(OutDir)export_plugins"
 Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"
 copy "$(SolutionDir)freeimage\x32\FreeImage.dll" "$(SolutionDir)$(OutDir)"
+copy "$(SolutionDir)assimp\Assimp32.dll" "$(SolutionDir)$(OutDir)"
 copy "$(SolutionDir)imgui.ini" "$(SolutionDir)$(OutDir)"</Command>
     </PostBuildEvent>
     <Link>
@@ -191,6 +192,7 @@ copy "$(SolutionDir)imgui.ini" "$(SolutionDir)$(OutDir)"</Command>
 Xcopy /E /I /Y "$(SolutionDir)export_plugins" "$(SolutionDir)$(OutDir)export_plugins"
 Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"
 copy "$(SolutionDir)freeimage\x64\FreeImage.dll" "$(SolutionDir)$(OutDir)"
+copy "$(SolutionDir)assimp\Assimp64.dll" "$(SolutionDir)$(OutDir)"
 copy "$(SolutionDir)imgui.ini" "$(SolutionDir)$(OutDir)"</Command>
     </PostBuildEvent>
     <Link>
@@ -221,6 +223,7 @@ copy "$(SolutionDir)imgui.ini" "$(SolutionDir)$(OutDir)"</Command>
 Xcopy /E /I /Y "$(SolutionDir)export_plugins" "$(SolutionDir)$(OutDir)export_plugins"
 Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"
 copy "$(SolutionDir)freeimage\x32\FreeImage.dll" "$(SolutionDir)$(OutDir)"
+copy "$(SolutionDir)assimp\Assimp32.dll" "$(SolutionDir)$(OutDir)"
 copy "$(SolutionDir)imgui.ini" "$(SolutionDir)$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -247,6 +250,7 @@ copy "$(SolutionDir)imgui.ini" "$(SolutionDir)$(OutDir)"</Command>
 Xcopy /E /I /Y "$(SolutionDir)export_plugins" "$(SolutionDir)$(OutDir)export_plugins"
 Xcopy /E /I /Y "$(SolutionDir)data" "$(SolutionDir)$(OutDir)data"
 copy "$(SolutionDir)freeimage\x64\FreeImage.dll" "$(SolutionDir)$(OutDir)"
+copy "$(SolutionDir)assimp\Assimp64.dll" "$(SolutionDir)$(OutDir)"
 copy "$(SolutionDir)imgui.ini" "$(SolutionDir)$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
