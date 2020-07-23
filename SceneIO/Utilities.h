@@ -203,7 +203,7 @@ public:
 			std::string thisFilepath = entry.path().u8string();
 			if (thisFilepath.length() < 4) continue;
 			if (thisFilepath.substr(thisFilepath.length() - 4) != ".dll") continue;
-			if (thisFilepath == "import_plugins/Assimp64.dll" || thisFilepath == "import_plugins/Assimp32.dll") continue; //Crap hard-coded ignore for Assimp export
+			if (thisFilepath == "import_plugins/Assimp64.dll" || thisFilepath == "import_plugins/Assimp32.dll") continue; //Crap hard-coded ignore for Assimp
 			allPlugins.push_back(thisFilepath);
 		}
 		return allPlugins;
@@ -217,6 +217,7 @@ public:
 			std::string thisFilepath = entry.path().u8string();
 			if (thisFilepath.length() < 4) continue;
 			if (thisFilepath.substr(thisFilepath.length() - 4) != ".dll") continue;
+			if (thisFilepath == "import_plugins/Assimp64.dll" || thisFilepath == "import_plugins/Assimp32.dll") continue; //Crap hard-coded ignore for Assimp
 			allPlugins.push_back(thisFilepath);
 		}
 		return allPlugins;
