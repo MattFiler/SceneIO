@@ -44,6 +44,10 @@ struct SimpleVertex
 /* A definition of a submesh within a mesh object */
 struct LoadedModelPart
 {
+	// This struct doesn't have a destructor as it's used a bit casually throughout the application, and destroying the material
+	// each time can easily cause corruptions. For this reason, when getting rid of an instance of this struct for the final
+	// time, you should be aware that you need to MANUALLY delete the material object.
+
 	std::vector<SimpleVertex> compVertices = std::vector<SimpleVertex>();
 	std::vector<WORD> compIndices = std::vector<WORD>();
 	DynamicMaterial* material = nullptr;

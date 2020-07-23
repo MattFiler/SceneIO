@@ -19,9 +19,7 @@ SharedModelBuffers::SharedModelBuffers(std::wstring plugin, std::string filepath
 		}
 		allModels.push_back(new SharedModelPart(&_m->modelParts[i]));
 		defaultMaterials.push_back(new DynamicMaterial(*_m->modelParts[i].material));
-		for (int x = 0; x < defaultMaterials[defaultMaterials.size() - 1]->GetParameterCount(); x++) {
-			//defaultMaterials[defaultMaterials.size() - 1]->GetParameter(x)->value->SetupBindable();
-		}
+		Memory::SafeDelete(_m->modelParts[i].material);
 	}
 	Memory::SafeDelete(_m);
 	CalculateFinalExtents();
