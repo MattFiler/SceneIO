@@ -21,17 +21,22 @@ public:
 	}
 	DynamicMaterial(const DynamicMaterial& cpy) {
 		config = cpy.config;
-#ifndef SCENEIO_PLUGIN
-		m_vertexLayout = cpy.m_vertexLayout;
-		m_vertexShader = cpy.m_vertexShader;
-		m_pixelShader = cpy.m_pixelShader;
-#endif
-		parameters.clear();
+		Setup(true);
+		parameters.clear(); //sanity
 		for (int i = 0; i < cpy.parameters.size(); i++) {
 			parameters.push_back(new MaterialParameter(*cpy.parameters[i]));
 		}
 		matIndex = cpy.matIndex;
-		Setup(true);
+#ifndef SCENEIO_PLUGIN
+		if (cpy.m_vertexLayout && cpy.m_vertexShader && cpy.m_pixelShader) {
+			m_vertexLayout = cpy.m_vertexLayout;
+			m_vertexShader = cpy.m_vertexShader;
+			m_pixelShader = cpy.m_pixelShader;
+		}
+		else {
+			LoadShader();
+		}
+#endif
 	}
 
 	~DynamicMaterial() {
@@ -80,27 +85,8 @@ public:
 		Shared::m_pImmediateContext->PSSetShader(m_pixelShader, nullptr, 0);
 		Shared::m_pImmediateContext->IASetInputLayout(m_vertexLayout);
 	}
-#endif
 
-private:
-	void Setup(bool _isCopy) {
-		//Setup base material values
-		name = config["name"].get<std::string>();
-
-		std::string typeString = config["type"].get<std::string>();
-		if (typeString == "SURFACE") type = MaterialSurfaceTypes::SURFACE;
-		if (typeString == "VOLUME") type = MaterialSurfaceTypes::VOLUME;
-		if (typeString == "ENVIRONMENT") type = MaterialSurfaceTypes::ENVIRONMENT;
-
-		isCopy = _isCopy;
-		if (_isCopy) return;
-
-		for (int i = 0; i < config["parameters"].size(); i++) {
-			MaterialParameter* newParam = new MaterialParameter(config["parameters"][i]);
-			parameters.push_back(newParam);
-		}
-
-#ifndef SCENEIO_PLUGIN
+	void LoadShader() {
 		//Compile the vertex shader
 		ID3DBlob* pVSBlob = nullptr;
 		std::string s = "data/materials/" + name + ".fx";
@@ -130,6 +116,29 @@ private:
 		//Create the pixel shader
 		HR(Shared::m_pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &m_pixelShader));
 		pPSBlob->Release();
+	}
+#endif
+
+private:
+	void Setup(bool _isCopy) {
+		//Setup base material values
+		name = config["name"].get<std::string>();
+
+		std::string typeString = config["type"].get<std::string>();
+		if (typeString == "SURFACE") type = MaterialSurfaceTypes::SURFACE;
+		if (typeString == "VOLUME") type = MaterialSurfaceTypes::VOLUME;
+		if (typeString == "ENVIRONMENT") type = MaterialSurfaceTypes::ENVIRONMENT;
+
+		isCopy = _isCopy;
+		if (_isCopy) return;
+
+		for (int i = 0; i < config["parameters"].size(); i++) {
+			MaterialParameter* newParam = new MaterialParameter(config["parameters"][i]);
+			parameters.push_back(newParam);
+		}
+
+#ifndef SCENEIO_PLUGIN
+		LoadShader();
 #endif
 	}
 

@@ -23,6 +23,51 @@ public:
 			}
 		}
 	}
+	MaterialParameter(const MaterialParameter& cpy) {
+		name = cpy.name;
+		isBound = cpy.isBound;
+		ChangeValueType(cpy.value->type);
+		switch (value->type) {
+			case DataTypes::RGB: {
+				static_cast<DataTypeRGB*>(value)->value = static_cast<DataTypeRGB*>(cpy.value)->value;
+				break;
+			}
+			case DataTypes::TEXTURE_FILEPATH: {
+				static_cast<DataTypeTextureFilepath*>(value)->value = static_cast<DataTypeTextureFilepath*>(cpy.value)->value;
+				break;
+			}
+			case DataTypes::STRING: {
+				static_cast<DataTypeString*>(value)->value = static_cast<DataTypeString*>(cpy.value)->value;
+				break;
+			}
+			case DataTypes::FLOAT: {
+				static_cast<DataTypeFloat*>(value)->value = static_cast<DataTypeFloat*>(cpy.value)->value;
+				break;
+			}
+			case DataTypes::INTEGER: {
+				static_cast<DataTypeInt*>(value)->value = static_cast<DataTypeInt*>(cpy.value)->value;
+				break;
+			}
+			case DataTypes::UNSIGNED_INTEGER: {
+				static_cast<DataTypeUInt*>(value)->value = static_cast<DataTypeUInt*>(cpy.value)->value;
+				break;
+			}
+			case DataTypes::BOOLEAN: {
+				static_cast<DataTypeBool*>(value)->value = static_cast<DataTypeBool*>(cpy.value)->value;
+				break;
+			}
+			case DataTypes::FLOAT_ARRAY: {
+				//static_cast<DataTypeFloatArray*>(value)->value = static_cast<DataTypeFloatArray*>(cpy.value)->value; - TODO
+				break;
+			}
+			case DataTypes::OPTIONS_LIST: {
+				static_cast<DataTypeOptionsList*>(value)->value = static_cast<DataTypeOptionsList*>(cpy.value)->value;
+				static_cast<DataTypeOptionsList*>(value)->options = static_cast<DataTypeOptionsList*>(cpy.value)->options;
+				break;
+			}
+		}
+	}
+
 	~MaterialParameter() {
 		Release();
 	}
