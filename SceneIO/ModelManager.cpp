@@ -50,6 +50,9 @@ ModelManager::~ModelManager()
 /* Render controls UI */
 void ModelManager::Update(double dt)
 {
+	//Enable/disable input based on the model manager UI visibility (nicer UX)
+	InputHandler::EnableInput(!(importerFileDialog.IsOpened() || exporterFileDialog.IsOpened()));
+
 	//Hotkeys for swapping modes (TODO: add rotation back)
 	if (InputHandler::KeyDown(WindowsKey::O)) {
 		Shared::mCurrentGizmoOperation = ImGuizmo::TRANSLATE;

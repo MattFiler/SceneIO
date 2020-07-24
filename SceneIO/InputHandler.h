@@ -129,16 +129,23 @@ public:
 	/* Is a key currently down? */
 	static bool KeyDown(WindowsKey _key)
 	{
+		if (!enabled) return false;
 		return io->KeysDown[(int)_key];
 	}
 
 	/* Is a mouse button down? */
 	static bool MouseDown(WindowsMouse _btn)
 	{
+		if (!enabled) return false;
 		return io->MouseDown[(int)_btn];
 	}
 
+	/* Enable/disable input */
+	static void EnableInput(bool _e) { enabled = _e; }
+	static void ToggleInput() { enabled = !enabled; }
+
 protected:
 	static ImGuiIO* io;
+	static bool enabled;
 };
 
