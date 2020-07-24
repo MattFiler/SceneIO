@@ -14,6 +14,7 @@
 #include "imgui/imgui_impl_dx11.h"
 #include "imguizmo/ImGuizmo.h"
 #include "imgui_stl.h"
+#include "imfilebrowser/imfilebrowser.h"
 
 enum CameraControlType {
 	KEYBOARD,
@@ -21,6 +22,7 @@ enum CameraControlType {
 };
 
 class DynamicMaterialManager;
+class PluginManager;
 
 /* Shared values which are persistant throughout the application's lifetime */
 struct Shared 
@@ -52,7 +54,8 @@ public:
 	static float cameraFar;
 
 	/* Engine Functionality */
-	static DynamicMaterialManager* materialManager; //This should be instantiated per-scene on init, if required
+	static DynamicMaterialManager* materialManager;
+	static PluginManager* pluginManager;
 
 	/* ImGuizmo */
 	static ImGuizmo::OPERATION mCurrentGizmoOperation;

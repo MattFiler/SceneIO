@@ -72,19 +72,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>../../SceneIO/export_plugins/</OutDir>
+    <OutDir>../../SceneIO/plugins/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>../../SceneIO/export_plugins/</OutDir>
+    <OutDir>../../SceneIO/plugins/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>../../SceneIO/export_plugins/</OutDir>
+    <OutDir>../../SceneIO/plugins/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>../../SceneIO/export_plugins/</OutDir>
+    <OutDir>../../SceneIO/plugins/</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -156,6 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\SceneIO\CommonMesh.h" />
+    <ClInclude Include="..\..\SceneIO\CommonMisc.h" />
     <ClInclude Include="..\..\SceneIO\DataTypes.h" />
     <ClInclude Include="..\..\SceneIO\DynamicMaterial.h" />
     <ClInclude Include="..\..\SceneIO\MaterialParameter.h" />

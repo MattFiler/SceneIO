@@ -21,6 +21,7 @@ bool SceneManager::Init()
 	ChangeScene(0);
 
 	Shared::materialManager = new DynamicMaterialManager();
+	Shared::pluginManager = new PluginManager();
 
 	return dxInit;
 }

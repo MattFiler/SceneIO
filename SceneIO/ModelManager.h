@@ -7,7 +7,7 @@
 /* Manages all model instances within the scene */
 class ModelManager {
 public:
-	ModelManager() = default;
+	ModelManager();
 	~ModelManager();
 
 	void Update(double dt);
@@ -33,9 +33,10 @@ private:
 	void ModelMaterialUI();
 	void MaterialDropdownUI(Model* model, int submeshID);
 
-	bool LoadModel(std::wstring plugin, std::string name, DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3 rot = DirectX::XMFLOAT3(0, 0, 0));
+	bool LoadModel(std::string name, DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3 rot = DirectX::XMFLOAT3(0, 0, 0));
+	bool SaveModel(std::string name);
 
-	SharedModelBuffers* LoadModelToLevel(std::wstring plugin, std::string filename);
+	SharedModelBuffers* LoadModelToLevel(std::string filename);
 	std::vector<SharedModelBuffers*> modelBuffers = std::vector<SharedModelBuffers*>();
 	std::vector<Model*> models = std::vector<Model*>();
 
@@ -46,6 +47,6 @@ private:
 	int selectedModelUI = -1;
 	int selectedModelSubmeshUI = -1;
 
-	std::string requestedLoadPath = "";
-	std::string requestedSavePath = "";
+	ImGui::FileBrowser importerFileDialog;
+	ImGui::FileBrowser exporterFileDialog;
 };

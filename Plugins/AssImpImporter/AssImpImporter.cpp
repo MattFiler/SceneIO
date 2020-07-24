@@ -6,6 +6,13 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+extern "C" __declspec(dllexport) PluginDefinition* RegisterPlugin()
+{
+	std::vector<std::string> supportedFormats = std::vector<std::string>();
+	supportedFormats.push_back(".obj");
+	return new PluginDefinition("AssImp Importer", supportedFormats, PluginType::IMPORTER);
+}
+
 extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath)
 {
 	Assimp::Importer importer;

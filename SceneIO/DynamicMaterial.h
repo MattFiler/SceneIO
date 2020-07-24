@@ -5,6 +5,12 @@
 #include "Utilities.h"
 #endif
 
+#ifdef SCENEIO_PLUGIN
+class ID3D11VertexShader;
+class ID3D11PixelShader;
+class ID3D11InputLayout;
+#endif
+
 enum class MaterialSurfaceTypes {
 	SURFACE,
 	VOLUME,
@@ -147,11 +153,9 @@ private:
 	std::vector<MaterialParameter*> parameters = std::vector<MaterialParameter*>();
 	json config;
 
-#ifndef SCENEIO_PLUGIN
 	ID3D11VertexShader* m_vertexShader = nullptr;
 	ID3D11PixelShader* m_pixelShader = nullptr;
 	ID3D11InputLayout* m_vertexLayout = nullptr;
-#endif
 
 	int matIndex = 0;
 

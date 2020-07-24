@@ -64,6 +64,9 @@
     <Filter Include="Source Files\Libraries\ImGuizmo">
       <UniqueIdentifier>{be34651f-f4a8-49d8-8838-cc362ed691c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Libraries\ImFileBrowser">
+      <UniqueIdentifier>{465615e2-3f8c-4e80-8f88-965b9c806b96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui_impl_dx11.cpp">
@@ -143,6 +146,9 @@
     </ClCompile>
     <ClCompile Include="imgui_stl.cpp">
       <Filter>Source Files\Libraries\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="PluginManager.cpp">
+      <Filter>Source Files\Utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -261,6 +267,15 @@
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Memory.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="imfilebrowser\imfilebrowser.h">
+      <Filter>Header Files\Libraries\ImFileBrowser</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonMisc.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="PluginManager.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>

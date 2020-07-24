@@ -6,6 +6,34 @@
 #include <vector>
 #include <codecvt>
 
+/* Setup available types in filepicker */
+ModelManager::ModelManager()
+{
+	std::vector<PluginDefinition*> allPlugins = Shared::pluginManager->GetPlugins();
+
+	importerFileDialog = ImGui::FileBrowser::FileBrowser(ImGuiFileBrowserFlags_CloseOnEsc);
+	importerFileDialog.SetTitle("Import Mesh");
+	std::vector<const char*> importerFiletypes = std::vector<const char*>();
+	for (int i = 0; i < allPlugins.size(); i++) {
+		if (allPlugins[i]->pluginType != PluginType::IMPORTER) continue;
+		for (int x = 0; x < allPlugins[i]->supportedExtensions.size(); x++) {
+			importerFiletypes.push_back(allPlugins[i]->supportedExtensions[x].c_str());
+		}
+	}
+	importerFileDialog.SetTypeFilters(importerFiletypes);
+
+	exporterFileDialog = ImGui::FileBrowser::FileBrowser(ImGuiFileBrowserFlags_EnterNewFilename | ImGuiFileBrowserFlags_CreateNewDir | ImGuiFileBrowserFlags_CloseOnEsc);
+	exporterFileDialog.SetTitle("Export Mesh");
+	std::vector<const char*> exporterFiletypes = std::vector<const char*>();
+	for (int i = 0; i < allPlugins.size(); i++) {
+		if (allPlugins[i]->pluginType != PluginType::EXPORTER) continue;
+		for (int x = 0; x < allPlugins[i]->supportedExtensions.size(); x++) {
+			exporterFiletypes.push_back(allPlugins[i]->supportedExtensions[x].c_str());
+		}
+	}
+	exporterFileDialog.SetTypeFilters(exporterFiletypes);
+}
+
 /* Free all model instances */
 ModelManager::~ModelManager()
 {
@@ -63,49 +91,51 @@ void ModelManager::ModelManagerUI()
 	ImGui::Begin("Model Controls", nullptr);
 	ImGui::PopStyleVar();
 
-	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
-
-	//Model loading through plugin
-	if (ImGui::CollapsingHeader("Load New Model", ImGuiTreeNodeFlags_DefaultOpen)) {
-		ImGui::InputText("Model load path", &requestedLoadPath);
-		std::vector<std::string> allPlugins = Utilities::GetImporterPlugins();
-		for (int i = 0; i < allPlugins.size(); i++) {
-			if (ImGui::Button(("Load using " + allPlugins[i]).c_str())) {
-				if (LoadModel(conv.from_bytes(allPlugins[i]), requestedLoadPath)) requestedLoadPath = "";
-			}
+	if (ImGui::Button("Load New Model")) {
+		importerFileDialog.Open();
+	}
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
+	importerFileDialog.Display();
+	ImGui::PopStyleVar();
+	if (importerFileDialog.HasSelected())
+	{
+		if (LoadModel(importerFileDialog.GetSelected().string())) {
+			importerFileDialog.ClearSelected();
+			importerFileDialog.Close();
 		}
 	}
 
-	//Model exporting through plugin
-	if (ImGui::CollapsingHeader("Export Selected Model", ImGuiTreeNodeFlags_DefaultOpen)) {
-		ImGui::InputText("Model save path", &requestedSavePath);
-		std::vector<std::string> allPlugins = Utilities::GetExporterPlugins();
-		for (int i = 0; i < allPlugins.size(); i++) {
-			if (ImGui::Button(("Export using " + allPlugins[i]).c_str())) {
-				if (selectedModelUI != -1) {
-					//Get the model's shared buffers, then apply the instanced material information
-					Model* modelInstance = models.at(selectedModelUI);
-					LoadedModel* loadedModel = modelInstance->GetSharedBuffers()->GetAsLoadedModel();
-					for (int i = 0; i < modelInstance->GetSubmeshCount(); i++) {
-						loadedModel->modelParts[i].material = modelInstance->GetSubmeshMaterial(i);
-					}
+	//Controls for selected model only
+	if (selectedModelUI != -1) {
+		ImGui::SameLine();
 
-					//Save it out
-					Utilities::SaveModelWithPlugin(conv.from_bytes(allPlugins[i]), loadedModel, requestedSavePath);
-					Memory::SafeDelete(loadedModel);
-					requestedSavePath = "";
-				}
+		if (ImGui::Button("Export Selected Model")) {
+			exporterFileDialog.Open();
+		}
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
+		exporterFileDialog.Display();
+		ImGui::PopStyleVar();
+		if (exporterFileDialog.HasSelected())
+		{
+			if (SaveModel(exporterFileDialog.GetSelected().string())) {
+				exporterFileDialog.ClearSelected();
+				exporterFileDialog.Close();
 			}
 		}
-	}
 
-	ImGui::Separator();
+		ImGui::Separator();
 
-	if (ImGui::Button("Delete Selected Model") && selectedModelUI != -1) {
-		GameObjectManager::RemoveObject(models.at(selectedModelUI));
-		delete models.at(selectedModelUI);
-		models.erase(models.begin() + selectedModelUI);
-		selectedModelUI -= 1;
+		if (ImGui::Button("Delete Selected Model")) {
+			GameObjectManager::RemoveObject(models.at(selectedModelUI));
+			delete models.at(selectedModelUI);
+			models.erase(models.begin() + selectedModelUI);
+			selectedModelUI -= 1;
+		}
+		ImGui::SameLine();
+
+		if (ImGui::Button("Copy Selected Model")) {
+			//TODO: duplicate the model instance
+		}
 	}
 
 	ImGui::Separator();
@@ -305,9 +335,9 @@ void ModelManager::SelectModel(Ray& _r)
 }
 
 /* Create a model instance using a plugin */
-bool ModelManager::LoadModel(std::wstring plugin, std::string name, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot)
+bool ModelManager::LoadModel(std::string name, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rot)
 {
-	SharedModelBuffers* sharedBuffer = LoadModelToLevel(plugin, name);
+	SharedModelBuffers* sharedBuffer = LoadModelToLevel(name);
 	if (sharedBuffer == nullptr) return false;
 
 	Model* newModel = new Model();
@@ -322,8 +352,24 @@ bool ModelManager::LoadModel(std::wstring plugin, std::string name, DirectX::XMF
 	return true;
 }
 
+/* Save a model instance using a plugin */
+bool ModelManager::SaveModel(std::string name)
+{
+	//Get the model's shared buffers, then apply the instanced material information
+	Model* modelInstance = models.at(selectedModelUI);
+	LoadedModel* loadedModel = modelInstance->GetSharedBuffers()->GetAsLoadedModel();
+	for (int i = 0; i < modelInstance->GetSubmeshCount(); i++) {
+		loadedModel->modelParts[i].material = modelInstance->GetSubmeshMaterial(i);
+	}
+
+	//Save it out
+	Shared::pluginManager->SaveModelWithPlugin(loadedModel, name);
+	Memory::SafeDelete(loadedModel);
+	return true;
+}
+
 /* Requested load of model: check our existing loaded data, and if not already loaded, load it */
-SharedModelBuffers* ModelManager::LoadModelToLevel(std::wstring plugin, std::string filename)
+SharedModelBuffers* ModelManager::LoadModelToLevel(std::string filename)
 {
 	//Return an already loaded model buffer, if it exists
 	for (int i = 0; i < modelBuffers.size(); i++) {
@@ -334,7 +380,7 @@ SharedModelBuffers* ModelManager::LoadModelToLevel(std::wstring plugin, std::str
 	}
 
 	//Model isn't already loaded - load it
-	SharedModelBuffers* newLoadedModel = new SharedModelBuffers(plugin, filename);
+	SharedModelBuffers* newLoadedModel = new SharedModelBuffers(filename);
 	if (!newLoadedModel->DidLoadOK()) return nullptr;
 	modelBuffers.push_back(newLoadedModel);
 	return newLoadedModel;

@@ -13,6 +13,7 @@
 #include "FreeImage.h"
 #include "InputHandler.h"
 
+#include "PluginManager.h"
 #include "CommonMesh.h"
 
 #include <string>
@@ -161,66 +162,17 @@ public:
 		return S_OK;
 	}
 
-	/* Load a model through a DLL */
-	typedef LoadedModel* (*modelImporterPlugin)(std::string filepath);
-	static LoadedModel* LoadModelWithPlugin(std::wstring pluginName, std::string filePath) 
+	/* Get the file extension from a filename/path */
+	static std::string GetFileExtension(std::string filename)
 	{
-		LoadedModel* newModel = nullptr;
-		HMODULE hModule = LoadLibraryW(pluginName.c_str());
-		if (hModule != NULL)
-		{
-			modelImporterPlugin LoadModel = (modelImporterPlugin)GetProcAddress(hModule, "LoadModel");
-			if (LoadModel != NULL)
-			{
-				newModel = LoadModel(filePath);
-			}
-		}
-		FreeLibrary(hModule);
-		return newModel;
-	}
+		const char* file_name = filename.c_str();
 
-	/* Export a model through a DLL */
-	typedef void (*modelExporterPlugin)(LoadedModel* model, std::string filepath);
-	static void SaveModelWithPlugin(std::wstring pluginName, LoadedModel* model, std::string filepath)
-	{
-		HMODULE hModule = LoadLibraryW(pluginName.c_str());
-		if (hModule != NULL)
-		{
-			modelExporterPlugin SaveModel = (modelExporterPlugin)GetProcAddress(hModule, "SaveModel");
-			if (SaveModel != NULL)
-			{
-				SaveModel(model, filepath);
-			}
-		}
-		FreeLibrary(hModule);
-	}
+		int ext = '.';
+		const char* extension = NULL;
+		extension = strrchr(file_name, ext);
 
-	/* Get a list of all DLLs for loading */
-	static std::vector<std::string> GetImporterPlugins()
-	{
-		std::vector<std::string> allPlugins = std::vector<std::string>();
-		for (const auto& entry : std::filesystem::directory_iterator("import_plugins/")) {
-			std::string thisFilepath = entry.path().u8string();
-			if (thisFilepath.length() < 4) continue;
-			if (thisFilepath.substr(thisFilepath.length() - 4) != ".dll") continue;
-			if (thisFilepath == "import_plugins/Assimp64.dll" || thisFilepath == "import_plugins/Assimp32.dll") continue; //Crap hard-coded ignore for Assimp
-			allPlugins.push_back(thisFilepath);
-		}
-		return allPlugins;
-	}
-
-	/* Get a list of all DLLs for exporting */
-	static std::vector<std::string> GetExporterPlugins()
-	{
-		std::vector<std::string> allPlugins = std::vector<std::string>();
-		for (const auto& entry : std::filesystem::directory_iterator("export_plugins/")) {
-			std::string thisFilepath = entry.path().u8string();
-			if (thisFilepath.length() < 4) continue;
-			if (thisFilepath.substr(thisFilepath.length() - 4) != ".dll") continue;
-			if (thisFilepath == "import_plugins/Assimp64.dll" || thisFilepath == "import_plugins/Assimp32.dll") continue; //Crap hard-coded ignore for Assimp
-			allPlugins.push_back(thisFilepath);
-		}
-		return allPlugins;
+		if (extension == NULL) return "";
+		return extension;
 	}
 
 	/* Convert a DirectX Matrix to Float4X4 */
@@ -302,32 +254,5 @@ public:
 		HR(Shared::m_pDevice->CreateShaderResourceView(thisTex->texture, &srvDesc, &thisTex->textureView));
 
 		return thisTex;
-	}
-
-	/* Copy a file from one location to another */
-	static void CopyFile(std::string from, std::string to) {
-		std::ifstream  src(from, std::ios::binary);
-		std::ofstream  dst(to, std::ios::binary);
-		dst << src.rdbuf();
-		src.close();
-		dst.close();
-	}
-
-	/* Allows the user to select a file from a file picker window */
-	static std::string OpenFile(std::string filter = "All Files (*.*)\0*.*\0", HWND owner = NULL) {
-		OPENFILENAME ofn;
-		char fileName[MAX_PATH] = "";
-		ZeroMemory(&ofn, sizeof(ofn));
-		ofn.lStructSize = sizeof(OPENFILENAME);
-		ofn.hwndOwner = owner;
-		ofn.lpstrFilter = filter.c_str();
-		ofn.lpstrFile = fileName;
-		ofn.nMaxFile = MAX_PATH;
-		ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
-		ofn.lpstrDefExt = "";
-		std::string fileNameStr;
-		if (GetOpenFileName(&ofn))
-			fileNameStr = fileName;
-		return fileNameStr;
 	}
 };

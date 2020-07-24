@@ -7,4 +7,5 @@
 #include "../SceneIO/CommonMesh.h"
 #include "../SceneIO/DynamicMaterial.h"
 
-extern "C" __declspec(dllexport) void SaveModel(LoadedModel* model, std::string filepath);
+extern "C" __declspec(dllexport) PluginDefinition* RegisterPlugin();
+extern "C" __declspec(dllexport) bool SaveModel(LoadedModel* model, std::string filepath);

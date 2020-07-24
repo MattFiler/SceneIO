@@ -32,6 +32,13 @@ struct Material
 	std::string texturePath = "data/plastic_base.png"; //placeholder blank texture
 };
 
+extern "C" __declspec(dllexport) PluginDefinition* RegisterPlugin()
+{
+	std::vector<std::string> supportedFormats = std::vector<std::string>();
+	supportedFormats.push_back(".obj");
+	return new PluginDefinition("OBJ Importer", supportedFormats, PluginType::IMPORTER);
+}
+
 extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath)
 {
 	//Open OBJ

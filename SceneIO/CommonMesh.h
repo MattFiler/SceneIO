@@ -1,37 +1,9 @@
 #pragma once
-#include <vector>
+#include "CommonMisc.h"
 
 class DynamicMaterial;
 
 /* Functionality shared between the main application and DLLs */
-
-/* A vector of X and Y values */
-struct Vector2 {
-	Vector2() {}
-	Vector2(float _x, float _y) {
-		x = _x;
-		y = _y;
-	}
-	//TODO: more useful addition overloads etc
-
-	float x = 0.0f;
-	float y = 0.0f;
-};
-
-/* A vector of X, Y, and Z values */
-struct Vector3 {
-	Vector3() {}
-	Vector3(float _x, float _y, float _z) {
-		x = _x;
-		y = _y;
-		z = _z;
-	}
-	//TODO: more useful addition overloads etc
-
-	float x = 0.0f;
-	float y = 0.0f;
-	float z = 0.0f;
-};
 
 /* A definition of a mesh vertex */
 struct SimpleVertex
