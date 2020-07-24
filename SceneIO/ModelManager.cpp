@@ -267,7 +267,7 @@ void ModelManager::MaterialDropdownUI(Model* model, int submeshID)
 		switch (thisParam->value->type) {
 			case DataTypes::RGB: {
 				DataTypeRGB* param = static_cast<DataTypeRGB*>(thisParam->value);
-				ImGui::InputFloat3(inputLabel.c_str(), param->value.AsFloatArray());
+				ImGui::ColorEdit3(inputLabel.c_str(), param->value.AsFloatArray());
 				break;
 			}
 			case DataTypes::TEXTURE_FILEPATH: {
