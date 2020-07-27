@@ -35,9 +35,10 @@ struct Vector3 {
 /* Plugin definition */
 enum class PluginType {
 	DUMMY,
-	IMPORTER,
-	EXPORTER,
-	//TODO: UI button thing
+	MODEL_IMPORTER,
+	MODEL_EXPORTER,
+	SCENE_IMPORTER,
+	SCENE_EXPORTER,
 };
 struct PluginDefinition {
 	//Filled in by the editor tool
@@ -50,5 +51,5 @@ struct PluginDefinition {
 	bool supportsScenes = false;
 
 	PluginDefinition() {};
-	PluginDefinition(std::string _name, std::vector<std::string> _extensions, PluginType _type, bool _scenes) : pluginName(_name), supportedExtensions(_extensions), pluginType(_type), supportsScenes(_scenes) {};
+	PluginDefinition(std::string _name, std::vector<std::string> _extensions, PluginType _type) : pluginName(_name), supportedExtensions(_extensions), pluginType(_type) {};
 };

@@ -1,5 +1,5 @@
 #pragma once
-#include "../ImporterPlugin.h"
+#include "../ModelImporterPlugin.h"
 #include <fstream>
 #include <iostream>
 #include <assimp/Importer.hpp>
@@ -11,7 +11,7 @@ extern "C" __declspec(dllexport) PluginDefinition* RegisterPlugin()
 {
 	std::vector<std::string> supportedFormats = std::vector<std::string>();
 	supportedFormats.push_back(".obj");
-	return new PluginDefinition("AssImp Importer", supportedFormats, PluginType::IMPORTER, false);
+	return new PluginDefinition("AssImp Importer", supportedFormats, PluginType::MODEL_IMPORTER);
 }
 
 /* Load a single model */
@@ -75,11 +75,4 @@ extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath)
 		}
 	}
 	return thisModel;
-}
-
-/* Load an entire scene */
-extern "C" __declspec(dllexport) SceneDefinition* LoadScene(std::string filePath)
-{
-	//WE DON'T SUPPORT SCENES WITH THIS PLUGIN
-	return nullptr;
 }

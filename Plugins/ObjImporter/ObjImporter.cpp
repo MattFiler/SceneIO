@@ -1,5 +1,5 @@
 #pragma once
-#include "../ImporterPlugin.h"
+#include "../ModelImporterPlugin.h"
 #include <fstream>
 #include <iostream>
 
@@ -37,7 +37,7 @@ extern "C" __declspec(dllexport) PluginDefinition* RegisterPlugin()
 {
 	std::vector<std::string> supportedFormats = std::vector<std::string>();
 	supportedFormats.push_back(".obj");
-	return new PluginDefinition("OBJ Importer", supportedFormats, PluginType::IMPORTER, true);
+	return new PluginDefinition("OBJ Importer", supportedFormats, PluginType::MODEL_IMPORTER);
 }
 
 /* Load a single model */
