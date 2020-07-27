@@ -30,9 +30,6 @@
     <ClInclude Include="..\..\SceneIO\DataTypes.h">
       <Filter>Header Files\SceneIO API</Filter>
     </ClInclude>
-    <ClInclude Include="..\ImporterPlugin.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\SceneIO\DynamicMaterialManager.h">
       <Filter>Header Files\SceneIO API</Filter>
     </ClInclude>
@@ -41,6 +38,9 @@
     </ClInclude>
     <ClInclude Include="..\..\SceneIO\CommonScene.h">
       <Filter>Header Files\SceneIO API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ModelImporterPlugin.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
