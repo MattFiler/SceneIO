@@ -47,6 +47,8 @@ private:
 	int selectedModelUI = -1;
 	int selectedModelSubmeshUI = -1;
 
+	bool shouldExportAsWorld = false;
+
 	ImGui::FileBrowser importerFileDialog;
 	ImGui::FileBrowser exporterFileDialog;
 };

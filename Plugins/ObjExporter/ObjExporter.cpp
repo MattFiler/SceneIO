@@ -59,8 +59,8 @@ extern "C" __declspec(dllexport) bool SaveModel(LoadedModel* model, std::string 
 		mtlFile << "\nnewmtl " << model->modelParts[i].material->GetName() << "\n";
 		RGBValue rgbVal = static_cast<DataTypeRGB*>(model->modelParts[i].material->GetParameter("albedoColour")->value)->value;
 		mtlFile << "Kd " << rgbVal.R << " " << rgbVal.G << " " << rgbVal.B << "\n";
-		mtlFile << "d " << static_cast<DataTypeString*>(model->modelParts[i].material->GetParameter("albedoTexture")->value)->value << "\n";
-		mtlFile << "map_Kd " << static_cast<DataTypeString*>(model->modelParts[i].material->GetParameter("albedoTexture")->value)->value << ".dds\n";
+		mtlFile << "d \"" << static_cast<DataTypeString*>(model->modelParts[i].material->GetParameter("albedoTexture")->value)->value << "\"\n";
+		mtlFile << "map_Kd \"" << static_cast<DataTypeString*>(model->modelParts[i].material->GetParameter("albedoTexture")->value)->value << "\"\n";
 		mtlFile << "illum 2\n";
 	}
 	objFile.close();

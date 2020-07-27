@@ -126,6 +126,8 @@ void ModelManager::ModelManagerUI()
 			}
 		}
 
+		ImGui::Checkbox("Export Using Global Transform", &shouldExportAsWorld);
+
 		ImGui::Separator();
 
 		if (ImGui::Button("Delete Selected Model")) {
@@ -363,6 +365,19 @@ bool ModelManager::SaveModel(std::string name)
 	LoadedModel* loadedModel = modelInstance->GetSharedBuffers()->GetAsLoadedModel();
 	for (int i = 0; i < modelInstance->GetSubmeshCount(); i++) {
 		loadedModel->modelParts[i].material = modelInstance->GetSubmeshMaterial(i);
+	}
+
+	//Move to worldspace if requested
+	if (shouldExportAsWorld) {
+		DirectX::XMMATRIX thisWorld = modelInstance->GetWorldMatrix();
+		for (int i = 0; i < loadedModel->modelParts.size(); i++) {
+			for (int x = 0; x < loadedModel->modelParts[i].compVertices.size(); x++) {
+				Vector3* vert = &loadedModel->modelParts[i].compVertices[x].Pos;
+				XMFLOAT3 tempPos = XMFLOAT3(vert->x, vert->y, vert->z);
+				XMStoreFloat3(&tempPos, XMVector3Transform(XMLoadFloat3(&tempPos), thisWorld));
+				vert->x = tempPos.x; vert->y = tempPos.y; vert->z = tempPos.z;
+			}
+		}
 	}
 
 	//Save it out
