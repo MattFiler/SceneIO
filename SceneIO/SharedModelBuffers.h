@@ -7,6 +7,7 @@
 /* A model data buffer which can be shared between multiple model instances to save memory */
 class SharedModelBuffers {
 public:
+	SharedModelBuffers(LoadedModel* modelRef);
 	SharedModelBuffers(std::string filepath);
 	~SharedModelBuffers();
 
@@ -73,6 +74,8 @@ private:
 	DirectX::XMFLOAT3 extents_tempMax;
 	DirectX::XMFLOAT3 extents;
 	DirectX::XMFLOAT3 extentsOffset;
+
+	void CreateBuffersFromLoadedModel(LoadedModel* modelRef);
 
 	ID3D11Buffer* g_pVertexBuffer = nullptr;
 	ID3D11SamplerState* g_pSamplerLinear = nullptr;

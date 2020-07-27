@@ -2,13 +2,15 @@
 #include "../ExporterPlugin.h"
 #include <fstream>
 
+/* Register the plugin with the application */
 extern "C" __declspec(dllexport) PluginDefinition* RegisterPlugin()
 {
 	std::vector<std::string> supportedFormats = std::vector<std::string>();
 	supportedFormats.push_back(".obj");
-	return new PluginDefinition("OBJ Importer", supportedFormats, PluginType::EXPORTER);
+	return new PluginDefinition("OBJ Importer", supportedFormats, PluginType::EXPORTER, true);
 }
 
+/* Save a single model */
 extern "C" __declspec(dllexport) bool SaveModel(LoadedModel* model, std::string filepath)
 {
 	std::ofstream objFile;
@@ -65,5 +67,15 @@ extern "C" __declspec(dllexport) bool SaveModel(LoadedModel* model, std::string 
 	}
 	objFile.close();
 	mtlFile.close();
+	return true;
+}
+
+/* Save an entire scene */
+extern "C" __declspec(dllexport) bool SaveScene(SceneDefinition* scene, std::string filepath)
+{
+	for (int i = 0; i < scene->loadedModels.size(); i++) {
+		SaveModel(scene->loadedModels[i], filepath + "_" + std::to_string(i));
+	}
+	//TODO: maybe compile all the OBJs together and save with camera info?
 	return true;
 }

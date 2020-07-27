@@ -6,13 +6,15 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+/* Register the plugin with the application */
 extern "C" __declspec(dllexport) PluginDefinition* RegisterPlugin()
 {
 	std::vector<std::string> supportedFormats = std::vector<std::string>();
 	supportedFormats.push_back(".obj");
-	return new PluginDefinition("AssImp Importer", supportedFormats, PluginType::IMPORTER);
+	return new PluginDefinition("AssImp Importer", supportedFormats, PluginType::IMPORTER, false);
 }
 
+/* Load a single model */
 extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath)
 {
 	Assimp::Importer importer;
@@ -20,6 +22,7 @@ extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath)
 
 	DynamicMaterialManager* materialManager = new DynamicMaterialManager();
 	LoadedModel* thisModel = new LoadedModel();
+	thisModel->filepath = filePath;
 	for (UINT x = 0; x < pScene->mRootNode->mNumChildren; x++) {
 		aiVector3D scale;
 		aiQuaternion rotation;
@@ -72,4 +75,11 @@ extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath)
 		}
 	}
 	return thisModel;
+}
+
+/* Load an entire scene */
+extern "C" __declspec(dllexport) SceneDefinition* LoadScene(std::string filePath)
+{
+	//WE DON'T SUPPORT SCENES WITH THIS PLUGIN
+	return nullptr;
 }

@@ -36,6 +36,9 @@ private:
 	bool LoadModel(std::string name, DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3 rot = DirectX::XMFLOAT3(0, 0, 0));
 	bool SaveModel(std::string name);
 
+	bool LoadScene(std::string name);
+	bool SaveScene(std::string name);
+
 	SharedModelBuffers* LoadModelToLevel(std::string filename);
 	std::vector<SharedModelBuffers*> modelBuffers = std::vector<SharedModelBuffers*>();
 	std::vector<Model*> models = std::vector<Model*>();
@@ -49,6 +52,9 @@ private:
 
 	bool shouldExportAsWorld = false;
 
-	ImGui::FileBrowser importerFileDialog;
-	ImGui::FileBrowser exporterFileDialog;
+	ImGui::FileBrowser modelImporterFileDialog;
+	ImGui::FileBrowser modelExporterFileDialog;
+
+	ImGui::FileBrowser sceneImporterFileDialog;
+	ImGui::FileBrowser sceneExporterFileDialog;
 };

@@ -32,13 +32,15 @@ struct Material
 	std::string texturePath = "data/plastic_base.png"; //placeholder blank texture
 };
 
+/* Register the plugin with the application */
 extern "C" __declspec(dllexport) PluginDefinition* RegisterPlugin()
 {
 	std::vector<std::string> supportedFormats = std::vector<std::string>();
 	supportedFormats.push_back(".obj");
-	return new PluginDefinition("OBJ Importer", supportedFormats, PluginType::IMPORTER);
+	return new PluginDefinition("OBJ Importer", supportedFormats, PluginType::IMPORTER, true);
 }
 
+/* Load a single model */
 extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath)
 {
 	//Open OBJ
@@ -312,6 +314,7 @@ extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath)
 	DynamicMaterialManager* materialManager = new DynamicMaterialManager();
 	LoadedModel* thisModel = new LoadedModel();
 	LoadedModelPart modelPart = LoadedModelPart();
+	thisModel->filepath = filePath;
 	int totalIndex = 0;
 	for (int i = 0; i < faces.size(); i++)
 	{
@@ -349,4 +352,13 @@ extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath)
 	}
 	thisModel->modelParts.push_back(modelPart);
 	return thisModel;
+}
+
+/* Load an entire scene */
+extern "C" __declspec(dllexport) SceneDefinition* LoadScene(std::string filePath)
+{
+	SceneDefinition* thisScene = new SceneDefinition();
+	thisScene->camera = new SceneCamera(Vector3(0, 0, 0), Vector3(0, 0, 0));
+	thisScene->modelDefinitions.push_back(LoadModel("")); ///TODO: provide ability to set position/rotation here
+	return thisScene;
 }

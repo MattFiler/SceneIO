@@ -53,9 +53,6 @@ bool SceneManager::Update(double dt)
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Save Scene")) int test1 = 0;
-			if (ImGui::MenuItem("Load Scene")) int test2 = 0;
-			ImGui::Separator();
 			if (ImGui::MenuItem("Quit")) return false;
 			ImGui::EndMenu();
 		}

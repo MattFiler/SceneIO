@@ -47,7 +47,8 @@ struct PluginDefinition {
 	std::string pluginName = ""; 
 	std::vector<std::string> supportedExtensions = std::vector<std::string>();
 	PluginType pluginType = PluginType::DUMMY;
+	bool supportsScenes = false;
 
 	PluginDefinition() {};
-	PluginDefinition(std::string _name, std::vector<std::string> _extensions, PluginType _type) : pluginName(_name), supportedExtensions(_extensions), pluginType(_type) {};
+	PluginDefinition(std::string _name, std::vector<std::string> _extensions, PluginType _type, bool _scenes) : pluginName(_name), supportedExtensions(_extensions), pluginType(_type), supportsScenes(_scenes) {};
 };

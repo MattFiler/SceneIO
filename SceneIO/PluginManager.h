@@ -1,9 +1,8 @@
 #pragma once
-#include <string>
-#include <vector>
+#include "CommonMisc.h"
 
-class PluginDefinition;
 class LoadedModel;
+class SceneDefinition;
 
 class PluginManager {
 public:
@@ -15,13 +14,19 @@ public:
 		plugins.clear();
 	}
 
-	LoadedModel* LoadModelWithPlugin(std::string filePath);
+	LoadedModel* LoadModelWithPlugin(std::string filepath);
 	bool SaveModelWithPlugin(LoadedModel* model, std::string filepath);
 
+	SceneDefinition* LoadSceneWithPlugin(std::string filepath);
+	bool SaveSceneWithPlugin(SceneDefinition* scene, std::string filepath);
+
 	std::vector<PluginDefinition*> GetPlugins();
-	std::vector<PluginDefinition*> GetImporterPlugins();
-	std::vector<PluginDefinition*> GetExporterPlugins();
+	std::vector<PluginDefinition*> GetModelImporterPlugins();
+	std::vector<PluginDefinition*> GetModelExporterPlugins();
+	std::vector<PluginDefinition*> GetSceneImporterPlugins();
+	std::vector<PluginDefinition*> GetSceneExporterPlugins();
 	
 private:
+	std::string GetPluginForExtension(PluginType type, std::string extension);
 	std::vector<PluginDefinition*> plugins = std::vector<PluginDefinition*>();
 };

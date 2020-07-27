@@ -5,6 +5,8 @@
 typedef PluginDefinition* (*pluginApplicationRegister)();
 typedef LoadedModel* (*modelImporterPlugin)(std::string filepath);
 typedef bool (*modelExporterPlugin)(LoadedModel* model, std::string filepath);
+typedef SceneDefinition* (*sceneImporterPlugin)(std::string filepath);
+typedef bool (*sceneExporterPlugin)(SceneDefinition* scene, std::string filepath);
 
 /* Get all available plugins on startup */
 PluginManager::PluginManager()
@@ -30,20 +32,10 @@ PluginManager::PluginManager()
 }
 
 /* Load a model through a DLL */
-LoadedModel* PluginManager::LoadModelWithPlugin(std::string filePath)
+LoadedModel* PluginManager::LoadModelWithPlugin(std::string filepath)
 {
 	//Find plugin to handle filetype
-	std::string pluginName = "";
-	std::string filePathExtension = Utilities::GetFileExtension(filePath);
-	for (int i = 0; i < plugins.size(); i++) {
-		if (plugins[i]->pluginType != PluginType::IMPORTER) continue;
-		for (int x = 0; x < plugins[i]->supportedExtensions.size(); x++) {
-			if (plugins[i]->supportedExtensions[x] == filePathExtension) {
-				pluginName = plugins[i]->pluginPath;
-				break;
-			}
-		}
-	}
+	std::string pluginName = GetPluginForExtension(PluginType::IMPORTER, Utilities::GetFileExtension(filepath));
 	if (pluginName == "") return nullptr;
 
 	//Load with plugin
@@ -55,7 +47,7 @@ LoadedModel* PluginManager::LoadModelWithPlugin(std::string filePath)
 		modelImporterPlugin LoadModel = (modelImporterPlugin)GetProcAddress(hModule, "LoadModel");
 		if (LoadModel != NULL)
 		{
-			newModel = LoadModel(filePath);
+			newModel = LoadModel(filepath);
 		}
 	}
 	FreeLibrary(hModule);
@@ -66,17 +58,7 @@ LoadedModel* PluginManager::LoadModelWithPlugin(std::string filePath)
 bool PluginManager::SaveModelWithPlugin(LoadedModel* model, std::string filepath)
 {
 	//Find plugin to handle filetype
-	std::string pluginName = "";
-	std::string filePathExtension = Utilities::GetFileExtension(filepath);
-	for (int i = 0; i < plugins.size(); i++) {
-		if (plugins[i]->pluginType != PluginType::EXPORTER) continue;
-		for (int x = 0; x < plugins[i]->supportedExtensions.size(); x++) {
-			if (plugins[i]->supportedExtensions[x] == filePathExtension) {
-				pluginName = plugins[i]->pluginPath;
-				break;
-			}
-		}
-	}
+	std::string pluginName = GetPluginForExtension(PluginType::EXPORTER, Utilities::GetFileExtension(filepath));
 	if (pluginName == "") return false;
 
 	//Save with plugin
@@ -95,6 +77,52 @@ bool PluginManager::SaveModelWithPlugin(LoadedModel* model, std::string filepath
 	return result;
 }
 
+/* Load a scene definition through a DLL */
+SceneDefinition* PluginManager::LoadSceneWithPlugin(std::string filepath)
+{
+	//Find plugin to handle filetype
+	std::string pluginName = GetPluginForExtension(PluginType::IMPORTER, Utilities::GetFileExtension(filepath));
+	if (pluginName == "") return false;
+
+	//Load with plugin
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
+	SceneDefinition* result = nullptr;
+	HMODULE hModule = LoadLibraryW(conv.from_bytes(pluginName).c_str());
+	if (hModule != NULL)
+	{
+		sceneImporterPlugin LoadScene = (sceneImporterPlugin)GetProcAddress(hModule, "LoadScene");
+		if (LoadScene != NULL)
+		{
+			result = LoadScene(filepath);
+		}
+	}
+	FreeLibrary(hModule);
+	return result;
+}
+
+/* Export a scene definition through a DLL */
+bool PluginManager::SaveSceneWithPlugin(SceneDefinition* scene, std::string filepath)
+{
+	//Find plugin to handle filetype
+	std::string pluginName = GetPluginForExtension(PluginType::EXPORTER, Utilities::GetFileExtension(filepath));
+	if (pluginName == "") return false;
+
+	//Save with plugin
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
+	bool result = false;
+	HMODULE hModule = LoadLibraryW(conv.from_bytes(pluginName).c_str());
+	if (hModule != NULL)
+	{
+		sceneExporterPlugin SaveScene = (sceneExporterPlugin)GetProcAddress(hModule, "SaveScene");
+		if (SaveScene != NULL)
+		{
+			result = SaveScene(scene, filepath);
+		}
+	}
+	FreeLibrary(hModule);
+	return result;
+}
+
 /* Get a vector of all plugin definitions */
 std::vector<PluginDefinition*> PluginManager::GetPlugins()
 {
@@ -102,7 +130,7 @@ std::vector<PluginDefinition*> PluginManager::GetPlugins()
 }
 
 /* Get a vector of all importer plugin definitions */
-std::vector<PluginDefinition*> PluginManager::GetImporterPlugins()
+std::vector<PluginDefinition*> PluginManager::GetModelImporterPlugins()
 {
 	std::vector<PluginDefinition*> importers = std::vector<PluginDefinition*>();
 	for (int i = 0; i < plugins.size(); i++) {
@@ -112,11 +140,47 @@ std::vector<PluginDefinition*> PluginManager::GetImporterPlugins()
 }
 
 /* Get a vector of all exporter plugin definitions */
-std::vector<PluginDefinition*> PluginManager::GetExporterPlugins()
+std::vector<PluginDefinition*> PluginManager::GetModelExporterPlugins()
 {
 	std::vector<PluginDefinition*> exporters = std::vector<PluginDefinition*>();
 	for (int i = 0; i < plugins.size(); i++) {
 		if (plugins[i]->pluginType == PluginType::EXPORTER) exporters.push_back(plugins[i]);
 	}
 	return exporters;
+}
+
+/* Get a vector of all importer plugin definitions that support scenes */
+std::vector<PluginDefinition*> PluginManager::GetSceneImporterPlugins()
+{
+	std::vector<PluginDefinition*> importers = std::vector<PluginDefinition*>();
+	for (int i = 0; i < plugins.size(); i++) {
+		if (plugins[i]->pluginType == PluginType::IMPORTER && plugins[i]->supportsScenes) importers.push_back(plugins[i]);
+	}
+	return importers;
+}
+
+/* Get a vector of all exporter plugin definitions that support scenes */
+std::vector<PluginDefinition*> PluginManager::GetSceneExporterPlugins()
+{
+	std::vector<PluginDefinition*> exporters = std::vector<PluginDefinition*>();
+	for (int i = 0; i < plugins.size(); i++) {
+		if (plugins[i]->pluginType == PluginType::EXPORTER && plugins[i]->supportsScenes) exporters.push_back(plugins[i]);
+	}
+	return exporters;
+}
+
+/* Get a plugin path that supports a given extension for a type (returns empty string if none exist) */
+std::string PluginManager::GetPluginForExtension(PluginType type, std::string extension)
+{
+	std::string pluginName = "";
+	for (int i = 0; i < plugins.size(); i++) {
+		if (plugins[i]->pluginType != type) continue;
+		for (int x = 0; x < plugins[i]->supportedExtensions.size(); x++) {
+			if (plugins[i]->supportedExtensions[x] == extension) {
+				pluginName = plugins[i]->pluginPath;
+				break;
+			}
+		}
+	}
+	return pluginName;
 }

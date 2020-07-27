@@ -90,7 +90,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;OBJEXPORTER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);SCENEIO_PLUGIN</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;OBJEXPORTER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);SCENEIO_PLUGIN;SCENEIO_PLUGIN_EXPORTER</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -107,7 +107,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;OBJEXPORTER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);SCENEIO_PLUGIN</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;OBJEXPORTER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);SCENEIO_PLUGIN;SCENEIO_PLUGIN_EXPORTER</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -124,7 +124,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;OBJEXPORTER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);SCENEIO_PLUGIN</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;OBJEXPORTER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);SCENEIO_PLUGIN;SCENEIO_PLUGIN_EXPORTER</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -141,7 +141,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;OBJEXPORTER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);SCENEIO_PLUGIN</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;OBJEXPORTER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);SCENEIO_PLUGIN;SCENEIO_PLUGIN_EXPORTER</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\SceneIO\CommonMesh.h" />
     <ClInclude Include="..\..\SceneIO\CommonMisc.h" />
+    <ClInclude Include="..\..\SceneIO\CommonScene.h" />
     <ClInclude Include="..\..\SceneIO\DataTypes.h" />
     <ClInclude Include="..\..\SceneIO\DynamicMaterial.h" />
     <ClInclude Include="..\..\SceneIO\MaterialParameter.h" />

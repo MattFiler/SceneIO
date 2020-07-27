@@ -11,27 +11,55 @@ ModelManager::ModelManager()
 {
 	std::vector<PluginDefinition*> allPlugins = Shared::pluginManager->GetPlugins();
 
-	importerFileDialog = ImGui::FileBrowser::FileBrowser(ImGuiFileBrowserFlags_CloseOnEsc);
-	importerFileDialog.SetTitle("Import Mesh");
-	std::vector<const char*> importerFiletypes = std::vector<const char*>();
+	//Model import
+	modelImporterFileDialog = ImGui::FileBrowser::FileBrowser(ImGuiFileBrowserFlags_CloseOnEsc);
+	modelImporterFileDialog.SetTitle("Import Mesh");
+	std::vector<const char*> filetypes = std::vector<const char*>();
 	for (int i = 0; i < allPlugins.size(); i++) {
 		if (allPlugins[i]->pluginType != PluginType::IMPORTER) continue;
 		for (int x = 0; x < allPlugins[i]->supportedExtensions.size(); x++) {
-			importerFiletypes.push_back(allPlugins[i]->supportedExtensions[x].c_str());
+			filetypes.push_back(allPlugins[i]->supportedExtensions[x].c_str());
 		}
 	}
-	importerFileDialog.SetTypeFilters(importerFiletypes);
+	modelImporterFileDialog.SetTypeFilters(filetypes);
 
-	exporterFileDialog = ImGui::FileBrowser::FileBrowser(ImGuiFileBrowserFlags_EnterNewFilename | ImGuiFileBrowserFlags_CreateNewDir | ImGuiFileBrowserFlags_CloseOnEsc);
-	exporterFileDialog.SetTitle("Export Mesh");
-	std::vector<const char*> exporterFiletypes = std::vector<const char*>();
+	//Model export
+	modelExporterFileDialog = ImGui::FileBrowser::FileBrowser(ImGuiFileBrowserFlags_EnterNewFilename | ImGuiFileBrowserFlags_CreateNewDir | ImGuiFileBrowserFlags_CloseOnEsc);
+	modelExporterFileDialog.SetTitle("Export Mesh");
+	filetypes.clear();
 	for (int i = 0; i < allPlugins.size(); i++) {
 		if (allPlugins[i]->pluginType != PluginType::EXPORTER) continue;
 		for (int x = 0; x < allPlugins[i]->supportedExtensions.size(); x++) {
-			exporterFiletypes.push_back(allPlugins[i]->supportedExtensions[x].c_str());
+			filetypes.push_back(allPlugins[i]->supportedExtensions[x].c_str());
 		}
 	}
-	exporterFileDialog.SetTypeFilters(exporterFiletypes);
+	modelExporterFileDialog.SetTypeFilters(filetypes);
+
+	//Scene import
+	sceneImporterFileDialog = ImGui::FileBrowser::FileBrowser(ImGuiFileBrowserFlags_CloseOnEsc);
+	sceneImporterFileDialog.SetTitle("Import Scene");
+	filetypes.clear();
+	for (int i = 0; i < allPlugins.size(); i++) {
+		if (allPlugins[i]->pluginType != PluginType::IMPORTER) continue;
+		if (!allPlugins[i]->supportsScenes) continue;
+		for (int x = 0; x < allPlugins[i]->supportedExtensions.size(); x++) {
+			filetypes.push_back(allPlugins[i]->supportedExtensions[x].c_str());
+		}
+	}
+	sceneImporterFileDialog.SetTypeFilters(filetypes);
+
+	//Scene export
+	sceneExporterFileDialog = ImGui::FileBrowser::FileBrowser(ImGuiFileBrowserFlags_EnterNewFilename | ImGuiFileBrowserFlags_CreateNewDir | ImGuiFileBrowserFlags_CloseOnEsc);
+	sceneExporterFileDialog.SetTitle("Export Scene");
+	filetypes.clear();
+	for (int i = 0; i < allPlugins.size(); i++) {
+		if (allPlugins[i]->pluginType != PluginType::EXPORTER) continue;
+		if (!allPlugins[i]->supportsScenes) continue;
+		for (int x = 0; x < allPlugins[i]->supportedExtensions.size(); x++) {
+			filetypes.push_back(allPlugins[i]->supportedExtensions[x].c_str());
+		}
+	}
+	sceneExporterFileDialog.SetTypeFilters(filetypes);
 }
 
 /* Free all model instances */
@@ -51,7 +79,7 @@ ModelManager::~ModelManager()
 void ModelManager::Update(double dt)
 {
 	//Enable/disable input based on the model manager UI visibility (nicer UX)
-	InputHandler::EnableInput(!(importerFileDialog.IsOpened() || exporterFileDialog.IsOpened()));
+	InputHandler::EnableInput(!(modelImporterFileDialog.IsOpened() || modelExporterFileDialog.IsOpened()));
 
 	//Hotkeys for swapping modes (TODO: add rotation back)
 	if (InputHandler::KeyDown(WindowsKey::O)) {
@@ -95,16 +123,16 @@ void ModelManager::ModelManagerUI()
 	ImGui::PopStyleVar();
 
 	if (ImGui::Button("Load New Model")) {
-		importerFileDialog.Open();
+		modelImporterFileDialog.Open();
 	}
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
-	importerFileDialog.Display();
+	modelImporterFileDialog.Display();
 	ImGui::PopStyleVar();
-	if (importerFileDialog.HasSelected())
+	if (modelImporterFileDialog.HasSelected())
 	{
-		if (LoadModel(importerFileDialog.GetSelected().string())) {
-			importerFileDialog.ClearSelected();
-			importerFileDialog.Close();
+		if (LoadModel(modelImporterFileDialog.GetSelected().string())) {
+			modelImporterFileDialog.ClearSelected();
+			modelImporterFileDialog.Close();
 		}
 	}
 
@@ -113,16 +141,16 @@ void ModelManager::ModelManagerUI()
 		ImGui::SameLine();
 
 		if (ImGui::Button("Export Selected Model")) {
-			exporterFileDialog.Open();
+			modelExporterFileDialog.Open();
 		}
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
-		exporterFileDialog.Display();
+		modelExporterFileDialog.Display();
 		ImGui::PopStyleVar();
-		if (exporterFileDialog.HasSelected())
+		if (modelExporterFileDialog.HasSelected())
 		{
-			if (SaveModel(exporterFileDialog.GetSelected().string())) {
-				exporterFileDialog.ClearSelected();
-				exporterFileDialog.Close();
+			if (SaveModel(modelExporterFileDialog.GetSelected().string())) {
+				modelExporterFileDialog.ClearSelected();
+				modelExporterFileDialog.Close();
 			}
 		}
 
@@ -141,6 +169,15 @@ void ModelManager::ModelManagerUI()
 		if (ImGui::Button("Copy Selected Model")) {
 			//TODO: duplicate the model instance
 		}
+	}
+
+	ImGui::Separator();
+
+	if (ImGui::Button("Load Scene")) {
+		sceneImporterFileDialog.Open();
+	}
+	if (ImGui::Button("Save Scene")) {
+		sceneExporterFileDialog.Open();
 	}
 
 	ImGui::Separator();
@@ -370,20 +407,38 @@ bool ModelManager::SaveModel(std::string name)
 	//Move to worldspace if requested
 	if (shouldExportAsWorld) {
 		DirectX::XMMATRIX thisWorld = modelInstance->GetWorldMatrix();
-		for (int i = 0; i < loadedModel->modelParts.size(); i++) {
-			for (int x = 0; x < loadedModel->modelParts[i].compVertices.size(); x++) {
-				Vector3* vert = &loadedModel->modelParts[i].compVertices[x].Pos;
-				XMFLOAT3 tempPos = XMFLOAT3(vert->x, vert->y, vert->z);
-				XMStoreFloat3(&tempPos, XMVector3Transform(XMLoadFloat3(&tempPos), thisWorld));
-				vert->x = tempPos.x; vert->y = tempPos.y; vert->z = tempPos.z;
-			}
-		}
+		Utilities::TransformLoadedModel(loadedModel, thisWorld);
 	}
 
 	//Save it out
-	Shared::pluginManager->SaveModelWithPlugin(loadedModel, name);
+	bool result = Shared::pluginManager->SaveModelWithPlugin(loadedModel, name);
 	Memory::SafeDelete(loadedModel);
-	return true;
+	return result;
+}
+
+/* Load a definition of a scene and instance everything from it */
+bool ModelManager::LoadScene(std::string name)
+{
+
+	return false;
+}
+
+/* Create and save a definition of the scene using a plugin */
+bool ModelManager::SaveScene(std::string name)
+{
+	SceneDefinition* sceneDefinition = new SceneDefinition();
+	for (int x = 0; x < models.size(); x++) {
+		LoadedModel* loadedModel = models.at(selectedModelUI)->GetSharedBuffers()->GetAsLoadedModel();
+		for (int i = 0; i < models.at(selectedModelUI)->GetSubmeshCount(); i++) {
+			loadedModel->modelParts[i].material = models.at(selectedModelUI)->GetSubmeshMaterial(i);
+		}
+		DirectX::XMMATRIX thisWorld = models.at(selectedModelUI)->GetWorldMatrix();
+		Utilities::TransformLoadedModel(loadedModel, thisWorld);
+		sceneDefinition->models.push_back(loadedModel);
+	}
+	bool result = Shared::pluginManager->SaveSceneWithPlugin(sceneDefinition, name);
+	Memory::SafeDelete(sceneDefinition);
+	return result;
 }
 
 /* Requested load of model: check our existing loaded data, and if not already loaded, load it */

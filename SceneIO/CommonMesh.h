@@ -29,4 +29,5 @@ struct LoadedModelPart
 struct LoadedModel
 {
 	std::vector<LoadedModelPart> modelParts = std::vector<LoadedModelPart>();
+	std::string filepath = "";
 };

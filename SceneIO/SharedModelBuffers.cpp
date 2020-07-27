@@ -1,26 +1,39 @@
 #include "SharedModelBuffers.h"
 #include "DynamicMaterialManager.h"
 
+/* Create the buffers from loaded model */
+SharedModelBuffers::SharedModelBuffers(LoadedModel* modelRef)
+{
+	Debug::Log("Populating shared buffer from passed LoadedModel.");
+	objPath = modelRef->filepath;
+	CreateBuffersFromLoadedModel(modelRef);
+}
+
 /* Load a model and create the buffers */
 SharedModelBuffers::SharedModelBuffers(std::string filepath)
 {
-	//Push data for our vertex buffer, and create children index buffers
 	Debug::Log("Loading model from disk.");
 	objPath = filepath;
 	LoadedModel* _m = Shared::pluginManager->LoadModelWithPlugin(filepath);
-	if (_m == nullptr) {
+	CreateBuffersFromLoadedModel(_m);
+	Memory::SafeDelete(_m);
+}
+
+/* Create buffers */
+void SharedModelBuffers::CreateBuffersFromLoadedModel(LoadedModel* modelRef) {
+	//Populate data from LoadedModel
+	if (modelRef == nullptr) {
 		Debug::Log("Failed to load model! May be a plugin error, or file could not exist.");
 		return;
 	}
-	for (int i = 0; i < _m->modelParts.size(); i++) {
-		for (int x = 0; x < _m->modelParts[i].compVertices.size(); x++) {
-			CheckAgainstBoundingPoints(XMFLOAT3(_m->modelParts[i].compVertices[x].Pos.x, _m->modelParts[i].compVertices[x].Pos.y, _m->modelParts[i].compVertices[x].Pos.z));
-			allVerts.push_back(_m->modelParts[i].compVertices[x]);
+	for (int i = 0; i < modelRef->modelParts.size(); i++) {
+		for (int x = 0; x < modelRef->modelParts[i].compVertices.size(); x++) {
+			CheckAgainstBoundingPoints(XMFLOAT3(modelRef->modelParts[i].compVertices[x].Pos.x, modelRef->modelParts[i].compVertices[x].Pos.y, modelRef->modelParts[i].compVertices[x].Pos.z));
+			allVerts.push_back(modelRef->modelParts[i].compVertices[x]);
 		}
-		allModels.push_back(new SharedModelPart(&_m->modelParts[i]));
-		defaultMaterials.push_back(new DynamicMaterial(*_m->modelParts[i].material));
+		allModels.push_back(new SharedModelPart(&modelRef->modelParts[i]));
+		defaultMaterials.push_back(new DynamicMaterial(*modelRef->modelParts[i].material));
 	}
-	Memory::SafeDelete(_m);
 	CalculateFinalExtents();
 
 	//Create vertex buffer 

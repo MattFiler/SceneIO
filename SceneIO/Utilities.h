@@ -14,7 +14,7 @@
 #include "InputHandler.h"
 
 #include "PluginManager.h"
-#include "CommonMesh.h"
+#include "CommonScene.h"
 
 #include <string>
 #include <vector>
@@ -254,5 +254,17 @@ public:
 		HR(Shared::m_pDevice->CreateShaderResourceView(thisTex->texture, &srvDesc, &thisTex->textureView));
 
 		return thisTex;
+	}
+
+	/* Transform a LoadedModel object by a world matrix */
+	static void TransformLoadedModel(LoadedModel* loadedModel, XMMATRIX worldMatrix) {
+		for (int i = 0; i < loadedModel->modelParts.size(); i++) {
+			for (int x = 0; x < loadedModel->modelParts[i].compVertices.size(); x++) {
+				Vector3* vert = &loadedModel->modelParts[i].compVertices[x].Pos;
+				XMFLOAT3 tempPos = XMFLOAT3(vert->x, vert->y, vert->z);
+				XMStoreFloat3(&tempPos, XMVector3Transform(XMLoadFloat3(&tempPos), worldMatrix));
+				vert->x = tempPos.x; vert->y = tempPos.y; vert->z = tempPos.z;
+			}
+		}
 	}
 };

@@ -36,6 +36,9 @@
     <ClInclude Include="..\..\SceneIO\CommonMisc.h">
       <Filter>Header Files\SceneIO API</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\SceneIO\CommonScene.h">
+      <Filter>Header Files\SceneIO API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
