@@ -418,38 +418,51 @@ bool ModelManager::SaveModel(std::string name)
 /* Load a definition of a scene and instance everything from it */
 bool ModelManager::LoadScene(std::string name)
 {
-	SceneDefinition* sceneDef = Shared::pluginManager->LoadSceneWithPlugin(name);
+	LoadedScene* sceneDef = Shared::pluginManager->LoadSceneWithPlugin(name);
 	Shared::activeCamera->SetPosition(Utilities::DXVec3FromVec3(sceneDef->camera.GetPosition()));
 	Shared::activeCamera->SetRotation(Utilities::DXVec3FromVec3(sceneDef->camera.GetRotation()));
-	bool loadedWithoutErrors = true;
-	for (int i = 0; i < sceneDef->modelDefinitions.size(); i++) {
-		bool thisLoad = LoadModel(sceneDef->modelDefinitions[i].GetFilepath(), Utilities::DXVec3FromVec3(sceneDef->modelDefinitions[i].GetPosition()), Utilities::DXVec3FromVec3(sceneDef->modelDefinitions[i].GetRotation()));
-		if (thisLoad) {
-			if (sceneDef->modelDefinitions[i].IsUsingMaterialOverride()) {
-				for (int x = 0; x < models[models.size() - 1]->GetSubmeshCount(); x++) {
-					models[models.size() - 1]->SetSubmeshMaterial(x, sceneDef->modelDefinitions[i].GetMaterials()[x]);
-				}
-			}
+	Shared::cameraFOV = sceneDef->camera.GetFOV();
+	bool didLoadOK = true;
+	for (int i = 0; i < sceneDef->modelDefinitions.size(); i++) 
+	{
+		SharedModelBuffers* newLoadedModel = new SharedModelBuffers(sceneDef->modelDefinitions[i].model);
+		if (newLoadedModel->DidLoadOK()) {
+			modelBuffers.push_back(newLoadedModel);
+			Model* newModel = new Model();
+			newModel->SetSharedBuffers(newLoadedModel);
+			newModel->SetPosition(Utilities::DXVec3FromVec3(sceneDef->modelDefinitions[i].position));
+			newModel->SetRotation(Utilities::DXVec3FromVec3(sceneDef->modelDefinitions[i].rotation), sceneDef->modelDefinitions[i].rotationIsInRadians);
+			newModel->Create();
+			GameObjectManager::AddObject(newModel);
+			models.push_back(newModel);
 		}
-		else loadedWithoutErrors = false;
+		else {
+			didLoadOK = false;
+		}
 	}
-	return loadedWithoutErrors;
+	return didLoadOK;
 }
 
 /* Create and save a definition of the scene using a plugin */
 bool ModelManager::SaveScene(std::string name)
 {
-	SceneDefinition* sceneDefinition = new SceneDefinition();
-	sceneDefinition->camera = SceneCamera(Utilities::Vec3FromDXVec3(Shared::activeCamera->GetPosition()), Utilities::Vec3FromDXVec3(Shared::activeCamera->GetRotation()));
+	LoadedScene* sceneDefinition = new LoadedScene();
+	sceneDefinition->camera = SceneCamera(Utilities::Vec3FromDXVec3(Shared::activeCamera->GetPosition()), Utilities::Vec3FromDXVec3(Shared::activeCamera->GetRotation()), Shared::cameraFOV);
 	for (int x = 0; x < models.size(); x++) {
-		LoadedModel* loadedModel = models.at(selectedModelUI)->GetSharedBuffers()->GetAsLoadedModel();
-		std::vector<DynamicMaterial*> loadedModelMaterials = std::vector<DynamicMaterial*>();
-		for (int i = 0; i < models.at(selectedModelUI)->GetSubmeshCount(); i++) {
-			loadedModelMaterials.push_back(models.at(selectedModelUI)->GetSubmeshMaterial(i));
+		LoadedModel* loadedModel = models.at(x)->GetSharedBuffers()->GetAsLoadedModel();
+		for (int i = 0; i < models.at(x)->GetSubmeshCount(); i++) {
+			loadedModel->modelParts[i].material = models.at(x)->GetSubmeshMaterial(i);
 		}
-		sceneDefinition->modelDefinitions.emplace_back(loadedModel->filepath, Utilities::Vec3FromDXVec3(models.at(selectedModelUI)->GetPosition()), Utilities::Vec3FromDXVec3(models.at(selectedModelUI)->GetRotation()), true, loadedModelMaterials);
+		LoadedModelPositioner loadedModelPos = LoadedModelPositioner();
+		loadedModelPos.model = loadedModel;
+		loadedModelPos.position = Utilities::Vec3FromDXVec3(models.at(x)->GetPosition());
+		loadedModelPos.rotation = Utilities::Vec3FromDXVec3(models.at(x)->GetRotation());
+		sceneDefinition->modelDefinitions.push_back(loadedModelPos);
 	}
 	bool result = Shared::pluginManager->SaveSceneWithPlugin(sceneDefinition, name);
+	for (int i = 0; i < sceneDefinition->modelDefinitions.size(); i++) {
+		Memory::SafeDelete(sceneDefinition->modelDefinitions[i].model);
+	}
 	Memory::SafeDelete(sceneDefinition);
 	return result;
 }

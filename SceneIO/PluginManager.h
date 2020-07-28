@@ -2,7 +2,7 @@
 #include "CommonMisc.h"
 
 class LoadedModel;
-class SceneDefinition;
+class LoadedScene;
 
 class PluginManager {
 public:
@@ -17,8 +17,8 @@ public:
 	LoadedModel* LoadModelWithPlugin(std::string filepath);
 	bool SaveModelWithPlugin(LoadedModel* model, std::string filepath);
 
-	SceneDefinition* LoadSceneWithPlugin(std::string filepath);
-	bool SaveSceneWithPlugin(SceneDefinition* scene, std::string filepath);
+	LoadedScene* LoadSceneWithPlugin(std::string filepath);
+	bool SaveSceneWithPlugin(LoadedScene* scene, std::string filepath);
 
 	std::vector<PluginDefinition*> GetPlugins();
 	std::vector<PluginDefinition*> GetModelImporterPlugins();

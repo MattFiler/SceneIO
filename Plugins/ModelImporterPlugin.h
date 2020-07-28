@@ -4,7 +4,7 @@
 #include <windows.h>
 #include <string>
 
-#include "../SceneIO/CommonScene.h"
+#include "../SceneIO/CommonMesh.h"
 #include "../SceneIO/DynamicMaterialManager.h"
 #include "../SceneIO/DynamicMaterial.h"
 

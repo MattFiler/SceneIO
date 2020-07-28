@@ -5,8 +5,8 @@
 typedef PluginDefinition* (*pluginApplicationRegister)();
 typedef LoadedModel* (*modelImporterPlugin)(std::string filepath);
 typedef bool (*modelExporterPlugin)(LoadedModel* model, std::string filepath);
-typedef SceneDefinition* (*sceneImporterPlugin)(std::string filepath);
-typedef bool (*sceneExporterPlugin)(SceneDefinition* scene, std::string filepath);
+typedef LoadedScene* (*sceneImporterPlugin)(std::string filepath);
+typedef bool (*sceneExporterPlugin)(LoadedScene* scene, std::string filepath);
 
 /* Get all available plugins on startup */
 PluginManager::PluginManager()
@@ -78,7 +78,7 @@ bool PluginManager::SaveModelWithPlugin(LoadedModel* model, std::string filepath
 }
 
 /* Load a scene definition through a DLL */
-SceneDefinition* PluginManager::LoadSceneWithPlugin(std::string filepath)
+LoadedScene* PluginManager::LoadSceneWithPlugin(std::string filepath)
 {
 	//Find plugin to handle filetype
 	std::string pluginName = GetPluginForExtension(PluginType::SCENE_IMPORTER, Utilities::GetFileExtension(filepath));
@@ -86,7 +86,7 @@ SceneDefinition* PluginManager::LoadSceneWithPlugin(std::string filepath)
 
 	//Load with plugin
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
-	SceneDefinition* result = nullptr;
+	LoadedScene* result = nullptr;
 	HMODULE hModule = LoadLibraryW(conv.from_bytes(pluginName).c_str());
 	if (hModule != NULL)
 	{
@@ -101,7 +101,7 @@ SceneDefinition* PluginManager::LoadSceneWithPlugin(std::string filepath)
 }
 
 /* Export a scene definition through a DLL */
-bool PluginManager::SaveSceneWithPlugin(SceneDefinition* scene, std::string filepath)
+bool PluginManager::SaveSceneWithPlugin(LoadedScene* scene, std::string filepath)
 {
 	//Find plugin to handle filetype
 	std::string pluginName = GetPluginForExtension(PluginType::SCENE_EXPORTER, Utilities::GetFileExtension(filepath));

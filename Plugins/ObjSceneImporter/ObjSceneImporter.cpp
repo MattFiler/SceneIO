@@ -12,7 +12,7 @@ extern "C" __declspec(dllexport) PluginDefinition* RegisterPlugin()
 }
 
 /* Load an entire scene */
-extern "C" __declspec(dllexport) SceneDefinition* LoadScene(std::string filePath)
+extern "C" __declspec(dllexport) LoadedScene* LoadScene(std::string filePath)
 {
 	/*
 	SceneDefinition* thisScene = new SceneDefinition();

@@ -36,12 +36,13 @@ struct Vector3 {
 enum class PluginType {
 	DUMMY,
 
-	MODEL_IMPORTER,
-	MODEL_EXPORTER,
+	MODEL_IMPORTER, //Model importers are plugins for importing individual meshes.
+	MODEL_EXPORTER, //Model exporters are plugins for exporting individual meshes.
 
-	SCENE_IMPORTER,
-	SCENE_EXPORTER,
+	SCENE_IMPORTER, //Scene importers are plugins for importing multiple meshes at once, and can also specify camera data.
+	SCENE_EXPORTER, //Scene exporters are plugins for exporting multiple meshes at once, along with camera data.
 
+	//WIP BELOW
 	UI_BUTTON,
 	IMPORT_EVENT,
 };

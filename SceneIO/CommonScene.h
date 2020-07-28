@@ -7,48 +7,32 @@
 class SceneCamera {
 public:
 	SceneCamera() = default;
-	SceneCamera(Vector3 _pos, Vector3 _rot) {
+	SceneCamera(Vector3 _pos, Vector3 _rot, float _fov) {
 		position = _pos;
 		rotationEuler = _rot;
+		fov = _fov;
 	}
 
 	Vector3 GetPosition() { return position; }
 	Vector3 GetRotation() { return rotationEuler; }
+	float GetFOV() { return fov; }
 
 private:
 	Vector3 position = Vector3(0,0,0);
 	Vector3 rotationEuler = Vector3(0,0,0);
+	float fov = 45.0f;
 };
 
-/* Define a filepath and position/rotation for a model in the scene - also optionally allows you to specify per-submesh materials to override the model's defaults */
-class SceneModel {
-public:
-	SceneModel() = default;
-	SceneModel(std::string _path, Vector3 _pos, Vector3 _rot, bool _useMats = false, std::vector<DynamicMaterial*> _mats = std::vector<DynamicMaterial*>()) {
-		filepath = _path;
-		materials = _mats;
-		useMatOverride = _useMats;
-		position = _pos;
-		rotationEuler = _rot;
-	}
-
-	std::string GetFilepath() { return filepath; }
-	bool IsUsingMaterialOverride() { return useMatOverride; }
-	std::vector<DynamicMaterial*> GetMaterials() { return materials; }
-	Vector3 GetPosition() { return position; }
-	Vector3 GetRotation() { return rotationEuler; }
-
-private:
-	std::string filepath;
-	bool useMatOverride = false;
-	std::vector<DynamicMaterial*> materials = std::vector<DynamicMaterial*>();
-	Vector3 position;
-	Vector3 rotationEuler;
+struct LoadedModelPositioner {
+	LoadedModel* model = nullptr;
+	Vector3 position = Vector3(0, 0, 0);
+	Vector3 rotation = Vector3(0, 0, 0);
+	bool rotationIsInRadians = true;
 };
 
-/* A definition of a scene, containing camera data and models */
-class SceneDefinition {
+/* A definition of a scene, containing camera data and model info */
+class LoadedScene {
 public:
-	std::vector<SceneModel> modelDefinitions = std::vector<SceneModel>();
+	std::vector<LoadedModelPositioner> modelDefinitions = std::vector<LoadedModelPositioner>();
 	SceneCamera camera = SceneCamera();
 };

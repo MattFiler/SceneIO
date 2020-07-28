@@ -157,7 +157,6 @@
   <ItemGroup>
     <ClInclude Include="..\..\SceneIO\CommonMesh.h" />
     <ClInclude Include="..\..\SceneIO\CommonMisc.h" />
-    <ClInclude Include="..\..\SceneIO\CommonScene.h" />
     <ClInclude Include="..\..\SceneIO\DataTypes.h" />
     <ClInclude Include="..\..\SceneIO\DynamicMaterial.h" />
     <ClInclude Include="..\..\SceneIO\DynamicMaterialManager.h" />

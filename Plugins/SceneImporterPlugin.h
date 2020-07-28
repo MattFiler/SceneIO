@@ -9,4 +9,4 @@
 #include "../SceneIO/DynamicMaterial.h"
 
 extern "C" __declspec(dllexport) PluginDefinition* RegisterPlugin();
-extern "C" __declspec(dllexport) SceneDefinition* LoadScene(std::string filePath);
+extern "C" __declspec(dllexport) LoadedScene* LoadScene(std::string filePath);
