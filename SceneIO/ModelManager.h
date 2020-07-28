@@ -40,6 +40,7 @@ private:
 	bool SaveScene(std::string name);
 
 	SharedModelBuffers* LoadModelToLevel(std::string filename);
+	SharedModelBuffers* LoadModelToLevel(LoadedModel* modelref);
 	std::vector<SharedModelBuffers*> modelBuffers = std::vector<SharedModelBuffers*>();
 	std::vector<Model*> models = std::vector<Model*>();
 

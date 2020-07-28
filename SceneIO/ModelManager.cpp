@@ -436,13 +436,16 @@ bool ModelManager::LoadScene(std::string name)
 	bool didLoadOK = true;
 	for (int i = 0; i < sceneDef->modelDefinitions.size(); i++) 
 	{
-		SharedModelBuffers* newLoadedModel = new SharedModelBuffers(sceneDef->modelDefinitions[i].model);
+		SharedModelBuffers* newLoadedModel = LoadModelToLevel(sceneDef->modelDefinitions[i].model);
 		if (newLoadedModel->DidLoadOK()) {
 			modelBuffers.push_back(newLoadedModel);
 			Model* newModel = new Model();
 			newModel->SetSharedBuffers(newLoadedModel);
 			newModel->SetPosition(Utilities::DXVec3FromVec3(sceneDef->modelDefinitions[i].position));
 			newModel->SetRotation(Utilities::DXVec3FromVec3(sceneDef->modelDefinitions[i].rotation), sceneDef->modelDefinitions[i].rotationIsInRadians);
+			for (int x = 0; x < sceneDef->modelDefinitions[i].model->modelParts.size(); x++) {
+				newModel->SetSubmeshMaterial(x, sceneDef->modelDefinitions[i].model->modelParts[x].material);
+			}
 			newModel->Create();
 			GameObjectManager::AddObject(newModel);
 			models.push_back(newModel);
@@ -450,6 +453,7 @@ bool ModelManager::LoadScene(std::string name)
 		else {
 			didLoadOK = false;
 		}
+		//TODO: I think we have a bit of a memory leak here. Should SetSubmeshMaterial do a deep copy, then have us destroy the LoadedModel from DLL here?
 	}
 	return didLoadOK;
 }
@@ -492,6 +496,22 @@ SharedModelBuffers* ModelManager::LoadModelToLevel(std::string filename)
 
 	//Model isn't already loaded - load it
 	SharedModelBuffers* newLoadedModel = new SharedModelBuffers(filename);
+	if (!newLoadedModel->DidLoadOK()) return nullptr;
+	modelBuffers.push_back(newLoadedModel);
+	return newLoadedModel;
+}
+SharedModelBuffers* ModelManager::LoadModelToLevel(LoadedModel* modelref)
+{
+	//Return an already loaded model buffer, if it exists
+	for (int i = 0; i < modelBuffers.size(); i++) {
+		if (modelBuffers[i]->GetFilepath() == modelref->filepath) {
+			Debug::Log("Pulling model from pool.");
+			return modelBuffers[i];
+		}
+	}
+
+	//Model isn't already loaded - load it
+	SharedModelBuffers* newLoadedModel = new SharedModelBuffers(modelref);
 	if (!newLoadedModel->DidLoadOK()) return nullptr;
 	modelBuffers.push_back(newLoadedModel);
 	return newLoadedModel;

@@ -29,6 +29,6 @@ struct LoadedModelPart
 /* A definition of a mesh object */
 struct LoadedModel
 {
-	std::vector<LoadedModelPart> modelParts = std::vector<LoadedModelPart>();
-	std::string filepath = "";
+	std::vector<LoadedModelPart> modelParts = std::vector<LoadedModelPart>(); //All model parts (submeshes) that make up this model
+	std::string filepath = "";												  //The pathpath to the model - PLEASE specify this as it is used for optimisation
 };
