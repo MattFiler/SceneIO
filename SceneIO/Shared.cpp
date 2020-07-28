@@ -16,6 +16,8 @@ DirectX::XMFLOAT4 Shared::ambientLightColour;
 //This should match the DataTypes enum in DataTypes.h
 const char* Shared::dataTypes[7] = { "RGB", "STRING", "FLOAT", "INTEGER", "UNSIGNED_INTEGER", "BOOLEAN", "FLOAT_ARRAY" };
 
+Camera* Shared::activeCamera = nullptr;
+
 float Shared::mouseCameraSensitivity = 0.03f;
 
 float Shared::cameraFOV = 1.5f;

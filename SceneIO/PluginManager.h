@@ -27,6 +27,7 @@ public:
 	std::vector<PluginDefinition*> GetSceneExporterPlugins();
 	
 private:
+	std::vector<PluginDefinition*> GetPluginsByType(PluginType _type);
 	std::string GetPluginForExtension(PluginType type, std::string extension);
 	std::vector<PluginDefinition*> plugins = std::vector<PluginDefinition*>();
 };

@@ -11,7 +11,7 @@ extern "C" __declspec(dllexport) PluginDefinition* RegisterPlugin()
 {
 	std::vector<std::string> supportedFormats = std::vector<std::string>();
 	supportedFormats.push_back(".obj");
-	return new PluginDefinition("AssImp Importer", supportedFormats, PluginType::MODEL_IMPORTER);
+	return new PluginDefinition("AssImp Mesh Importer", supportedFormats, PluginType::MODEL_IMPORTER);
 }
 
 /* Load a single model */

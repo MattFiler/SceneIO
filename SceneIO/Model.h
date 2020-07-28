@@ -32,11 +32,14 @@ public:
 		return modelData->GetSubmeshCount();
 	}
 
-	//Set & get material data which is important to our API and editor
 	void SetSubmeshMaterial(int submeshIndex, int materialIndex) {
 		Memory::SafeDelete(materials[submeshIndex]);
 		DynamicMaterial* materialTemplate = Shared::materialManager->GetMaterial(materialIndex);
 		materials[submeshIndex] = new DynamicMaterial(*materialTemplate);
+	}
+	void SetSubmeshMaterial(int submeshIndex, DynamicMaterial* materialInstance) {
+		Memory::SafeDelete(materials[submeshIndex]);
+		materials[submeshIndex] = new DynamicMaterial(*materialInstance);
 	}
 	DynamicMaterial* GetSubmeshMaterial(int submeshIndex) {
 		return materials[submeshIndex];

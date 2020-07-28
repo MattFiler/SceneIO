@@ -1,6 +1,7 @@
 #include "ModelManager.h"
 #include "imgui/imgui.h"
 #include "InputHandler.h"
+#include "Camera.h"
 #include <iostream>
 #include <algorithm>
 #include <vector>
@@ -16,7 +17,7 @@ ModelManager::ModelManager()
 	modelImporterFileDialog.SetTitle("Import Mesh");
 	std::vector<const char*> filetypes = std::vector<const char*>();
 	for (int i = 0; i < allPlugins.size(); i++) {
-		if (allPlugins[i]->pluginType != PluginType::IMPORTER) continue;
+		if (allPlugins[i]->pluginType != PluginType::MODEL_IMPORTER) continue;
 		for (int x = 0; x < allPlugins[i]->supportedExtensions.size(); x++) {
 			filetypes.push_back(allPlugins[i]->supportedExtensions[x].c_str());
 		}
@@ -28,7 +29,7 @@ ModelManager::ModelManager()
 	modelExporterFileDialog.SetTitle("Export Mesh");
 	filetypes.clear();
 	for (int i = 0; i < allPlugins.size(); i++) {
-		if (allPlugins[i]->pluginType != PluginType::EXPORTER) continue;
+		if (allPlugins[i]->pluginType != PluginType::MODEL_EXPORTER) continue;
 		for (int x = 0; x < allPlugins[i]->supportedExtensions.size(); x++) {
 			filetypes.push_back(allPlugins[i]->supportedExtensions[x].c_str());
 		}
@@ -40,8 +41,7 @@ ModelManager::ModelManager()
 	sceneImporterFileDialog.SetTitle("Import Scene");
 	filetypes.clear();
 	for (int i = 0; i < allPlugins.size(); i++) {
-		if (allPlugins[i]->pluginType != PluginType::IMPORTER) continue;
-		if (!allPlugins[i]->supportsScenes) continue;
+		if (allPlugins[i]->pluginType != PluginType::SCENE_IMPORTER) continue;
 		for (int x = 0; x < allPlugins[i]->supportedExtensions.size(); x++) {
 			filetypes.push_back(allPlugins[i]->supportedExtensions[x].c_str());
 		}
@@ -53,8 +53,7 @@ ModelManager::ModelManager()
 	sceneExporterFileDialog.SetTitle("Export Scene");
 	filetypes.clear();
 	for (int i = 0; i < allPlugins.size(); i++) {
-		if (allPlugins[i]->pluginType != PluginType::EXPORTER) continue;
-		if (!allPlugins[i]->supportsScenes) continue;
+		if (allPlugins[i]->pluginType != PluginType::SCENE_EXPORTER) continue;
 		for (int x = 0; x < allPlugins[i]->supportedExtensions.size(); x++) {
 			filetypes.push_back(allPlugins[i]->supportedExtensions[x].c_str());
 		}
@@ -419,22 +418,36 @@ bool ModelManager::SaveModel(std::string name)
 /* Load a definition of a scene and instance everything from it */
 bool ModelManager::LoadScene(std::string name)
 {
-
-	return false;
+	SceneDefinition* sceneDef = Shared::pluginManager->LoadSceneWithPlugin(name);
+	Shared::activeCamera->SetPosition(Utilities::DXVec3FromVec3(sceneDef->camera.GetPosition()));
+	Shared::activeCamera->SetRotation(Utilities::DXVec3FromVec3(sceneDef->camera.GetRotation()));
+	bool loadedWithoutErrors = true;
+	for (int i = 0; i < sceneDef->modelDefinitions.size(); i++) {
+		bool thisLoad = LoadModel(sceneDef->modelDefinitions[i].GetFilepath(), Utilities::DXVec3FromVec3(sceneDef->modelDefinitions[i].GetPosition()), Utilities::DXVec3FromVec3(sceneDef->modelDefinitions[i].GetRotation()));
+		if (thisLoad) {
+			if (sceneDef->modelDefinitions[i].IsUsingMaterialOverride()) {
+				for (int x = 0; x < models[models.size() - 1]->GetSubmeshCount(); x++) {
+					models[models.size() - 1]->SetSubmeshMaterial(x, sceneDef->modelDefinitions[i].GetMaterials()[x]);
+				}
+			}
+		}
+		else loadedWithoutErrors = false;
+	}
+	return loadedWithoutErrors;
 }
 
 /* Create and save a definition of the scene using a plugin */
 bool ModelManager::SaveScene(std::string name)
 {
 	SceneDefinition* sceneDefinition = new SceneDefinition();
+	sceneDefinition->camera = SceneCamera(Utilities::Vec3FromDXVec3(Shared::activeCamera->GetPosition()), Utilities::Vec3FromDXVec3(Shared::activeCamera->GetRotation()));
 	for (int x = 0; x < models.size(); x++) {
 		LoadedModel* loadedModel = models.at(selectedModelUI)->GetSharedBuffers()->GetAsLoadedModel();
+		std::vector<DynamicMaterial*> loadedModelMaterials = std::vector<DynamicMaterial*>();
 		for (int i = 0; i < models.at(selectedModelUI)->GetSubmeshCount(); i++) {
-			loadedModel->modelParts[i].material = models.at(selectedModelUI)->GetSubmeshMaterial(i);
+			loadedModelMaterials.push_back(models.at(selectedModelUI)->GetSubmeshMaterial(i));
 		}
-		DirectX::XMMATRIX thisWorld = models.at(selectedModelUI)->GetWorldMatrix();
-		Utilities::TransformLoadedModel(loadedModel, thisWorld);
-		sceneDefinition->models.push_back(loadedModel);
+		sceneDefinition->modelDefinitions.emplace_back(loadedModel->filepath, Utilities::Vec3FromDXVec3(models.at(selectedModelUI)->GetPosition()), Utilities::Vec3FromDXVec3(models.at(selectedModelUI)->GetRotation()), true, loadedModelMaterials);
 	}
 	bool result = Shared::pluginManager->SaveSceneWithPlugin(sceneDefinition, name);
 	Memory::SafeDelete(sceneDefinition);

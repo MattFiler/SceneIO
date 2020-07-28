@@ -23,6 +23,7 @@ enum CameraControlType {
 
 class DynamicMaterialManager;
 class PluginManager;
+class Camera;
 
 /* Shared values which are persistant throughout the application's lifetime */
 struct Shared 
@@ -45,6 +46,9 @@ public:
 
 	/* Misc Shared Variables */
 	const static char* dataTypes[7];
+
+	/* Active camera ref */
+	static Camera* activeCamera;
 
 	/* Camera Properties */
 	static float mouseCameraSensitivity;

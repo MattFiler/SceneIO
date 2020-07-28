@@ -267,4 +267,12 @@ public:
 			}
 		}
 	}
+	
+	/* Conversions between vector types */
+	static Vector3 Vec3FromDXVec3(DirectX::XMFLOAT3 _vec) {
+		return Vector3(_vec.x, _vec.y, _vec.z);
+	}
+	static DirectX::XMFLOAT3 DXVec3FromVec3(Vector3 _vec) {
+		return DirectX::XMFLOAT3(_vec.x, _vec.y, _vec.z);
+	}
 };

@@ -35,7 +35,7 @@ PluginManager::PluginManager()
 LoadedModel* PluginManager::LoadModelWithPlugin(std::string filepath)
 {
 	//Find plugin to handle filetype
-	std::string pluginName = GetPluginForExtension(PluginType::IMPORTER, Utilities::GetFileExtension(filepath));
+	std::string pluginName = GetPluginForExtension(PluginType::MODEL_IMPORTER, Utilities::GetFileExtension(filepath));
 	if (pluginName == "") return nullptr;
 
 	//Load with plugin
@@ -58,7 +58,7 @@ LoadedModel* PluginManager::LoadModelWithPlugin(std::string filepath)
 bool PluginManager::SaveModelWithPlugin(LoadedModel* model, std::string filepath)
 {
 	//Find plugin to handle filetype
-	std::string pluginName = GetPluginForExtension(PluginType::EXPORTER, Utilities::GetFileExtension(filepath));
+	std::string pluginName = GetPluginForExtension(PluginType::MODEL_EXPORTER, Utilities::GetFileExtension(filepath));
 	if (pluginName == "") return false;
 
 	//Save with plugin
@@ -81,8 +81,8 @@ bool PluginManager::SaveModelWithPlugin(LoadedModel* model, std::string filepath
 SceneDefinition* PluginManager::LoadSceneWithPlugin(std::string filepath)
 {
 	//Find plugin to handle filetype
-	std::string pluginName = GetPluginForExtension(PluginType::IMPORTER, Utilities::GetFileExtension(filepath));
-	if (pluginName == "") return false;
+	std::string pluginName = GetPluginForExtension(PluginType::SCENE_IMPORTER, Utilities::GetFileExtension(filepath));
+	if (pluginName == "") return nullptr;
 
 	//Load with plugin
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
@@ -104,7 +104,7 @@ SceneDefinition* PluginManager::LoadSceneWithPlugin(std::string filepath)
 bool PluginManager::SaveSceneWithPlugin(SceneDefinition* scene, std::string filepath)
 {
 	//Find plugin to handle filetype
-	std::string pluginName = GetPluginForExtension(PluginType::EXPORTER, Utilities::GetFileExtension(filepath));
+	std::string pluginName = GetPluginForExtension(PluginType::SCENE_EXPORTER, Utilities::GetFileExtension(filepath));
 	if (pluginName == "") return false;
 
 	//Save with plugin
@@ -132,41 +132,35 @@ std::vector<PluginDefinition*> PluginManager::GetPlugins()
 /* Get a vector of all importer plugin definitions */
 std::vector<PluginDefinition*> PluginManager::GetModelImporterPlugins()
 {
-	std::vector<PluginDefinition*> importers = std::vector<PluginDefinition*>();
-	for (int i = 0; i < plugins.size(); i++) {
-		if (plugins[i]->pluginType == PluginType::IMPORTER) importers.push_back(plugins[i]);
-	}
-	return importers;
+	return GetPluginsByType(PluginType::MODEL_IMPORTER);
 }
 
 /* Get a vector of all exporter plugin definitions */
 std::vector<PluginDefinition*> PluginManager::GetModelExporterPlugins()
 {
-	std::vector<PluginDefinition*> exporters = std::vector<PluginDefinition*>();
-	for (int i = 0; i < plugins.size(); i++) {
-		if (plugins[i]->pluginType == PluginType::EXPORTER) exporters.push_back(plugins[i]);
-	}
-	return exporters;
+	return GetPluginsByType(PluginType::MODEL_EXPORTER);
 }
 
 /* Get a vector of all importer plugin definitions that support scenes */
 std::vector<PluginDefinition*> PluginManager::GetSceneImporterPlugins()
 {
-	std::vector<PluginDefinition*> importers = std::vector<PluginDefinition*>();
-	for (int i = 0; i < plugins.size(); i++) {
-		if (plugins[i]->pluginType == PluginType::IMPORTER && plugins[i]->supportsScenes) importers.push_back(plugins[i]);
-	}
-	return importers;
+	return GetPluginsByType(PluginType::SCENE_IMPORTER);
 }
 
 /* Get a vector of all exporter plugin definitions that support scenes */
 std::vector<PluginDefinition*> PluginManager::GetSceneExporterPlugins()
 {
-	std::vector<PluginDefinition*> exporters = std::vector<PluginDefinition*>();
+	return GetPluginsByType(PluginType::SCENE_EXPORTER);
+}
+
+/* Get all plugins that match the given type */
+std::vector<PluginDefinition*> PluginManager::GetPluginsByType(PluginType _type)
+{
+	std::vector<PluginDefinition*> importers = std::vector<PluginDefinition*>();
 	for (int i = 0; i < plugins.size(); i++) {
-		if (plugins[i]->pluginType == PluginType::EXPORTER && plugins[i]->supportsScenes) exporters.push_back(plugins[i]);
+		if (plugins[i]->pluginType == _type) importers.push_back(plugins[i]);
 	}
-	return exporters;
+	return importers;
 }
 
 /* Get a plugin path that supports a given extension for a type (returns empty string if none exist) */

@@ -22,6 +22,8 @@ void EditorScene::Init()
 
 	//Setup subsystems
 	modelManager = new ModelManager();
+
+	Shared::activeCamera = &main_cam;
 }
 
 /* Release all objects in the scene */

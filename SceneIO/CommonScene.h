@@ -16,51 +16,39 @@ public:
 	Vector3 GetRotation() { return rotationEuler; }
 
 private:
-	Vector3 position;
-	Vector3 rotationEuler;
+	Vector3 position = Vector3(0,0,0);
+	Vector3 rotationEuler = Vector3(0,0,0);
 };
 
-#if defined SCENEIO_PLUGIN_IMPORTER || defined SCENEIO_CORE_APPLICATION
-/* Define a filepath and position/rotation for a model in the scene */
+/* Define a filepath and position/rotation for a model in the scene - also optionally allows you to specify per-submesh materials to override the model's defaults */
 class SceneModel {
 public:
 	SceneModel() = default;
-	SceneModel(std::string _path, Vector3 _pos, Vector3 _rot) {
+	SceneModel(std::string _path, Vector3 _pos, Vector3 _rot, bool _useMats = false, std::vector<DynamicMaterial*> _mats = std::vector<DynamicMaterial*>()) {
 		filepath = _path;
+		materials = _mats;
+		useMatOverride = _useMats;
 		position = _pos;
 		rotationEuler = _rot;
 	}
 
 	std::string GetFilepath() { return filepath; }
+	bool IsUsingMaterialOverride() { return useMatOverride; }
+	std::vector<DynamicMaterial*> GetMaterials() { return materials; }
 	Vector3 GetPosition() { return position; }
 	Vector3 GetRotation() { return rotationEuler; }
 
 private:
 	std::string filepath;
+	bool useMatOverride = false;
+	std::vector<DynamicMaterial*> materials = std::vector<DynamicMaterial*>();
 	Vector3 position;
 	Vector3 rotationEuler;
 };
-#endif
 
 /* A definition of a scene, containing camera data and models */
 class SceneDefinition {
 public:
-	~SceneDefinition() {
-#ifndef SCENEIO_PLUGIN
-		for (int i = 0; i < loadedModels.size(); i++) {
-			delete loadedModels[i];
-		}
-		loadedModels.clear();
-		delete camera;
-		camera = nullptr;
-#endif
-	}
-
-#if defined SCENEIO_PLUGIN_EXPORTER || defined SCENEIO_CORE_APPLICATION
-	std::vector<LoadedModel*> loadedModels = std::vector<LoadedModel*>();
-#endif
-#if defined SCENEIO_PLUGIN_IMPORTER || defined SCENEIO_CORE_APPLICATION
 	std::vector<SceneModel> modelDefinitions = std::vector<SceneModel>();
-#endif
-	SceneCamera* camera = nullptr;
+	SceneCamera camera = SceneCamera();
 };

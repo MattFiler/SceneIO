@@ -37,7 +37,7 @@ extern "C" __declspec(dllexport) PluginDefinition* RegisterPlugin()
 {
 	std::vector<std::string> supportedFormats = std::vector<std::string>();
 	supportedFormats.push_back(".obj");
-	return new PluginDefinition("OBJ Importer", supportedFormats, PluginType::MODEL_IMPORTER);
+	return new PluginDefinition("OBJ Mesh Importer", supportedFormats, PluginType::MODEL_IMPORTER);
 }
 
 /* Load a single model */
@@ -352,13 +352,4 @@ extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath)
 	}
 	thisModel->modelParts.push_back(modelPart);
 	return thisModel;
-}
-
-/* Load an entire scene */
-extern "C" __declspec(dllexport) SceneDefinition* LoadScene(std::string filePath)
-{
-	SceneDefinition* thisScene = new SceneDefinition();
-	thisScene->camera = new SceneCamera(Vector3(0, 0, 0), Vector3(0, 0, 0));
-	thisScene->modelDefinitions.push_back(LoadModel("")); ///TODO: provide ability to set position/rotation here
-	return thisScene;
 }
