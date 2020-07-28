@@ -1,5 +1,5 @@
 #pragma once
-#include "../ModelExporterPlugin.h"
+#include "../ExporterPlugin.h"
 #include <fstream>
 
 /* Register the plugin with the application */

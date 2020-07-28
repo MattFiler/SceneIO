@@ -1,5 +1,5 @@
 #pragma once
-#include "../SceneExporterPlugin.h"
+#include "../ExporterPlugin.h"
 #include <fstream>
 
 /* Register the plugin with the application */

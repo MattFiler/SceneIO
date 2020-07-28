@@ -21,13 +21,9 @@ public:
 	bool SaveSceneWithPlugin(LoadedScene* scene, std::string filepath);
 
 	std::vector<PluginDefinition*> GetPlugins();
-	std::vector<PluginDefinition*> GetModelImporterPlugins();
-	std::vector<PluginDefinition*> GetModelExporterPlugins();
-	std::vector<PluginDefinition*> GetSceneImporterPlugins();
-	std::vector<PluginDefinition*> GetSceneExporterPlugins();
+	std::vector<PluginDefinition*> GetPluginsOfType(PluginType _type);
+	std::string GetPluginForExtension(PluginType type, std::string extension);
 	
 private:
-	std::vector<PluginDefinition*> GetPluginsByType(PluginType _type);
-	std::string GetPluginForExtension(PluginType type, std::string extension);
 	std::vector<PluginDefinition*> plugins = std::vector<PluginDefinition*>();
 };

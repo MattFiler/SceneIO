@@ -1,5 +1,5 @@
 #pragma once
-#include "../ModelImporterPlugin.h"
+#include "../ImporterPlugin.h"
 #include <fstream>
 #include <iostream>
 #include <assimp/Importer.hpp>

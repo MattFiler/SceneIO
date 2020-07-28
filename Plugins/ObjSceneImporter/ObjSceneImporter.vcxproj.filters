@@ -39,7 +39,7 @@
     <ClInclude Include="..\..\SceneIO\CommonScene.h">
       <Filter>Header Files\SceneIO API</Filter>
     </ClInclude>
-    <ClInclude Include="..\SceneImporterPlugin.h">
+    <ClInclude Include="..\ImporterPlugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -36,6 +36,7 @@ LoadedModel* PluginManager::LoadModelWithPlugin(std::string filepath)
 {
 	//Find plugin to handle filetype
 	std::string pluginName = GetPluginForExtension(PluginType::MODEL_IMPORTER, Utilities::GetFileExtension(filepath));
+	if (pluginName == "") pluginName = GetPluginForExtension(PluginType::MODEL_AND_SCENE_IMPORTER, Utilities::GetFileExtension(filepath));
 	if (pluginName == "") return nullptr;
 
 	//Load with plugin
@@ -59,6 +60,7 @@ bool PluginManager::SaveModelWithPlugin(LoadedModel* model, std::string filepath
 {
 	//Find plugin to handle filetype
 	std::string pluginName = GetPluginForExtension(PluginType::MODEL_EXPORTER, Utilities::GetFileExtension(filepath));
+	if (pluginName == "") pluginName = GetPluginForExtension(PluginType::MODEL_AND_SCENE_EXPORTER, Utilities::GetFileExtension(filepath));
 	if (pluginName == "") return false;
 
 	//Save with plugin
@@ -82,6 +84,7 @@ LoadedScene* PluginManager::LoadSceneWithPlugin(std::string filepath)
 {
 	//Find plugin to handle filetype
 	std::string pluginName = GetPluginForExtension(PluginType::SCENE_IMPORTER, Utilities::GetFileExtension(filepath));
+	if (pluginName == "") pluginName = GetPluginForExtension(PluginType::MODEL_AND_SCENE_IMPORTER, Utilities::GetFileExtension(filepath));
 	if (pluginName == "") return nullptr;
 
 	//Load with plugin
@@ -105,6 +108,7 @@ bool PluginManager::SaveSceneWithPlugin(LoadedScene* scene, std::string filepath
 {
 	//Find plugin to handle filetype
 	std::string pluginName = GetPluginForExtension(PluginType::SCENE_EXPORTER, Utilities::GetFileExtension(filepath));
+	if (pluginName == "") pluginName = GetPluginForExtension(PluginType::MODEL_AND_SCENE_EXPORTER, Utilities::GetFileExtension(filepath));
 	if (pluginName == "") return false;
 
 	//Save with plugin
@@ -129,32 +133,8 @@ std::vector<PluginDefinition*> PluginManager::GetPlugins()
 	return plugins;
 }
 
-/* Get a vector of all importer plugin definitions */
-std::vector<PluginDefinition*> PluginManager::GetModelImporterPlugins()
-{
-	return GetPluginsByType(PluginType::MODEL_IMPORTER);
-}
-
-/* Get a vector of all exporter plugin definitions */
-std::vector<PluginDefinition*> PluginManager::GetModelExporterPlugins()
-{
-	return GetPluginsByType(PluginType::MODEL_EXPORTER);
-}
-
-/* Get a vector of all importer plugin definitions that support scenes */
-std::vector<PluginDefinition*> PluginManager::GetSceneImporterPlugins()
-{
-	return GetPluginsByType(PluginType::SCENE_IMPORTER);
-}
-
-/* Get a vector of all exporter plugin definitions that support scenes */
-std::vector<PluginDefinition*> PluginManager::GetSceneExporterPlugins()
-{
-	return GetPluginsByType(PluginType::SCENE_EXPORTER);
-}
-
 /* Get all plugins that match the given type */
-std::vector<PluginDefinition*> PluginManager::GetPluginsByType(PluginType _type)
+std::vector<PluginDefinition*> PluginManager::GetPluginsOfType(PluginType _type)
 {
 	std::vector<PluginDefinition*> importers = std::vector<PluginDefinition*>();
 	for (int i = 0; i < plugins.size(); i++) {

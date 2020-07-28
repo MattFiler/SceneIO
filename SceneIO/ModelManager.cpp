@@ -10,54 +10,43 @@
 /* Setup available types in filepicker */
 ModelManager::ModelManager()
 {
-	std::vector<PluginDefinition*> allPlugins = Shared::pluginManager->GetPlugins();
+	std::vector<PluginDefinition*> mI = Shared::pluginManager->GetPluginsOfType(PluginType::MODEL_IMPORTER);
+	std::vector<PluginDefinition*> mE = Shared::pluginManager->GetPluginsOfType(PluginType::MODEL_EXPORTER);
+	std::vector<PluginDefinition*> sI = Shared::pluginManager->GetPluginsOfType(PluginType::SCENE_IMPORTER);
+	std::vector<PluginDefinition*> sE = Shared::pluginManager->GetPluginsOfType(PluginType::SCENE_EXPORTER);
+	std::vector<PluginDefinition*> msI = Shared::pluginManager->GetPluginsOfType(PluginType::MODEL_AND_SCENE_IMPORTER);
+	std::vector<PluginDefinition*> msE = Shared::pluginManager->GetPluginsOfType(PluginType::MODEL_AND_SCENE_EXPORTER);
 
 	//Model import
 	modelImporterFileDialog = ImGui::FileBrowser::FileBrowser(ImGuiFileBrowserFlags_CloseOnEsc);
 	modelImporterFileDialog.SetTitle("Import Mesh");
 	std::vector<const char*> filetypes = std::vector<const char*>();
-	for (int i = 0; i < allPlugins.size(); i++) {
-		if (allPlugins[i]->pluginType != PluginType::MODEL_IMPORTER) continue;
-		for (int x = 0; x < allPlugins[i]->supportedExtensions.size(); x++) {
-			filetypes.push_back(allPlugins[i]->supportedExtensions[x].c_str());
-		}
-	}
+	for (int i = 0; i < mI.size(); i++) for (int x = 0; x < mI[i]->supportedExtensions.size(); x++) filetypes.push_back(mI[i]->supportedExtensions[x].c_str());
+	for (int i = 0; i < msI.size(); i++) for (int x = 0; x < msI[i]->supportedExtensions.size(); x++) filetypes.push_back(msI[i]->supportedExtensions[x].c_str());
 	modelImporterFileDialog.SetTypeFilters(filetypes);
 
 	//Model export
 	modelExporterFileDialog = ImGui::FileBrowser::FileBrowser(ImGuiFileBrowserFlags_EnterNewFilename | ImGuiFileBrowserFlags_CreateNewDir | ImGuiFileBrowserFlags_CloseOnEsc);
 	modelExporterFileDialog.SetTitle("Export Mesh");
 	filetypes.clear();
-	for (int i = 0; i < allPlugins.size(); i++) {
-		if (allPlugins[i]->pluginType != PluginType::MODEL_EXPORTER) continue;
-		for (int x = 0; x < allPlugins[i]->supportedExtensions.size(); x++) {
-			filetypes.push_back(allPlugins[i]->supportedExtensions[x].c_str());
-		}
-	}
+	for (int i = 0; i < mE.size(); i++) for (int x = 0; x < mE[i]->supportedExtensions.size(); x++) filetypes.push_back(mE[i]->supportedExtensions[x].c_str());
+	for (int i = 0; i < msE.size(); i++) for (int x = 0; x < msE[i]->supportedExtensions.size(); x++) filetypes.push_back(msE[i]->supportedExtensions[x].c_str());
 	modelExporterFileDialog.SetTypeFilters(filetypes);
 
 	//Scene import
 	sceneImporterFileDialog = ImGui::FileBrowser::FileBrowser(ImGuiFileBrowserFlags_CloseOnEsc);
 	sceneImporterFileDialog.SetTitle("Import Scene");
 	filetypes.clear();
-	for (int i = 0; i < allPlugins.size(); i++) {
-		if (allPlugins[i]->pluginType != PluginType::SCENE_IMPORTER) continue;
-		for (int x = 0; x < allPlugins[i]->supportedExtensions.size(); x++) {
-			filetypes.push_back(allPlugins[i]->supportedExtensions[x].c_str());
-		}
-	}
+	for (int i = 0; i < sI.size(); i++) for (int x = 0; x < sI[i]->supportedExtensions.size(); x++) filetypes.push_back(sI[i]->supportedExtensions[x].c_str());
+	for (int i = 0; i < msI.size(); i++) for (int x = 0; x < msI[i]->supportedExtensions.size(); x++) filetypes.push_back(msI[i]->supportedExtensions[x].c_str());
 	sceneImporterFileDialog.SetTypeFilters(filetypes);
 
 	//Scene export
 	sceneExporterFileDialog = ImGui::FileBrowser::FileBrowser(ImGuiFileBrowserFlags_EnterNewFilename | ImGuiFileBrowserFlags_CreateNewDir | ImGuiFileBrowserFlags_CloseOnEsc);
 	sceneExporterFileDialog.SetTitle("Export Scene");
 	filetypes.clear();
-	for (int i = 0; i < allPlugins.size(); i++) {
-		if (allPlugins[i]->pluginType != PluginType::SCENE_EXPORTER) continue;
-		for (int x = 0; x < allPlugins[i]->supportedExtensions.size(); x++) {
-			filetypes.push_back(allPlugins[i]->supportedExtensions[x].c_str());
-		}
-	}
+	for (int i = 0; i < sE.size(); i++) for (int x = 0; x < sE[i]->supportedExtensions.size(); x++) filetypes.push_back(sE[i]->supportedExtensions[x].c_str());
+	for (int i = 0; i < msE.size(); i++) for (int x = 0; x < msE[i]->supportedExtensions.size(); x++) filetypes.push_back(msE[i]->supportedExtensions[x].c_str());
 	sceneExporterFileDialog.SetTypeFilters(filetypes);
 }
 

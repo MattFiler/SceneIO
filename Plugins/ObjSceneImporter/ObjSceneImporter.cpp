@@ -1,5 +1,5 @@
 #pragma once
-#include "../SceneImporterPlugin.h"
+#include "../ImporterPlugin.h"
 #include <fstream>
 #include <iostream>
 

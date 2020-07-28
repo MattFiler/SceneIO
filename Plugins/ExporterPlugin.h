@@ -5,8 +5,8 @@
 #include <string>
 
 #include "../SceneIO/CommonScene.h"
-#include "../SceneIO/DynamicMaterialManager.h"
 #include "../SceneIO/DynamicMaterial.h"
 
 extern "C" __declspec(dllexport) PluginDefinition* RegisterPlugin();
-extern "C" __declspec(dllexport) LoadedScene* LoadScene(std::string filePath);
+extern "C" __declspec(dllexport) bool SaveModel(LoadedModel* model, std::string filepath);
+extern "C" __declspec(dllexport) bool SaveScene(LoadedScene* scene, std::string filepath);
