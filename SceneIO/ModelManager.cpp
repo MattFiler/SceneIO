@@ -164,6 +164,7 @@ void ModelManager::ModelManagerUI()
 	if (ImGui::Button("Load Scene")) {
 		sceneImporterFileDialog.Open();
 	}
+	ImGui::SameLine();
 	if (ImGui::Button("Save Scene")) {
 		sceneExporterFileDialog.Open();
 	}
@@ -411,6 +412,7 @@ bool ModelManager::LoadScene(std::string name)
 	Shared::activeCamera->SetPosition(Utilities::DXVec3FromVec3(sceneDef->camera.GetPosition()));
 	Shared::activeCamera->SetRotation(Utilities::DXVec3FromVec3(sceneDef->camera.GetRotation()));
 	Shared::cameraFOV = sceneDef->camera.GetFOV();
+	if (sceneDef->environmentMat) Shared::environmentMaterial = sceneDef->environmentMat;
 	bool didLoadOK = true;
 	for (int i = 0; i < sceneDef->modelDefinitions.size(); i++) 
 	{
@@ -437,6 +439,7 @@ bool ModelManager::SaveScene(std::string name)
 {
 	LoadedScene* sceneDefinition = new LoadedScene();
 	sceneDefinition->camera = SceneCamera(Utilities::Vec3FromDXVec3(Shared::activeCamera->GetPosition()), Utilities::Vec3FromDXVec3(Shared::activeCamera->GetRotation()), Shared::cameraFOV);
+	sceneDefinition->environmentMat = Shared::environmentMaterial;
 	for (int x = 0; x < models.size(); x++) {
 		LoadedModel* loadedModel = models.at(x)->GetSharedBuffers()->GetAsLoadedModel();
 		for (int i = 0; i < models.at(x)->GetSubmeshCount(); i++) {

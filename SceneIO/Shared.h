@@ -22,6 +22,7 @@ enum CameraControlType {
 };
 
 class DynamicMaterialManager;
+class DynamicMaterial;
 class PluginManager;
 class Camera;
 
@@ -46,6 +47,9 @@ public:
 
 	/* Misc Shared Variables */
 	const static char* dataTypes[7];
+
+	/* The active scene's global environment material */
+	static DynamicMaterial* environmentMaterial;
 
 	/* Active camera ref */
 	static Camera* activeCamera;

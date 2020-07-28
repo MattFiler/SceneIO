@@ -20,7 +20,7 @@ public:
 private:
 	Vector3 position = Vector3(0,0,0);
 	Vector3 rotationEuler = Vector3(0,0,0);
-	float fov = 45.0f;
+	float fov = 1.5f;
 };
 
 struct LoadedModelPositioner {
@@ -35,4 +35,5 @@ class LoadedScene {
 public:
 	std::vector<LoadedModelPositioner> modelDefinitions = std::vector<LoadedModelPositioner>();
 	SceneCamera camera = SceneCamera();
+	DynamicMaterial* environmentMat = nullptr;
 };

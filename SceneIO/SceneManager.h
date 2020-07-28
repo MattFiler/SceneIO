@@ -33,6 +33,8 @@ private:
 	int currentSceneIndex = -1;
 	std::vector<Scene*> availableScenes = std::vector<Scene*>();
 
+	DynamicMaterial* env_mat = nullptr;
+
 	bool showControlsMenu = false;
 };
 

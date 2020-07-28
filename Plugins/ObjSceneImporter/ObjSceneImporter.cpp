@@ -14,11 +14,11 @@ extern "C" __declspec(dllexport) PluginDefinition* RegisterPlugin()
 /* Load an entire scene */
 extern "C" __declspec(dllexport) LoadedScene* LoadScene(std::string filePath)
 {
-	/*
-	SceneDefinition* thisScene = new SceneDefinition();
-	thisScene->camera = new SceneCamera(Vector3(0, 0, 0), Vector3(0, 0, 0));
-	thisScene->modelDefinitions.push_back()
+	DynamicMaterialManager* materialManager = new DynamicMaterialManager();
+
+	LoadedScene* thisScene = new LoadedScene();
+	thisScene->camera = SceneCamera(Vector3(0, 0, 0), Vector3(0, 0, 0), 1.5f);
+	thisScene->environmentMat = materialManager->GetEnvironmentMaterial(); //Tweak properties as appropriate
+	//thisScene->modelDefinitions.push_back()
 	return thisScene;
-	*/
-	return nullptr;
 }

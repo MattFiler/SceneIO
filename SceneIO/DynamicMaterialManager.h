@@ -35,6 +35,15 @@ public:
 		throw std::out_of_range("ERROR! Incorrect material requested. Fatal.");
 	}
 
+	DynamicMaterial* GetEnvironmentMaterial() {
+		for (int i = 0; i < materials.size(); i++) {
+			if (materials[i]->GetSurfaceType() == MaterialSurfaceTypes::ENVIRONMENT) {
+				return materials[i];
+			}
+		}
+		throw std::out_of_range("ERROR! No environment material exists.");
+	}
+
 	int GetMaterialCount() {
 		return materials.size();
 	}

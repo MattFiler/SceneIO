@@ -23,6 +23,7 @@ void EditorScene::Init()
 	//Setup subsystems
 	modelManager = new ModelManager();
 
+	//Shared global stuff
 	Shared::activeCamera = &main_cam;
 }
 

@@ -23,6 +23,9 @@ bool SceneManager::Init()
 	Shared::materialManager = new DynamicMaterialManager();
 	Shared::pluginManager = new PluginManager();
 
+	env_mat = Shared::materialManager->GetEnvironmentMaterial();
+	Shared::environmentMaterial = env_mat;
+
 	return dxInit;
 }
 
