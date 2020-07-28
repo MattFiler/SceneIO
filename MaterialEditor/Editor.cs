@@ -221,6 +221,23 @@ namespace MaterialEditor
                     }
                 }
             }
+            if (materialType.SelectedItem.ToString() == "ENVIRONMENT")
+            {
+                bool validColourNaming = false;
+                foreach (JObject mat in (JArray)thisObject["parameters"])
+                {
+                    if (mat["name"].Value<string>() == "colour" && mat["type"].Value<string>() == "RGB")
+                    {
+                        validColourNaming = true;
+                        break;
+                    }
+                }
+                if (!validColourNaming)
+                {
+                    MessageBox.Show("This material must have an RGB parameter named 'colour'!", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
             bool hasBindable = false;
             for (int i = 0; i < materialParameters.Items.Count; i++)
             {
