@@ -13,7 +13,9 @@ public:
 		cmd_js >> config;
 
 		for (int i = 0; i < config["materials"].size(); i++) {
-			materials.push_back(new DynamicMaterial(config["materials"][i], i));
+			DynamicMaterial* thisMat = new DynamicMaterial(config["materials"][i], i);
+			if (thisMat->GetSurfaceType() == MaterialSurfaceTypes::ENVIRONMENT) envMaterial = thisMat;
+			else materials.push_back(thisMat);
 		}
 
 		if (materials.size() == 0) {
@@ -36,12 +38,7 @@ public:
 	}
 
 	DynamicMaterial* GetEnvironmentMaterial() {
-		for (int i = 0; i < materials.size(); i++) {
-			if (materials[i]->GetSurfaceType() == MaterialSurfaceTypes::ENVIRONMENT) {
-				return materials[i];
-			}
-		}
-		throw std::out_of_range("ERROR! No environment material exists.");
+		return envMaterial;
 	}
 
 	int GetMaterialCount() {
@@ -50,4 +47,5 @@ public:
 
 private:
 	std::vector<DynamicMaterial*> materials = std::vector<DynamicMaterial*>();
+	DynamicMaterial* envMaterial = nullptr;
 };

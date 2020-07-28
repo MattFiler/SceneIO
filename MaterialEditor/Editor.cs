@@ -56,8 +56,8 @@ namespace MaterialEditor
             thisObject = (JObject)((JObject)config["materials"][config_index]).DeepClone();
             materialName.Text = thisObject["name"].Value<string>();
             materialName.ReadOnly = true;
-            materialType.SelectedItem = thisObject["type"].Value<string>().ToUpper();
             pixelShaderCode.Text = thisObject["pixel_shader"]["code"].Value<string>();
+            materialType.SelectedItem = thisObject["type"].Value<string>().ToUpper();
 
             RefreshParamList();
         }
@@ -247,7 +247,7 @@ namespace MaterialEditor
                 MessageBox.Show("Material name cannot contain numbers or special characters.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if (pixelShaderCode.Text == "")
+            if (pixelShaderCode.Enabled && pixelShaderCode.Text == "")
             {
                 MessageBox.Show("Material must have pixel shader code.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -333,6 +333,13 @@ namespace MaterialEditor
         {
             OtherShaderVariablesWindow win = new OtherShaderVariablesWindow();
             win.Show();
+        }
+
+        /* Not all material types take pixel shader code */
+        private void materialType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if ((materialType.SelectedItem.ToString() == "ENVIRONMENT")) pixelShaderCode.Text = "";
+            pixelShaderCode.Enabled = !(materialType.SelectedItem.ToString() == "ENVIRONMENT");
         }
     }
 }

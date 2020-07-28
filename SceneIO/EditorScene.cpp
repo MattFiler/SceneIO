@@ -48,16 +48,12 @@ bool EditorScene::Update(double dt)
 	ImGui::Text(("Cam Pos X: " + std::to_string(main_cam.GetPosition().x) + ", Y: " + std::to_string(main_cam.GetPosition().y) + "Z: " + std::to_string(main_cam.GetPosition().z)).c_str());
 	ImGui::Text(("Cam Rot X: " + std::to_string(main_cam.GetRotation().x) + ", Y: " + std::to_string(main_cam.GetRotation().y) + "Z: " + std::to_string(main_cam.GetRotation().z)).c_str());
 
-	ImGui::Separator();
-	ImGui::SliderFloat("Ambient R", &Shared::ambientLightColour.x, 0.0f, 1.0f);
-	ImGui::SliderFloat("Ambient G", &Shared::ambientLightColour.y, 0.0f, 1.0f);
-	ImGui::SliderFloat("Ambient B", &Shared::ambientLightColour.z, 0.0f, 1.0f);
-
-	ImGui::Separator();
-	ImGui::SliderFloat("Sensitivity", &Shared::mouseCameraSensitivity, 0.0f, 1.0f);
 	ImGui::SliderFloat("Camera FOV", &Shared::cameraFOV, 0.01f, 3.14f);
 	if (fovCheck != Shared::cameraFOV) Shared::mProjection = DirectX::XMMatrixPerspectiveFovLH(Shared::cameraFOV, Shared::m_renderWidth / (FLOAT)Shared::m_renderHeight, Shared::cameraNear, Shared::cameraFar);
 	fovCheck = Shared::cameraFOV;
+
+	ImGui::Separator();
+	ImGui::SliderFloat("Sensitivity", &Shared::mouseCameraSensitivity, 0.0f, 1.0f);
 
 	ImGui::End();
 

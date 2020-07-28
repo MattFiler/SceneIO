@@ -164,9 +164,30 @@ void ModelManager::ModelManagerUI()
 	if (ImGui::Button("Load Scene")) {
 		sceneImporterFileDialog.Open();
 	}
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
+	sceneImporterFileDialog.Display();
+	ImGui::PopStyleVar();
+	if (sceneImporterFileDialog.HasSelected())
+	{
+		if (LoadScene(sceneImporterFileDialog.GetSelected().string())) {
+			sceneImporterFileDialog.ClearSelected();
+			sceneImporterFileDialog.Close();
+		}
+	}
+
 	ImGui::SameLine();
 	if (ImGui::Button("Save Scene")) {
 		sceneExporterFileDialog.Open();
+	}
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
+	sceneExporterFileDialog.Display();
+	ImGui::PopStyleVar();
+	if (sceneExporterFileDialog.HasSelected())
+	{
+		if (SaveScene(sceneExporterFileDialog.GetSelected().string())) {
+			sceneExporterFileDialog.ClearSelected();
+			sceneExporterFileDialog.Close();
+		}
 	}
 
 	ImGui::Separator();
@@ -291,7 +312,6 @@ void ModelManager::MaterialDropdownUI(Model* model, int submeshID)
 	for (int i = 0; i < thisMaterial->GetParameterCount(); i++) {
 		MaterialParameter* thisParam = thisMaterial->GetParameter(i);
 		std::string inputLabel = ("S" + std::to_string(submeshID) + " " + thisParam->name);
-
 		switch (thisParam->value->type) {
 			case DataTypes::RGB: {
 				DataTypeRGB* param = static_cast<DataTypeRGB*>(thisParam->value);

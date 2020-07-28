@@ -34,6 +34,7 @@ private:
 	std::vector<Scene*> availableScenes = std::vector<Scene*>();
 
 	DynamicMaterial* env_mat = nullptr;
+	bool useClearColourFromEnvMat = true;
 
 	bool showControlsMenu = false;
 };

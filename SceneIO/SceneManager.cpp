@@ -23,7 +23,13 @@ bool SceneManager::Init()
 	Shared::materialManager = new DynamicMaterialManager();
 	Shared::pluginManager = new PluginManager();
 
-	env_mat = Shared::materialManager->GetEnvironmentMaterial();
+	if (Shared::materialManager->GetEnvironmentMaterial() == nullptr) Debug::Log("ERROR! No environment material template configured!");
+
+	env_mat = new DynamicMaterial(*Shared::materialManager->GetEnvironmentMaterial());
+	DataTypeRGB* rgbClearColour = static_cast<DataTypeRGB*>(Shared::materialManager->GetEnvironmentMaterial()->GetParameter("colour")->value);
+	rgbClearColour->value.R = DirectX::Colors::CornflowerBlue.f[0];
+	rgbClearColour->value.G = DirectX::Colors::CornflowerBlue.f[1];
+	rgbClearColour->value.B = DirectX::Colors::CornflowerBlue.f[2];
 	Shared::environmentMaterial = env_mat;
 
 	return dxInit;
@@ -97,6 +103,74 @@ bool SceneManager::Update(double dt)
 		ImGui::End();
 	}
 
+	//Environment material controls
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
+	ImGui::Begin("Environment Material Controls", nullptr);
+	ImGui::PopStyleVar();
+	ImGui::Checkbox("Use As Clear Colour In Render", &useClearColourFromEnvMat);
+	ImGui::Separator();
+	for (int i = 0; i < Shared::materialManager->GetEnvironmentMaterial()->GetParameterCount(); i++) {
+		MaterialParameter* thisParam = Shared::materialManager->GetEnvironmentMaterial()->GetParameter(i);
+		switch (thisParam->value->type) {
+			case DataTypes::RGB: {
+				DataTypeRGB* param = static_cast<DataTypeRGB*>(thisParam->value);
+				ImGui::ColorEdit3(thisParam->name.c_str(), param->value.AsFloatArray());
+				break;
+			}
+			case DataTypes::TEXTURE_FILEPATH: {
+				DataTypeTextureFilepath* param = static_cast<DataTypeTextureFilepath*>(thisParam->value);
+				ImGui::InputText(thisParam->name.c_str(), &param->value);
+				break;
+			}
+			case DataTypes::STRING: {
+				DataTypeString* param = static_cast<DataTypeString*>(thisParam->value);
+				ImGui::InputText(thisParam->name.c_str(), &param->value);
+				break;
+			}
+			case DataTypes::FLOAT: {
+				DataTypeFloat* param = static_cast<DataTypeFloat*>(thisParam->value);
+				ImGui::InputFloat(thisParam->name.c_str(), &param->value);
+				break;
+			}
+			case DataTypes::INTEGER: {
+				DataTypeInt* param = static_cast<DataTypeInt*>(thisParam->value);
+				ImGui::InputInt(thisParam->name.c_str(), &param->value);
+				break;
+			}
+			case DataTypes::UNSIGNED_INTEGER: {
+				DataTypeUInt* param = static_cast<DataTypeUInt*>(thisParam->value);
+				int toEdit = (int)param->value;
+				ImGui::InputInt(thisParam->name.c_str(), &toEdit);
+				param->value = (uint32_t)toEdit;
+				break;
+			}
+			case DataTypes::BOOLEAN: {
+				DataTypeBool* param = static_cast<DataTypeBool*>(thisParam->value);
+				ImGui::Checkbox(thisParam->name.c_str(), &param->value);
+				break;
+			}
+			case DataTypes::FLOAT_ARRAY: {
+				DataTypeFloatArray* param = static_cast<DataTypeFloatArray*>(thisParam->value);
+				//Input TBD
+				//ImGui::InputText(thisParam->name.c_str(), &param->value);
+				break;
+			}
+			case DataTypes::OPTIONS_LIST: {
+				DataTypeOptionsList* param = static_cast<DataTypeOptionsList*>(thisParam->value);
+				if (ImGui::BeginCombo(thisParam->name.c_str(), param->options[param->value].c_str())) {
+					for (int x = 0; x < param->options.size(); x++) {
+						const bool is_selected = (param->value == x);
+						if (ImGui::Selectable(param->options[x].c_str(), is_selected)) param->value = x;
+						if (is_selected) ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndCombo();
+				}
+				break;
+			}
+		}
+	}
+	ImGui::End();
+
 	//Update current scene
 	if (currentSceneIndex != -1)
 		return availableScenes[currentSceneIndex]->Update(dt);
@@ -106,7 +180,12 @@ bool SceneManager::Update(double dt)
 void SceneManager::Render(double dt)
 {
 	//Clear back buffer & depth stencil view
-	m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, DirectX::Colors::CornflowerBlue);
+	XMVECTORF32 clearColour = DirectX::Colors::CornflowerBlue; 
+	if (useClearColourFromEnvMat) {
+		DataTypeRGB* rgbClearColour = static_cast<DataTypeRGB*>(Shared::materialManager->GetEnvironmentMaterial()->GetParameter("colour")->value);
+		clearColour = { { { rgbClearColour->value.R, rgbClearColour->value.G, rgbClearColour->value.B, 1.000000000f } } };
+	}
+	m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, clearColour);
 	m_pImmediateContext->ClearDepthStencilView(g_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	//Render scene

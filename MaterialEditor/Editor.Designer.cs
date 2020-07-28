@@ -49,8 +49,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.saveMaterial = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.pixelShaderCode = new System.Windows.Forms.RichTextBox();
             this.showOtherVars = new System.Windows.Forms.Button();
+            this.pixelShaderCode = new System.Windows.Forms.RichTextBox();
             this.groupBox1.SuspendLayout();
             this.parameterEditWindow.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -124,6 +124,7 @@
             this.materialType.Name = "materialType";
             this.materialType.Size = new System.Drawing.Size(255, 21);
             this.materialType.TabIndex = 8;
+            this.materialType.SelectedIndexChanged += new System.EventHandler(this.materialType_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -266,16 +267,6 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Pixel Shader Code";
             // 
-            // pixelShaderCode
-            // 
-            this.pixelShaderCode.DetectUrls = false;
-            this.pixelShaderCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pixelShaderCode.Location = new System.Drawing.Point(6, 20);
-            this.pixelShaderCode.Name = "pixelShaderCode";
-            this.pixelShaderCode.Size = new System.Drawing.Size(851, 428);
-            this.pixelShaderCode.TabIndex = 0;
-            this.pixelShaderCode.Text = "";
-            // 
             // showOtherVars
             // 
             this.showOtherVars.Location = new System.Drawing.Point(6, 451);
@@ -285,6 +276,16 @@
             this.showOtherVars.Text = "Other Shader Variables";
             this.showOtherVars.UseVisualStyleBackColor = true;
             this.showOtherVars.Click += new System.EventHandler(this.showOtherVars_Click);
+            // 
+            // pixelShaderCode
+            // 
+            this.pixelShaderCode.DetectUrls = false;
+            this.pixelShaderCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pixelShaderCode.Location = new System.Drawing.Point(6, 20);
+            this.pixelShaderCode.Name = "pixelShaderCode";
+            this.pixelShaderCode.Size = new System.Drawing.Size(851, 428);
+            this.pixelShaderCode.TabIndex = 0;
+            this.pixelShaderCode.Text = "";
             // 
             // Editor
             // 
