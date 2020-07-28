@@ -17,11 +17,12 @@ namespace MaterialEditor
     public partial class Editor : Form
     {
         JObject config;
+        JObject thisObject;
         int config_index;
         int edit_param_index;
         bool creating_param;
 
-        public Editor(JObject configObject = null, int materialIndex = 0)
+        public Editor(JObject configObject = null, int materialIndex = -1)
         {
             config = configObject;
             config_index = materialIndex;
@@ -44,20 +45,26 @@ namespace MaterialEditor
             parameterType.Items.Add("FLOAT_ARRAY");
             parameterType.Items.Add("OPTIONS_LIST");
 
-            if (configObject == null) return;
+            if (materialIndex == -1)
+            {
+                thisObject = new JObject();
+                thisObject["parameters"] = new JArray();
+                thisObject["pixel_shader"] = new JObject();
+                return;
+            }
 
-            JObject thisMatData = (JObject)config["materials"][config_index];
-            materialName.Text = thisMatData["name"].Value<string>();
+            thisObject = (JObject)((JObject)config["materials"][config_index]).DeepClone();
+            materialName.Text = thisObject["name"].Value<string>();
             materialName.ReadOnly = true;
-            materialType.SelectedItem = thisMatData["type"].Value<string>().ToUpper();
-            pixelShaderCode.Text = thisMatData["pixel_shader"]["code"].Value<string>();
+            materialType.SelectedItem = thisObject["type"].Value<string>().ToUpper();
+            pixelShaderCode.Text = thisObject["pixel_shader"]["code"].Value<string>();
 
             RefreshParamList();
         }
         private void RefreshParamList()
         {
             materialParameters.Items.Clear();
-            foreach (JObject param_entry in config["materials"][config_index]["parameters"])
+            foreach (JObject param_entry in thisObject["parameters"])
             {
                 materialParameters.Items.Add(param_entry["name"]);
             }
@@ -84,7 +91,7 @@ namespace MaterialEditor
 
             edit_param_index = materialParameters.SelectedIndex;
 
-            JObject thisParamData = (JObject)config["materials"][config_index]["parameters"][edit_param_index];
+            JObject thisParamData = (JObject)thisObject["parameters"][edit_param_index];
             parameterName.Text = thisParamData["name"].Value<string>();
             parameterType.SelectedItem = thisParamData["type"].Value<string>().ToUpper();
             parameterIsBound.Checked = thisParamData["is_bound"].Value<bool>();
@@ -110,7 +117,7 @@ namespace MaterialEditor
             DialogResult shouldDo = MessageBox.Show("Are you sure you wish to delete this parameter?", "Confirmation...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (shouldDo != DialogResult.Yes) return;
 
-            config["materials"][config_index]["parameters"][materialParameters.SelectedIndex].Remove();
+            thisObject["parameters"][materialParameters.SelectedIndex].Remove();
 
             RefreshParamList();
             MessageBox.Show("Deleted parameter!", "Deleted.", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -150,12 +157,12 @@ namespace MaterialEditor
 
             if (creating_param)
             {
-                JArray paramArray = (JArray)config["materials"][config_index]["parameters"];
+                JArray paramArray = (JArray)thisObject["parameters"];
                 paramArray.Add(new JObject());
                 edit_param_index = paramArray.Count - 1;
             }
 
-            JObject thisParamData = (JObject)config["materials"][config_index]["parameters"][edit_param_index];
+            JObject thisParamData = (JObject)thisObject["parameters"][edit_param_index];
             thisParamData["name"] = parameterName.Text;
             thisParamData["type"] = parameterType.SelectedItem.ToString();
             thisParamData["is_bound"] = (parameterIsBound.Visible && parameterIsBound.Checked);
@@ -198,10 +205,26 @@ namespace MaterialEditor
                 MessageBox.Show("Material must have at least one parameter.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            if (materialType.SelectedIndex == -1)
+            {
+                MessageBox.Show("Material requires a type to be selected.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (materialType.SelectedItem.ToString() == "ENVIRONMENT" && config_index == -1)
+            {
+                foreach (JObject mat in (JArray)config["materials"])
+                {
+                    if (mat["type"].Value<string>() == "ENVIRONMENT")
+                    {
+                        MessageBox.Show("An environment material definition already exists.\nThere can only be one environment material!", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+            }
             bool hasBindable = false;
             for (int i = 0; i < materialParameters.Items.Count; i++)
             {
-                hasBindable = config["materials"][config_index]["parameters"][i]["is_bound"].Value<bool>();
+                hasBindable = thisObject["parameters"][i]["is_bound"].Value<bool>();
                 break;
             }
             if (!hasBindable)
@@ -230,16 +253,18 @@ namespace MaterialEditor
                 return;
             }
 
-            JObject thisMatData = (JObject)config["materials"][config_index];
-            thisMatData["name"] = materialName.Text;
-            thisMatData["type"] = materialType.SelectedItem.ToString();
-            thisMatData["pixel_shader"]["code"] = pixelShaderCode.Text;
+            thisObject["name"] = materialName.Text;
+            thisObject["type"] = materialType.SelectedItem.ToString();
+            thisObject["pixel_shader"]["code"] = pixelShaderCode.Text;
 
-            if (!CreateShader(thisMatData))
+            if (!CreateShader())
             {
                 MessageBox.Show("Couldn't generate shader.\nPlease check pixel shader code.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
+            if (config_index == -1) ((JArray)config["materials"]).Add(thisObject);
+            else ((JArray)config["materials"])[config_index] = thisObject;
 
             File.WriteAllText("data/materials/material_config.json", config.ToString(Formatting.Indented));
             MessageBox.Show("Material saved!", "Saved.", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -247,15 +272,15 @@ namespace MaterialEditor
         }
 
         /* Create the shader for this material in-editor */
-        private bool CreateShader(JObject thisMatData)
+        private bool CreateShader()
         {
-            string shaderPath = "data/materials/" + config["materials"][config_index]["name"].Value<string>() + ".fx";
+            string shaderPath = "data/materials/" + thisObject["name"].Value<string>() + ".fx";
 
             string baseShader = Properties.Resources.shader_template.ToString();
             List<string> baseShaderList = new List<string>(Regex.Split(baseShader, Environment.NewLine));
             List<string> finalShaderList = new List<string>();
 
-            JArray allParams = (JArray)thisMatData["parameters"];
+            JArray allParams = (JArray)thisObject["parameters"];
             int texBuffCount = 0;
             int cBuffCount = 1; //We have one base constant buffer
 
@@ -288,7 +313,7 @@ namespace MaterialEditor
                 }
                 if (baseShaderList[i] == "%CUSTOM_PIXEL_SHADER%")
                 {
-                    List<string> pixelCode = new List<string>(Regex.Split(thisMatData["pixel_shader"]["code"].Value<string>(), Environment.NewLine));
+                    List<string> pixelCode = new List<string>(Regex.Split(thisObject["pixel_shader"]["code"].Value<string>(), Environment.NewLine));
                     for (int x = 0; x < pixelCode.Count; x++)
                     {
                         finalShaderList.Add("\t" + pixelCode[x]);

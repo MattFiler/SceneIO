@@ -42,7 +42,7 @@ namespace MaterialEditor
         /* Create a new material */
         private void newMaterial_Click(object sender, EventArgs e)
         {
-            Editor materialEditor = new Editor();
+            Editor materialEditor = new Editor(comp_json_config);
             materialEditor.FormClosed += new FormClosedEventHandler(ReloadList);
             materialEditor.Show();
         }
