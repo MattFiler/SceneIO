@@ -57,11 +57,11 @@ void Camera::Update(float dt)
 	if (InputHandler::KeyDown(WindowsKey::SHIFT)) {
 		speedMod = 3.0f;
 	}
-	if (InputHandler::KeyDown(WindowsKey::A)) {
+	if (InputHandler::KeyDown(WindowsKey::Z)) {
 		//Look Up
 		SetRotation(XMFLOAT3(GetRotation().x + (dt * speedMod), GetRotation().y, GetRotation().z), true);
 	}
-	if (InputHandler::KeyDown(WindowsKey::Z)) {
+	if (InputHandler::KeyDown(WindowsKey::A)) {
 		//Look Down
 		SetRotation(XMFLOAT3(GetRotation().x - (dt * speedMod), GetRotation().y, GetRotation().z), true);
 	}

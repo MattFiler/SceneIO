@@ -91,6 +91,15 @@ bool SceneManager::Update(double dt)
 
 		ImGui::Separator();
 
+		ImGui::Text("Camera Pan Up: A");
+		ImGui::Text("Camera Pan Down: Z");
+		ImGui::Text("Camera Pan Left: Q");
+		ImGui::Text("Camera Pan Right: E");
+		ImGui::Text("Camera Move Up: D");
+		ImGui::Text("Camera Move Down: C");
+
+		ImGui::Separator();
+
 		ImGui::Text("Translate Mode: O");
 		ImGui::Text("Scale Mode: P");
 

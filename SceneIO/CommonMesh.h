@@ -20,9 +20,10 @@ struct LoadedModelPart
 	// each time can easily cause corruptions. For this reason, when getting rid of an instance of this struct for the final
 	// time, you should be aware that you need to MANUALLY delete the material object.
 
-	std::vector<SimpleVertex> compVertices = std::vector<SimpleVertex>();
-	std::vector<WORD> compIndices = std::vector<WORD>();
-	DynamicMaterial* material = nullptr;
+	std::vector<SimpleVertex> compVertices = std::vector<SimpleVertex>(); //Core vertex data
+	std::vector<float*> compVerticesAdditional = std::vector<float*>();   //Extra additional vertex data, if required
+	std::vector<WORD> compIndices = std::vector<WORD>();                  //Indicies mapping to the vertices and extra vertex data
+	DynamicMaterial* material = nullptr;                                  //This model part (submesh)'s material
 };
 
 /* A definition of a mesh object */
