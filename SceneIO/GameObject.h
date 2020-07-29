@@ -8,6 +8,14 @@ class GameObject
 {
 public:
 	GameObject() = default;
+	GameObject(const GameObject& cpy) {
+		mWorld = cpy.mWorld;
+		position = cpy.position;
+		rotation = cpy.rotation;
+		scale = cpy.scale;
+		isActive = cpy.isActive; 
+		isInvisible = cpy.isInvisible;
+	}
 	~GameObject() {
 		GameObjectManager::RemoveObject(this);
 		Release();

@@ -154,8 +154,11 @@ void ModelManager::ModelManagerUI()
 		}
 		ImGui::SameLine();
 
-		if (ImGui::Button("Copy Selected Model")) {
-			//TODO: duplicate the model instance
+		if (ImGui::Button("Duplicate Selected Model")) {
+			Model* duplicatedModel = new Model(*models.at(selectedModelUI));
+			models.push_back(duplicatedModel);
+			GameObjectManager::AddObject(duplicatedModel);
+			selectedModelUI = models.size() - 1;
 		}
 	}
 

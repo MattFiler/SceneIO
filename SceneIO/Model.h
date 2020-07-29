@@ -8,6 +8,14 @@
 /* A model instance, pulling from a shared vertex/index buffer, with bespoke per-submesh material definitions */
 class Model : public GameObject {
 public:
+	Model() = default;
+	Model(const Model & cpy) : GameObject(cpy) {
+		modelData = cpy.modelData;
+		boundingBox = cpy.boundingBox;
+		for (int i = 0; i < cpy.materials.size(); i++) {
+			materials.push_back(new DynamicMaterial(*cpy.materials[i]));
+		}
+	}
 	~Model() {
 		Release();
 	}
