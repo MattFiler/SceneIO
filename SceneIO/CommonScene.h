@@ -7,19 +7,22 @@
 class SceneCamera {
 public:
 	SceneCamera() = default;
-	SceneCamera(Vector3 _pos, Vector3 _rot, float _fov) {
+	SceneCamera(Vector3 _pos, Vector3 _rot, float _fov, bool _usingRadians = true) {
 		position = _pos;
-		rotationEuler = _rot;
+		rotation = _rot;
 		fov = _fov;
+		rotationIsInRadians = _usingRadians;
 	}
 
 	Vector3 GetPosition() { return position; }
-	Vector3 GetRotation() { return rotationEuler; }
+	Vector3 GetRotation() { return rotation; }
+	bool IsRotationInRadians() { return rotationIsInRadians; }
 	float GetFOV() { return fov; }
 
 private:
 	Vector3 position = Vector3(0,0,0);
-	Vector3 rotationEuler = Vector3(0,0,0);
+	Vector3 rotation = Vector3(0,0,0);
+	bool rotationIsInRadians = true;
 	float fov = 1.5f;
 };
 

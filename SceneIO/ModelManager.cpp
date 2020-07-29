@@ -99,6 +99,10 @@ void ModelManager::Update(double dt)
 
 	//UI
 	ModelManagerUI();
+	if (didIOThisFrame) {
+		didIOThisFrame = false;
+		return; //Because of the way the GameObject update system works, we need to wait until the next tick to handle transforms if IO was performed
+	}
 	ModelTransformUI();
 	ModelMaterialUI();
 }
@@ -107,9 +111,10 @@ void ModelManager::Update(double dt)
 void ModelManager::ModelManagerUI()
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
-	ImGui::Begin("Model Controls", nullptr);
+	ImGui::Begin("Content Controls", nullptr);
 	ImGui::PopStyleVar();
 
+	//Import new model
 	if (ImGui::Button("Load New Model")) {
 		modelImporterFileDialog.Open();
 	}
@@ -124,10 +129,10 @@ void ModelManager::ModelManagerUI()
 		}
 	}
 
+	ImGui::Separator();
+
 	//Controls for selected model only
 	if (selectedModelUI != -1) {
-		ImGui::SameLine();
-
 		if (ImGui::Button("Export Selected Model")) {
 			modelExporterFileDialog.Open();
 		}
@@ -141,10 +146,9 @@ void ModelManager::ModelManagerUI()
 				modelExporterFileDialog.Close();
 			}
 		}
+		ImGui::SameLine();
 
-		ImGui::Checkbox("Export Using Global Transform", &shouldExportAsWorld);
-
-		ImGui::Separator();
+		ImGui::Checkbox("Use Global Transform", &shouldExportAsWorld);
 
 		if (ImGui::Button("Delete Selected Model")) {
 			GameObjectManager::RemoveObject(models.at(selectedModelUI));
@@ -159,11 +163,13 @@ void ModelManager::ModelManagerUI()
 			models.push_back(duplicatedModel);
 			GameObjectManager::AddObject(duplicatedModel);
 			selectedModelUI = models.size() - 1;
+			CommonImportEvent();
 		}
+
+		ImGui::Separator();
 	}
 
-	ImGui::Separator();
-
+	//Import new content from scene definition
 	if (ImGui::Button("Load Scene")) {
 		sceneImporterFileDialog.Open();
 	}
@@ -179,6 +185,8 @@ void ModelManager::ModelManagerUI()
 	}
 
 	ImGui::SameLine();
+
+	//Export full scene
 	if (ImGui::Button("Save Scene")) {
 		sceneExporterFileDialog.Open();
 	}
@@ -195,9 +203,27 @@ void ModelManager::ModelManagerUI()
 
 	ImGui::Separator();
 
+	//Show all model instances in a list
 	if (ImGui::CollapsingHeader("Model Instances", ImGuiTreeNodeFlags_DefaultOpen)) {
-		for (int i = 0; i < GetModelCount(); i++) {
-			ImGui::RadioButton(std::to_string(i).c_str(), &selectedModelUI, i);
+		for (int i = 0; i < models.size(); i++) {
+			ImGui::RadioButton((std::to_string(i) + ": " + models[i]->GetSharedBuffers()->GetFilepath()).c_str(), &selectedModelUI, i);
+		}
+	}
+
+	ImGui::End();
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
+	ImGui::Begin("Plugin Buttons", nullptr);
+	ImGui::PopStyleVar();
+
+	//Send scene definition to UI button plugin, and then re-apply it back
+	std::vector<PluginDefinition*> uiPlugins = Shared::pluginManager->GetPluginsOfType(PluginType::UI_BUTTON);
+	for (int i = 0; i < uiPlugins.size(); i++) {
+		if (ImGui::Button(("Plugin " + std::to_string(i) + ": " + uiPlugins[i]->pluginName).c_str())) {
+			LoadedScene* sceneDefinition = GetSceneAsLoadedScene();
+			Shared::pluginManager->CallButtonPressPlugin(sceneDefinition, uiPlugins[i]);
+			SetSceneAsLoadedScene(sceneDefinition);
+			didIOThisFrame = true;
 		}
 	}
 
@@ -403,6 +429,8 @@ bool ModelManager::LoadModel(std::string name, DirectX::XMFLOAT3 pos, DirectX::X
 	models.push_back(newModel);
 
 	selectedModelUI = models.size() - 1;
+
+	CommonImportEvent();
 	return true;
 }
 
@@ -431,23 +459,82 @@ bool ModelManager::SaveModel(std::string name)
 /* Load a definition of a scene and instance everything from it */
 bool ModelManager::LoadScene(std::string name)
 {
-	LoadedScene* sceneDef = Shared::pluginManager->LoadSceneWithPlugin(name);
-	Shared::activeCamera->SetPosition(Utilities::DXVec3FromVec3(sceneDef->camera.GetPosition()));
-	Shared::activeCamera->SetRotation(Utilities::DXVec3FromVec3(sceneDef->camera.GetRotation()));
-	Shared::cameraFOV = sceneDef->camera.GetFOV();
-	if (sceneDef->environmentMat) Shared::environmentMaterial = sceneDef->environmentMat;
+	bool returnVal = SetSceneAsLoadedScene(Shared::pluginManager->LoadSceneWithPlugin(name));
+	CommonImportEvent();
+	return returnVal;
+}
+
+/* Create and save a definition of the scene using a plugin */
+bool ModelManager::SaveScene(std::string name)
+{
+	LoadedScene* sceneDefinition = GetSceneAsLoadedScene();
+	bool result = Shared::pluginManager->SaveSceneWithPlugin(sceneDefinition, name);
+	for (int i = 0; i < sceneDefinition->modelDefinitions.size(); i++) {
+		Memory::SafeDelete(sceneDefinition->modelDefinitions[i].model);
+	}
+	Memory::SafeDelete(sceneDefinition);
+	return result;
+}
+
+/* This should be called whenever a new model is instantiated */
+void ModelManager::CommonImportEvent()
+{
+	std::vector<PluginDefinition*> importerPlugins = Shared::pluginManager->GetPluginsOfType(PluginType::IMPORT_EVENT);
+	for (int i = 0; i < importerPlugins.size(); i++) {
+		LoadedScene* sceneDefinition = GetSceneAsLoadedScene();
+		Shared::pluginManager->CallImportEventPlugin(sceneDefinition, importerPlugins[i]);
+		SetSceneAsLoadedScene(sceneDefinition);
+	}
+
+	if (selectedModelUI >= models.size()) selectedModelUI = -1;
+	didIOThisFrame = true;
+}
+
+/* Generate a LoadedScene object to represent the current scene content */
+LoadedScene* ModelManager::GetSceneAsLoadedScene()
+{
+	LoadedScene* sceneDefinition = new LoadedScene();
+	sceneDefinition->camera = SceneCamera(Utilities::Vec3FromDXVec3(Shared::activeCamera->GetPosition()), Utilities::Vec3FromDXVec3(Shared::activeCamera->GetRotation()), Shared::cameraFOV);
+	sceneDefinition->environmentMat = Shared::environmentMaterial;
+	for (int x = 0; x < models.size(); x++) {
+		LoadedModel* loadedModel = models.at(x)->GetSharedBuffers()->GetAsLoadedModel();
+		for (int i = 0; i < models.at(x)->GetSubmeshCount(); i++) {
+			loadedModel->modelParts[i].material = new DynamicMaterial(*models.at(x)->GetSubmeshMaterial(i));
+		}
+		LoadedModelPositioner loadedModelPos = LoadedModelPositioner();
+		loadedModelPos.model = loadedModel;
+		loadedModelPos.position = Utilities::Vec3FromDXVec3(models.at(x)->GetPosition());
+		loadedModelPos.rotation = Utilities::Vec3FromDXVec3(models.at(x)->GetRotation());
+		sceneDefinition->modelDefinitions.push_back(loadedModelPos);
+	}
+	return sceneDefinition;
+}
+
+/* Repopulate the entire scene from a LoadedScene object */
+bool ModelManager::SetSceneAsLoadedScene(LoadedScene* scene)
+{
+	Shared::activeCamera->SetPosition(Utilities::DXVec3FromVec3(scene->camera.GetPosition()));
+	Shared::activeCamera->SetRotation(Utilities::DXVec3FromVec3(scene->camera.GetRotation()), scene->camera.IsRotationInRadians());
+	Shared::cameraFOV = scene->camera.GetFOV();
+	if (scene->environmentMat) Shared::environmentMaterial = scene->environmentMat;
+
+	for (int i = 0; i < models.size(); i++) {
+		GameObjectManager::RemoveObject(models.at(i));
+		Memory::SafeRelease(models[i]);
+	}
+	models.clear();
+
 	bool didLoadOK = true;
-	for (int i = 0; i < sceneDef->modelDefinitions.size(); i++) 
-	{
-		SharedModelBuffers* newLoadedModel = LoadModelToLevel(sceneDef->modelDefinitions[i].model);
+	for (int i = 0; i < scene->modelDefinitions.size(); i++) {
+		SharedModelBuffers* newLoadedModel = LoadModelToLevel(scene->modelDefinitions[i].model);
 		if (newLoadedModel->DidLoadOK()) {
 			modelBuffers.push_back(newLoadedModel);
 			Model* newModel = new Model();
 			newModel->SetSharedBuffers(newLoadedModel);
-			newModel->SetPosition(Utilities::DXVec3FromVec3(sceneDef->modelDefinitions[i].position));
-			newModel->SetRotation(Utilities::DXVec3FromVec3(sceneDef->modelDefinitions[i].rotation), sceneDef->modelDefinitions[i].rotationIsInRadians);
-			for (int x = 0; x < sceneDef->modelDefinitions[i].model->modelParts.size(); x++) {
-				newModel->SetSubmeshMaterial(x, sceneDef->modelDefinitions[i].model->modelParts[x].material);
+			newModel->SetPosition(Utilities::DXVec3FromVec3(scene->modelDefinitions[i].position));
+			newModel->SetRotation(Utilities::DXVec3FromVec3(scene->modelDefinitions[i].rotation), scene->modelDefinitions[i].rotationIsInRadians);
+			for (int x = 0; x < scene->modelDefinitions[i].model->modelParts.size(); x++) {
+				newModel->SetSubmeshMaterial(x, scene->modelDefinitions[i].model->modelParts[x].material);
 			}
 			newModel->Create();
 			GameObjectManager::AddObject(newModel);
@@ -456,34 +543,20 @@ bool ModelManager::LoadScene(std::string name)
 		else {
 			didLoadOK = false;
 		}
-		//TODO: I think we have a bit of a memory leak here. Should SetSubmeshMaterial do a deep copy, then have us destroy the LoadedModel from DLL here?
 	}
-	return didLoadOK;
-}
 
-/* Create and save a definition of the scene using a plugin */
-bool ModelManager::SaveScene(std::string name)
-{
-	LoadedScene* sceneDefinition = new LoadedScene();
-	sceneDefinition->camera = SceneCamera(Utilities::Vec3FromDXVec3(Shared::activeCamera->GetPosition()), Utilities::Vec3FromDXVec3(Shared::activeCamera->GetRotation()), Shared::cameraFOV);
-	sceneDefinition->environmentMat = Shared::environmentMaterial;
-	for (int x = 0; x < models.size(); x++) {
-		LoadedModel* loadedModel = models.at(x)->GetSharedBuffers()->GetAsLoadedModel();
-		for (int i = 0; i < models.at(x)->GetSubmeshCount(); i++) {
-			loadedModel->modelParts[i].material = models.at(x)->GetSubmeshMaterial(i);
+	for (int i = 0; i < scene->modelDefinitions.size(); i++) {
+		for (int x = 0; x < scene->modelDefinitions[i].model->modelParts.size(); x++) {
+			Memory::SafeDelete(scene->modelDefinitions[i].model->modelParts[x].material);
 		}
-		LoadedModelPositioner loadedModelPos = LoadedModelPositioner();
-		loadedModelPos.model = loadedModel;
-		loadedModelPos.position = Utilities::Vec3FromDXVec3(models.at(x)->GetPosition());
-		loadedModelPos.rotation = Utilities::Vec3FromDXVec3(models.at(x)->GetRotation());
-		sceneDefinition->modelDefinitions.push_back(loadedModelPos);
+		Memory::SafeDelete(scene->modelDefinitions[i].model);
 	}
-	bool result = Shared::pluginManager->SaveSceneWithPlugin(sceneDefinition, name);
-	for (int i = 0; i < sceneDefinition->modelDefinitions.size(); i++) {
-		Memory::SafeDelete(sceneDefinition->modelDefinitions[i].model);
-	}
-	Memory::SafeDelete(sceneDefinition);
-	return result;
+	Memory::SafeDelete(scene);
+
+	Debug::Log("Finished setting LoadedScene, with " + std::to_string(models.size()) + " models.");
+	Debug::Log("GameObjectManager has " + std::to_string(GameObjectManager::GetModels().size()) + " models.");
+
+	return didLoadOK;
 }
 
 /* Requested load of model: check our existing loaded data, and if not already loaded, load it */

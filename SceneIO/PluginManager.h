@@ -20,6 +20,9 @@ public:
 	LoadedScene* LoadSceneWithPlugin(std::string filepath);
 	bool SaveSceneWithPlugin(LoadedScene* scene, std::string filepath);
 
+	void CallImportEventPlugin(LoadedScene* scene, PluginDefinition* plugin);
+	void CallButtonPressPlugin(LoadedScene* scene, PluginDefinition* plugin);
+
 	std::vector<PluginDefinition*> GetPlugins();
 	std::vector<PluginDefinition*> GetPluginsOfType(PluginType _type);
 	std::string GetPluginForExtension(PluginType type, std::string extension);

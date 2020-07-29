@@ -39,6 +39,11 @@ private:
 	bool LoadScene(std::string name);
 	bool SaveScene(std::string name);
 
+	void CommonImportEvent();
+
+	LoadedScene* GetSceneAsLoadedScene();
+	bool SetSceneAsLoadedScene(LoadedScene* scene);
+
 	SharedModelBuffers* LoadModelToLevel(std::string filename);
 	SharedModelBuffers* LoadModelToLevel(LoadedModel* modelref);
 	std::vector<SharedModelBuffers*> modelBuffers = std::vector<SharedModelBuffers*>();
@@ -52,6 +57,8 @@ private:
 	int selectedModelSubmeshUI = -1;
 
 	bool shouldExportAsWorld = false;
+
+	bool didIOThisFrame = false;
 
 	ImGui::FileBrowser modelImporterFileDialog;
 	ImGui::FileBrowser modelExporterFileDialog;

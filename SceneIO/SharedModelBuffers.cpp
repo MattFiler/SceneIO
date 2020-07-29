@@ -114,6 +114,7 @@ LoadedModel* SharedModelBuffers::GetAsLoadedModel()
 	for (int i = 0; i < allModels.size(); i++) {
 		_m->modelParts.push_back(*allModels[i]->GetAsLoadedModelPart());
 	}
+	_m->filepath = objPath;
 	return _m;
 }
 

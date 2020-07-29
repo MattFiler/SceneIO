@@ -7,6 +7,8 @@ typedef LoadedModel* (*modelImporterPlugin)(std::string filepath);
 typedef bool (*modelExporterPlugin)(LoadedModel* model, std::string filepath);
 typedef LoadedScene* (*sceneImporterPlugin)(std::string filepath);
 typedef bool (*sceneExporterPlugin)(LoadedScene* scene, std::string filepath);
+typedef void (*importEventPlugin)(LoadedScene* scene);
+typedef void (*buttonPressPlugin)(LoadedScene* scene);
 
 /* Get all available plugins on startup */
 PluginManager::PluginManager()
@@ -125,6 +127,32 @@ bool PluginManager::SaveSceneWithPlugin(LoadedScene* scene, std::string filepath
 	}
 	FreeLibrary(hModule);
 	return result;
+}
+
+/* Call the plugin for import events with a LoadedScene */
+void PluginManager::CallImportEventPlugin(LoadedScene* scene, PluginDefinition* plugin)
+{
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
+	HMODULE hModule = LoadLibraryW(conv.from_bytes(plugin->pluginPath).c_str());
+	if (hModule != NULL)
+	{
+		importEventPlugin ImportEvent = (importEventPlugin)GetProcAddress(hModule, "ImportEvent");
+		if (ImportEvent != NULL) ImportEvent(scene);
+	}
+	FreeLibrary(hModule);
+}
+
+/* Call the plugin for button press with a LoadedScene */
+void PluginManager::CallButtonPressPlugin(LoadedScene* scene, PluginDefinition* plugin)
+{
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
+	HMODULE hModule = LoadLibraryW(conv.from_bytes(plugin->pluginPath).c_str());
+	if (hModule != NULL)
+	{
+		buttonPressPlugin ButtonPress = (buttonPressPlugin)GetProcAddress(hModule, "ButtonPress");
+		if (ButtonPress != NULL) ButtonPress(scene);
+	}
+	FreeLibrary(hModule);
 }
 
 /* Get a vector of all plugin definitions */

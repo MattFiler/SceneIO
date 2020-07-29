@@ -10,5 +10,5 @@ extern "C" __declspec(dllexport) PluginDefinition* RegisterPlugin()
 /* Perform changes on button press */
 extern "C" __declspec(dllexport) void ButtonPress(LoadedScene * scene)
 {
-	
+	//do some stuff with the scene
 }

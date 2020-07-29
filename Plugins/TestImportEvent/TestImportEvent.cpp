@@ -10,5 +10,5 @@ extern "C" __declspec(dllexport) PluginDefinition* RegisterPlugin()
 /* Perform changes on import event */
 extern "C" __declspec(dllexport) void ImportEvent(LoadedScene * scene)
 {
-	
+	//do some stuff with the scene
 }

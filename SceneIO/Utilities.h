@@ -69,7 +69,19 @@ public:
 		OutputDebugString(std::to_string(msg).c_str());
 		OutputDebugString("\n");
 	}
+	static void Log(DirectX::XMFLOAT2 msg) {
+		OutputDebugString(("(X: " + std::to_string(msg.x) + ", Y: " + std::to_string(msg.y) + ")").c_str());
+		OutputDebugString("\n");
+	}
 	static void Log(DirectX::XMFLOAT3 msg) {
+		OutputDebugString(("(X: " + std::to_string(msg.x) + ", Y: " + std::to_string(msg.y) + ", Z: " + std::to_string(msg.z) + ")").c_str());
+		OutputDebugString("\n");
+	}
+	static void Log(Vector2 msg) {
+		OutputDebugString(("(X: " + std::to_string(msg.x) + ", Y: " + std::to_string(msg.y) + ")").c_str());
+		OutputDebugString("\n");
+	}
+	static void Log(Vector3 msg) {
 		OutputDebugString(("(X: " + std::to_string(msg.x) + ", Y: " + std::to_string(msg.y) + ", Z: " + std::to_string(msg.z) + ")").c_str());
 		OutputDebugString("\n");
 	}
