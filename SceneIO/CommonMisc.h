@@ -11,7 +11,18 @@ struct Vector2 {
 		x = _x;
 		y = _y;
 	}
-	//TODO: more useful addition overloads etc
+	Vector2 operator + (Vector2 const& obj) {
+		return Vector2(x + obj.x, y + obj.y);
+	}
+	Vector2 operator - (Vector2 const& obj) {
+		return Vector2(x - obj.x, y - obj.y);
+	}
+	Vector2 operator * (Vector2 const& obj) {
+		return Vector2(x * obj.x, y * obj.y);
+	}
+	Vector2 operator / (Vector2 const& obj) {
+		return Vector2(x / obj.x, y / obj.y);
+	}
 
 	float x = 0.0f;
 	float y = 0.0f;
@@ -25,7 +36,18 @@ struct Vector3 {
 		y = _y;
 		z = _z;
 	}
-	//TODO: more useful addition overloads etc
+	Vector3 operator + (Vector3 const& obj) {
+		return Vector3(x + obj.x, y + obj.y, z + obj.z);
+	}
+	Vector3 operator - (Vector3 const& obj) {
+		return Vector3(x - obj.x, y - obj.y, z - obj.z);
+	}
+	Vector3 operator * (Vector3 const& obj) {
+		return Vector3(x * obj.x, y * obj.y, z * obj.z);
+	}
+	Vector3 operator / (Vector3 const& obj) {
+		return Vector3(x / obj.x, y / obj.y, z / obj.z);
+	}
 
 	float x = 0.0f;
 	float y = 0.0f;
