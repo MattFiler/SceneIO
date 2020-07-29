@@ -7,7 +7,7 @@ extern "C" __declspec(dllexport) PluginDefinition* RegisterPlugin()
 {
 	std::vector<std::string> supportedFormats = std::vector<std::string>();
 	supportedFormats.push_back(".obj");
-	return new PluginDefinition("OBJ Scene Exporter", supportedFormats, PluginType::SCENE_EXPORTER);
+	return new PluginDefinition("OBJ Scene Exporter", PluginType::SCENE_EXPORTER, supportedFormats);
 }
 
 /* Save the entire loaded scene data */

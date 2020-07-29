@@ -36,18 +36,18 @@ struct Vector3 {
 enum class PluginType {
 	DUMMY,
 
-	MODEL_IMPORTER, //Defines LoadModel functionality
-	MODEL_EXPORTER, //Defines SaveModel functionality
+	MODEL_IMPORTER,            //Defines LoadModel functionality
+	MODEL_EXPORTER,            //Defines SaveModel functionality
+					           
+	SCENE_IMPORTER,            //Defines LoadScene functionality
+	SCENE_EXPORTER,            //Defines SaveScene functionality
+							   
+	MODEL_AND_SCENE_IMPORTER,  //Defines LoadModel and LoadScene functionality
+	MODEL_AND_SCENE_EXPORTER,  //Defines SaveModel and SaveScene functionality
+							   
+	UI_BUTTON,                 //Defines ButtonPress functionality
 
-	SCENE_IMPORTER, //Defines LoadScene functionality
-	SCENE_EXPORTER, //Defines SaveScene functionality
-
-	MODEL_AND_SCENE_IMPORTER, //Defines LoadModel and LoadScene functionality
-	MODEL_AND_SCENE_EXPORTER, //Defines SaveModel and SaveScene functionality
-
-	//WIP BELOW
-	UI_BUTTON,
-	IMPORT_EVENT,
+	IMPORT_EVENT,              //Defines ImportEvent functionality
 };
 struct PluginDefinition {
 	//Filled in by the editor tool
@@ -59,5 +59,5 @@ struct PluginDefinition {
 	PluginType pluginType = PluginType::DUMMY;
 
 	PluginDefinition() {};
-	PluginDefinition(std::string _name, std::vector<std::string> _extensions, PluginType _type) : pluginName(_name), supportedExtensions(_extensions), pluginType(_type) {};
+	PluginDefinition(std::string _name, PluginType _type, std::vector<std::string> _extensions = std::vector<std::string>()) : pluginName(_name), supportedExtensions(_extensions), pluginType(_type) {};
 };

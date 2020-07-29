@@ -7,7 +7,7 @@ extern "C" __declspec(dllexport) PluginDefinition* RegisterPlugin()
 {
 	std::vector<std::string> supportedFormats = std::vector<std::string>();
 	supportedFormats.push_back(".obj");
-	return new PluginDefinition("OBJ Mesh Exporter", supportedFormats, PluginType::MODEL_EXPORTER);
+	return new PluginDefinition("OBJ Mesh Exporter", PluginType::MODEL_EXPORTER, supportedFormats);
 }
 
 /* Save a single model */
