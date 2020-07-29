@@ -11,6 +11,7 @@ public:
 	Model() = default;
 	Model(const Model & cpy) : GameObject(cpy) {
 		modelData = cpy.modelData;
+		modelData->AddUsage();
 		boundingBox = cpy.boundingBox;
 		for (int i = 0; i < cpy.materials.size(); i++) {
 			materials.push_back(new DynamicMaterial(*cpy.materials[i]));
