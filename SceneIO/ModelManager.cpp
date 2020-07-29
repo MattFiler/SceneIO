@@ -101,7 +101,7 @@ void ModelManager::Update(double dt)
 	ModelManagerUI();
 	if (didIOThisFrame) {
 		didIOThisFrame = false;
-		return; //Because of the way the GameObject update system works, we need to wait until the next tick to handle transforms if IO was performed
+		GameObjectManager::Update(dt);
 	}
 	ModelTransformUI();
 	ModelMaterialUI();
@@ -528,7 +528,6 @@ bool ModelManager::SetSceneAsLoadedScene(LoadedScene* scene)
 	for (int i = 0; i < scene->modelDefinitions.size(); i++) {
 		SharedModelBuffers* newLoadedModel = LoadModelToLevel(scene->modelDefinitions[i].model);
 		if (newLoadedModel->DidLoadOK()) {
-			modelBuffers.push_back(newLoadedModel);
 			Model* newModel = new Model();
 			newModel->SetSharedBuffers(newLoadedModel);
 			newModel->SetPosition(Utilities::DXVec3FromVec3(scene->modelDefinitions[i].position));
@@ -553,7 +552,7 @@ bool ModelManager::SetSceneAsLoadedScene(LoadedScene* scene)
 	}
 	Memory::SafeDelete(scene);
 
-	Debug::Log("Finished setting LoadedScene, with " + std::to_string(models.size()) + " models.");
+	Debug::Log("Finished setting LoadedScene, with " + std::to_string(models.size()) + " models and " + std::to_string(modelBuffers.size()) + " buffers.");
 	Debug::Log("GameObjectManager has " + std::to_string(GameObjectManager::GetModels().size()) + " models.");
 
 	return didLoadOK;
