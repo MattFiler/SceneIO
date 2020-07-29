@@ -160,8 +160,11 @@ bool SceneManager::Update(double dt)
 			}
 			case DataTypes::FLOAT_ARRAY: {
 				DataTypeFloatArray* param = static_cast<DataTypeFloatArray*>(thisParam->value);
-				//Input TBD
-				//ImGui::InputText(thisParam->name.c_str(), &param->value);
+				//TODO: test this
+				ImGui::InputInt((thisParam->name + " length").c_str(), &param->length);
+				for (int x = 0; x < param->length; x++) {
+					ImGui::InputFloat((thisParam->name + " i" + std::to_string(x)).c_str(), param->value[x]);
+				}
 				break;
 			}
 			case DataTypes::OPTIONS_LIST: {

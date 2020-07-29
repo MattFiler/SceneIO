@@ -155,6 +155,7 @@ public:
 
 class DataTypeFloatArray : public DataType {
 public:
+	int length = 0;
 	float* value[];
 };
 
