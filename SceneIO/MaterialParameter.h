@@ -57,7 +57,11 @@ public:
 				break;
 			}
 			case DataTypes::FLOAT_ARRAY: {
-				//static_cast<DataTypeFloatArray*>(value)->value = static_cast<DataTypeFloatArray*>(cpy.value)->value; - TODO
+				static_cast<DataTypeFloatArray*>(value)->length = static_cast<DataTypeFloatArray*>(cpy.value)->length;
+				for (int i = 0; i < static_cast<DataTypeFloatArray*>(value)->length; i++) {
+					//TODO: test this
+					static_cast<DataTypeFloatArray*>(value)->value[i] = static_cast<DataTypeFloatArray*>(cpy.value)->value[i];
+				}
 				break;
 			}
 			case DataTypes::OPTIONS_LIST: {

@@ -34,9 +34,6 @@
     <Filter Include="Header Files\Libraries\ImGui">
       <UniqueIdentifier>{30127ea4-ab0d-4dc5-964b-62460538925b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Libraries\ImGuizmo">
-      <UniqueIdentifier>{8cfeeb4e-cc56-4d22-a601-c4a4b1abf534}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Libraries\nlohmann">
       <UniqueIdentifier>{735155ad-9576-4c13-8cf7-e5717cbd627b}</UniqueIdentifier>
     </Filter>
@@ -61,11 +58,20 @@
     <Filter Include="Source Files\Libraries\ImGui">
       <UniqueIdentifier>{896c74de-11d7-4826-a9ef-efc6a54e7d78}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Libraries\ImGuizmo">
-      <UniqueIdentifier>{be34651f-f4a8-49d8-8838-cc362ed691c4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Libraries\ImFileBrowser">
       <UniqueIdentifier>{465615e2-3f8c-4e80-8f88-965b9c806b96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Libraries\ImGuIZMO.quat">
+      <UniqueIdentifier>{923b577e-d0cc-476b-a49a-aff3500cfa87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Libraries\ImGuIZMO.quat">
+      <UniqueIdentifier>{26163ef6-5f4c-4546-9b60-2b2625ccf98e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Libraries\ImGuizmo">
+      <UniqueIdentifier>{67d105ef-54d8-4928-b4b3-a054183c5480}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Libraries\ImGuizmo">
+      <UniqueIdentifier>{1e01980c-0053-4b5d-b9cb-8cdc11858e83}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -93,20 +99,8 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="imguizmo\ImGuizmo.cpp">
-      <Filter>Source Files\Libraries\ImGuizmo</Filter>
-    </ClCompile>
     <ClCompile Include="EditorScene.cpp">
       <Filter>Source Files\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="imguizmo\ImCurveEdit.cpp">
-      <Filter>Source Files\Libraries\ImGuizmo</Filter>
-    </ClCompile>
-    <ClCompile Include="imguizmo\ImGradient.cpp">
-      <Filter>Source Files\Libraries\ImGuizmo</Filter>
-    </ClCompile>
-    <ClCompile Include="imguizmo\ImSequencer.cpp">
-      <Filter>Source Files\Libraries\ImGuizmo</Filter>
     </ClCompile>
     <ClCompile Include="DebugCube.cpp">
       <Filter>Source Files\GameObjects</Filter>
@@ -150,6 +144,21 @@
     <ClCompile Include="PluginManager.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="imguizmo.quat\imGuIZMOquat.cpp">
+      <Filter>Source Files\Libraries\ImGuIZMO.quat</Filter>
+    </ClCompile>
+    <ClCompile Include="imguizmo\ImGradient.cpp">
+      <Filter>Source Files\Libraries\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="imguizmo\ImGuizmo.cpp">
+      <Filter>Source Files\Libraries\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="imguizmo\ImSequencer.cpp">
+      <Filter>Source Files\Libraries\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="imguizmo\ImCurveEdit.cpp">
+      <Filter>Source Files\Libraries\ImGuizmo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imgui_impl_win32.h">
@@ -191,20 +200,8 @@
     <ClInclude Include="nlohmann\json.hpp">
       <Filter>Header Files\Libraries\nlohmann</Filter>
     </ClInclude>
-    <ClInclude Include="imguizmo\ImGuizmo.h">
-      <Filter>Header Files\Libraries\ImGuizmo</Filter>
-    </ClInclude>
     <ClInclude Include="EditorScene.h">
       <Filter>Header Files\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="imguizmo\ImSequencer.h">
-      <Filter>Header Files\Libraries\ImGuizmo</Filter>
-    </ClInclude>
-    <ClInclude Include="imguizmo\ImCurveEdit.h">
-      <Filter>Header Files\Libraries\ImGuizmo</Filter>
-    </ClInclude>
-    <ClInclude Include="imguizmo\ImGradient.h">
-      <Filter>Header Files\Libraries\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="DebugCube.h">
       <Filter>Header Files\GameObjects</Filter>
@@ -280,6 +277,33 @@
     </ClInclude>
     <ClInclude Include="CommonScene.h">
       <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="imguizmo.quat\vgConfig.h">
+      <Filter>Header Files\Libraries\ImGuIZMO.quat</Filter>
+    </ClInclude>
+    <ClInclude Include="imguizmo.quat\vGizmo.h">
+      <Filter>Header Files\Libraries\ImGuIZMO.quat</Filter>
+    </ClInclude>
+    <ClInclude Include="imguizmo.quat\vGizmoMath.h">
+      <Filter>Header Files\Libraries\ImGuIZMO.quat</Filter>
+    </ClInclude>
+    <ClInclude Include="imguizmo.quat\vgMath.h">
+      <Filter>Header Files\Libraries\ImGuIZMO.quat</Filter>
+    </ClInclude>
+    <ClInclude Include="imguizmo.quat\imGuIZMOquat.h">
+      <Filter>Header Files\Libraries\ImGuIZMO.quat</Filter>
+    </ClInclude>
+    <ClInclude Include="imguizmo\ImGradient.h">
+      <Filter>Header Files\Libraries\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="imguizmo\ImGuizmo.h">
+      <Filter>Header Files\Libraries\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="imguizmo\ImSequencer.h">
+      <Filter>Header Files\Libraries\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="imguizmo\ImCurveEdit.h">
+      <Filter>Header Files\Libraries\ImGuizmo</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

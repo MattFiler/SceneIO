@@ -13,6 +13,7 @@
 #include "imgui/imgui_impl_win32.h"
 #include "imgui/imgui_impl_dx11.h"
 #include "imguizmo/ImGuizmo.h"
+#include "imguizmo.quat/imGuIZMOquat.h"
 #include "imgui_stl.h"
 #include "imfilebrowser/imfilebrowser.h"
 

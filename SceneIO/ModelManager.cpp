@@ -248,11 +248,12 @@ void ModelManager::ModelTransformUI()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
 	ImGui::Begin("Model Transform Control", nullptr);
 	ImGui::PopStyleVar();
+	/*
 	if (ImGui::RadioButton("Translate", Shared::mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
 		Shared::mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
 	ImGui::SameLine();
-	//if (ImGui::RadioButton("Rotate", dxshared::mCurrentGizmoOperation == ImGuizmo::ROTATE))
-	//	dxshared::mCurrentGizmoOperation = ImGuizmo::ROTATE;
+	if (ImGui::RadioButton("Rotate", Shared::mCurrentGizmoOperation == ImGuizmo::ROTATE))
+		Shared::mCurrentGizmoOperation = ImGuizmo::ROTATE;
 	ImGui::SameLine();
 	if (ImGui::RadioButton("Scale", Shared::mCurrentGizmoOperation == ImGuizmo::SCALE))
 		Shared::mCurrentGizmoOperation = ImGuizmo::SCALE;
@@ -279,11 +280,6 @@ void ModelManager::ModelTransformUI()
 	float matrixTranslation[3], matrixRotation[3], matrixScale[3];
 	ImGuizmo::DecomposeMatrixToComponents(objectMatrix, matrixTranslation, matrixRotation, matrixScale);
 
-	//We don't allow gizmo editing of rotation, as ImGuizmo's accuracy really sucks, and throws everything off
-	matrixRotation[0] = objectToEdit->GetRotation(false).x;
-	matrixRotation[1] = objectToEdit->GetRotation(false).y;
-	matrixRotation[2] = objectToEdit->GetRotation(false).z;
-
 	//Allow text overwrite
 	ImGui::InputFloat3("Translation", matrixTranslation, 3);
 	ImGui::InputFloat3("Rotation", matrixRotation, 3);
@@ -291,8 +287,24 @@ void ModelManager::ModelTransformUI()
 
 	//Set new transforms back
 	objectToEdit->SetPosition(DirectX::XMFLOAT3(matrixTranslation[0], matrixTranslation[1], matrixTranslation[2]));
+	float test[3] = { objectToEdit->GetRotation(false).x, objectToEdit->GetRotation(false).y, objectToEdit->GetRotation(false).z };
 	objectToEdit->SetRotation(DirectX::XMFLOAT3(matrixRotation[0], matrixRotation[1], matrixRotation[2]));
 	objectToEdit->SetScale(DirectX::XMFLOAT3(matrixScale[0], matrixScale[1], matrixScale[2]));
+	*/
+	
+	DirectX::XMVECTOR positionv, rotationv, scalev;
+	DirectX::XMMatrixDecompose(&scalev, &rotationv, &positionv, objectToEdit->GetWorldMatrix());
+	DirectX::XMFLOAT3 position, scale;
+	DirectX::XMStoreFloat3(&position, positionv);
+	DirectX::XMStoreFloat3(&scale, scalev);
+	Vec3 test = Vec3(position.x, position.y, position.z);
+	Vec3 test2 = Vec3(scale.x, scale.y, scale.z);
+	ImGui::gizmo3D("Position", test);
+	ImGui::gizmo3D("Scale", test2);
+	position = XMFLOAT3(test.x, test.y, test.z);
+	scale = XMFLOAT3(test2.x, test2.y, test2.z);
+	objectToEdit->SetPosition(position);
+	objectToEdit->SetScale(scale);
 
 	ImGui::End();
 }
