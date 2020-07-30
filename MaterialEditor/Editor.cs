@@ -21,6 +21,7 @@ namespace MaterialEditor
         int config_index;
         int edit_param_index;
         bool creating_param;
+        Color default_tex_colour = Color.White;
 
         public Editor(JObject configObject = null, int materialIndex = -1)
         {
@@ -84,6 +85,7 @@ namespace MaterialEditor
         /* Open edit for selected parameter */
         private void editParam_Click(object sender, EventArgs e)
         {
+            default_tex_colour = Color.White;
             creating_param = false;
             parameterEditWindow.Visible = false;
             if (materialParameters.SelectedIndex == -1) return;
@@ -95,6 +97,8 @@ namespace MaterialEditor
             parameterName.Text = thisParamData["name"].Value<string>();
             parameterType.SelectedItem = thisParamData["type"].Value<string>().ToUpper();
             parameterIsBound.Checked = thisParamData["is_bound"].Value<bool>();
+            if (parameterType.SelectedItem.ToString() == "TEXTURE_FILEPATH")
+                default_tex_colour = Color.FromArgb(thisParamData["default_colour"][0].Value<int>(), thisParamData["default_colour"][1].Value<int>(), thisParamData["default_colour"][2].Value<int>());
             if (parameterType.SelectedItem.ToString() == "OPTIONS_LIST")
             {
                 optionsListLabel.Visible = true;
@@ -148,6 +152,7 @@ namespace MaterialEditor
             }
             for (int i = 0; i < materialParameters.Items.Count; i++)
             {
+                if (i == edit_param_index) continue;
                 if (materialParameters.Items[i].ToString() == parameterName.Text)
                 {
                     MessageBox.Show("Parameter name must be unique in material.", "Failed to save.", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -166,6 +171,15 @@ namespace MaterialEditor
             thisParamData["name"] = parameterName.Text;
             thisParamData["type"] = parameterType.SelectedItem.ToString();
             thisParamData["is_bound"] = (parameterIsBound.Visible && parameterIsBound.Checked);
+
+            if (thisParamData["default_colour"] != null) thisParamData["default_colour"] = null;
+            if (parameterType.SelectedItem.ToString() == "TEXTURE_FILEPATH")
+            {
+                thisParamData["default_colour"] = new JArray();
+                ((JArray)thisParamData["default_colour"]).Add(default_tex_colour.R);
+                ((JArray)thisParamData["default_colour"]).Add(default_tex_colour.G);
+                ((JArray)thisParamData["default_colour"]).Add(default_tex_colour.B);
+            }
 
             if (thisParamData["type"].Value<string>() == "OPTIONS_LIST")
             {
@@ -192,6 +206,7 @@ namespace MaterialEditor
         {
             parameterIsBound.Checked = false;
             parameterIsBound.Visible = (parameterType.SelectedItem.ToString() == "RGB" || parameterType.SelectedItem.ToString() == "TEXTURE_FILEPATH");
+            texDefaultColour.Visible = parameterType.SelectedItem.ToString() == "TEXTURE_FILEPATH";
             parameterOptionsList.Text = "";
             parameterOptionsList.Visible = parameterType.SelectedItem.ToString() == "OPTIONS_LIST";
             optionsListLabel.Visible = parameterOptionsList.Visible;
@@ -357,6 +372,16 @@ namespace MaterialEditor
         {
             if ((materialType.SelectedItem.ToString() == "ENVIRONMENT")) pixelShaderCode.Text = "";
             pixelShaderCode.Enabled = !(materialType.SelectedItem.ToString() == "ENVIRONMENT");
+        }
+
+        /* Default colour selection for TEXTURE_FILEPATH types */
+        private void texDefaultColour_Click(object sender, EventArgs e)
+        {
+            colorDialog1.Color = default_tex_colour;
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                default_tex_colour = colorDialog1.Color;
+            }
         }
     }
 }

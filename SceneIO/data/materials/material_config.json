@@ -12,11 +12,13 @@
         {
           "name": "albedoTexture",
           "type": "TEXTURE_FILEPATH",
+		  "default_colour": [255, 255, 255],
           "is_bound": true
         },
         {
           "name": "normalMap",
           "type": "TEXTURE_FILEPATH",
+		  "default_colour": [255, 255, 255],
           "is_bound": true
         },
         {
@@ -55,11 +57,13 @@
         {
           "name": "albedoTexture",
           "type": "TEXTURE_FILEPATH",
+		  "default_colour": [255, 255, 255],
           "is_bound": true
         },
         {
           "name": "normalMap",
           "type": "TEXTURE_FILEPATH",
+		  "default_colour": [255, 255, 255],
           "is_bound": true
         }
       ],

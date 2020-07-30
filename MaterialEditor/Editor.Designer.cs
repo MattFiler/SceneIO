@@ -51,6 +51,8 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.showOtherVars = new System.Windows.Forms.Button();
             this.pixelShaderCode = new System.Windows.Forms.RichTextBox();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.texDefaultColour = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.parameterEditWindow.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -185,6 +187,7 @@
             // 
             // parameterEditWindow
             // 
+            this.parameterEditWindow.Controls.Add(this.texDefaultColour);
             this.parameterEditWindow.Controls.Add(this.optionsListLabel);
             this.parameterEditWindow.Controls.Add(this.parameterOptionsList);
             this.parameterEditWindow.Controls.Add(this.saveParameter);
@@ -287,6 +290,16 @@
             this.pixelShaderCode.TabIndex = 0;
             this.pixelShaderCode.Text = "";
             // 
+            // texDefaultColour
+            // 
+            this.texDefaultColour.Location = new System.Drawing.Point(9, 125);
+            this.texDefaultColour.Name = "texDefaultColour";
+            this.texDefaultColour.Size = new System.Drawing.Size(121, 23);
+            this.texDefaultColour.TabIndex = 14;
+            this.texDefaultColour.Text = "Set Default Colour";
+            this.texDefaultColour.UseVisualStyleBackColor = true;
+            this.texDefaultColour.Click += new System.EventHandler(this.texDefaultColour_Click);
+            // 
             // Editor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -335,5 +348,7 @@
         private System.Windows.Forms.Label optionsListLabel;
         private System.Windows.Forms.TextBox parameterOptionsList;
         private System.Windows.Forms.Button showOtherVars;
+        private System.Windows.Forms.Button texDefaultColour;
+        private System.Windows.Forms.ColorDialog colorDialog1;
     }
 }

@@ -22,6 +22,11 @@ public:
 				valueOptions->options.push_back(config["values"][i].get<std::string>());
 			}
 		}
+
+		//The filepath parameter takes a default colour for when we have no texture given
+		if (type == DataTypes::TEXTURE_FILEPATH) {
+			static_cast<DataTypeTextureFilepath*>(value)->defaultColour = new int[3] { config["default_colour"][0].get<int>(), config["default_colour"][1].get<int>(), config["default_colour"][2].get<int>() };
+		}
 	}
 	MaterialParameter(const MaterialParameter& cpy) {
 		name = cpy.name;
@@ -34,6 +39,7 @@ public:
 			}
 			case DataTypes::TEXTURE_FILEPATH: {
 				static_cast<DataTypeTextureFilepath*>(value)->value = static_cast<DataTypeTextureFilepath*>(cpy.value)->value;
+				static_cast<DataTypeTextureFilepath*>(value)->defaultColour = static_cast<DataTypeTextureFilepath*>(cpy.value)->defaultColour;
 				break;
 			}
 			case DataTypes::STRING: {

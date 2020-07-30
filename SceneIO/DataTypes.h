@@ -104,14 +104,17 @@ public:
 	~DataTypeTextureFilepath() {
 		Memory::SafeRelease(g_pConstantBuffer);
 		Memory::SafeDelete(internalTex);
+		//Should probably clear defaultColour here too.
 	}
 #endif
 
 	std::string value = "";
+	int* defaultColour;
 
 #ifndef SCENEIO_PLUGIN
 	ID3D11ShaderResourceView* GetTextureBindable() override {
 		if (internalTex == nullptr) internalTex = Utilities::LoadTexture(value);
+		if (internalTex == nullptr) internalTex = Utilities::LoadTexture(defaultColour);
 		if (internalTex == nullptr) return nullptr;
 		if (internalTex->texturePath != value) {
 			Memory::SafeDelete(internalTex);

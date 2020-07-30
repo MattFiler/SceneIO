@@ -268,6 +268,51 @@ public:
 		return thisTex;
 	}
 
+	/* Load an image to texture from a given colour */
+	static Texture* LoadTexture(int* colourRGBA, int width = 50, int height = 50)
+	{
+		Texture* thisTex = new Texture();
+		thisTex->dimensions = XMFLOAT2(width, height);
+		int imgLength = thisTex->dimensions.x * thisTex->dimensions.y * 4;
+		thisTex->textureBuffer = new char[imgLength];
+		char R = colourRGBA[0]; char G = colourRGBA[1]; char B = colourRGBA[2]; char A = colourRGBA[3];
+		for (int i = 0; i < width * height; i+=4) {
+			thisTex->textureBuffer[i] = B;
+			thisTex->textureBuffer[i+1] = G;
+			thisTex->textureBuffer[i+2] = R;
+			thisTex->textureBuffer[i+3] = A;
+		}
+
+		D3D11_TEXTURE2D_DESC desc;
+		ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
+		desc.Width = thisTex->dimensions.x;
+		desc.Height = thisTex->dimensions.y;
+		desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+		desc.Usage = D3D11_USAGE_DYNAMIC;
+		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		desc.MiscFlags = 0;
+		desc.MipLevels = 1;
+		desc.ArraySize = 1;
+		desc.SampleDesc.Count = 1;
+		desc.SampleDesc.Quality = 0;
+		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+		D3D11_SUBRESOURCE_DATA initData;
+		initData.pSysMem = thisTex->textureBuffer;
+		initData.SysMemPitch = thisTex->dimensions.x * 4;
+		initData.SysMemSlicePitch = imgLength;
+		HR(Shared::m_pDevice->CreateTexture2D(&desc, &initData, &thisTex->texture));
+
+		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+		srvDesc.Format = desc.Format;
+		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.Texture2D.MipLevels = desc.MipLevels;
+		srvDesc.Texture2D.MostDetailedMip = desc.MipLevels - 1;
+		HR(Shared::m_pDevice->CreateShaderResourceView(thisTex->texture, &srvDesc, &thisTex->textureView));
+
+		return thisTex;
+	}
+
 	/* Transform a LoadedModel object by a world matrix */
 	static void TransformLoadedModel(LoadedModel* loadedModel, XMMATRIX worldMatrix) {
 		for (int i = 0; i < loadedModel->modelParts.size(); i++) {
