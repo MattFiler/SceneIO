@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <vector>
 #include <codecvt>
+#include <math.h>
 
 /* Setup available types in filepicker */
 ModelManager::ModelManager()
@@ -248,17 +249,18 @@ void ModelManager::ModelTransformUI()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
 	ImGui::Begin("Model Transform Control", nullptr);
 	ImGui::PopStyleVar();
-	/*
-	if (ImGui::RadioButton("Translate", Shared::mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
+
+	if (ImGui::RadioButton("Translate Gizmo", Shared::mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
 		Shared::mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
 	ImGui::SameLine();
-	if (ImGui::RadioButton("Rotate", Shared::mCurrentGizmoOperation == ImGuizmo::ROTATE))
-		Shared::mCurrentGizmoOperation = ImGuizmo::ROTATE;
+	/* if (ImGui::RadioButton("Rotate Gizmo", Shared::mCurrentGizmoOperation == ImGuizmo::ROTATE))
+		Shared::mCurrentGizmoOperation = ImGuizmo::ROTATE;*/
 	ImGui::SameLine();
-	if (ImGui::RadioButton("Scale", Shared::mCurrentGizmoOperation == ImGuizmo::SCALE))
+	if (ImGui::RadioButton("Scale Gizmo", Shared::mCurrentGizmoOperation == ImGuizmo::SCALE))
 		Shared::mCurrentGizmoOperation = ImGuizmo::SCALE;
 
 	//Allow swap between local/world
+	/*
 	if (Shared::mCurrentGizmoOperation != ImGuizmo::SCALE)
 	{
 		if (ImGui::RadioButton("Local", Shared::mCurrentGizmoMode == ImGuizmo::LOCAL))
@@ -266,7 +268,7 @@ void ModelManager::ModelTransformUI()
 		ImGui::SameLine();
 		if (ImGui::RadioButton("World", Shared::mCurrentGizmoMode == ImGuizmo::WORLD))
 			Shared::mCurrentGizmoMode = ImGuizmo::WORLD;
-	}
+	}*/
 
 	//If user isn't clicking on a mesh, allow gizmo control
 	if (!(InputHandler::KeyDown(WindowsKey::SHIFT) && InputHandler::MouseDown(WindowsMouse::LEFT_CLICK)))
@@ -280,6 +282,13 @@ void ModelManager::ModelTransformUI()
 	float matrixTranslation[3], matrixRotation[3], matrixScale[3];
 	ImGuizmo::DecomposeMatrixToComponents(objectMatrix, matrixTranslation, matrixRotation, matrixScale);
 
+	//We don't allow gizmo editing of rotation, as ImGuizmo's accuracy really sucks, and throws everything off
+	matrixRotation[0] = objectToEdit->GetRotation(false).x;
+	matrixRotation[1] = objectToEdit->GetRotation(false).y;
+	matrixRotation[2] = objectToEdit->GetRotation(false).z;
+
+	ImGui::Separator();
+
 	//Allow text overwrite
 	ImGui::InputFloat3("Translation", matrixTranslation, 3);
 	ImGui::InputFloat3("Rotation", matrixRotation, 3);
@@ -290,21 +299,34 @@ void ModelManager::ModelTransformUI()
 	float test[3] = { objectToEdit->GetRotation(false).x, objectToEdit->GetRotation(false).y, objectToEdit->GetRotation(false).z };
 	objectToEdit->SetRotation(DirectX::XMFLOAT3(matrixRotation[0], matrixRotation[1], matrixRotation[2]));
 	objectToEdit->SetScale(DirectX::XMFLOAT3(matrixScale[0], matrixScale[1], matrixScale[2]));
-	*/
-	
+
+	/*
 	DirectX::XMVECTOR positionv, rotationv, scalev;
 	DirectX::XMMatrixDecompose(&scalev, &rotationv, &positionv, objectToEdit->GetWorldMatrix());
-	DirectX::XMFLOAT3 position, scale;
+	DirectX::XMFLOAT3 position, scale; DirectX::XMFLOAT4 rotation;
+
 	DirectX::XMStoreFloat3(&position, positionv);
-	DirectX::XMStoreFloat3(&scale, scalev);
 	Vec3 test = Vec3(position.x, position.y, position.z);
-	Vec3 test2 = Vec3(scale.x, scale.y, scale.z);
 	ImGui::gizmo3D("Position", test);
-	ImGui::gizmo3D("Scale", test2);
 	position = XMFLOAT3(test.x, test.y, test.z);
-	scale = XMFLOAT3(test2.x, test2.y, test2.z);
 	objectToEdit->SetPosition(position);
+
+	DirectX::XMStoreFloat3(&scale, scalev);
+	Vec3 test2 = Vec3(scale.x, scale.y, scale.z);
+	ImGui::gizmo3D("Scale", test2);
+	scale = XMFLOAT3(test2.x, test2.y, test2.z);
 	objectToEdit->SetScale(scale);
+
+	DirectX::XMStoreFloat4(&rotation, rotationv);
+	Quat test3 = Quat(rotation.w, rotation.x, rotation.y, rotation.z);
+	ImGui::gizmo3D("Rotation", test3);
+	rotation = XMFLOAT4(test3.x, test3.y, test3.z, test3.w);
+	rotationv = DirectX::XMLoadFloat4(&rotation);
+	float roll = atan2(2 * rotation.y * rotation.w - 2 * rotation.x * rotation.z, 1 - 2 * rotation.y * rotation.y - 2 * rotation.z * rotation.z);
+	float pitch = atan2(2 * rotation.x * rotation.w - 2 * rotation.y * rotation.z, 1 - 2 * rotation.x * rotation.x - 2 * rotation.z * rotation.z);
+	float yaw = asin(2 * rotation.x * rotation.y + 2 * rotation.z * rotation.w);
+	objectToEdit->SetRotation(XMFLOAT3(roll, pitch, yaw), true);
+	*/
 
 	ImGui::End();
 }
