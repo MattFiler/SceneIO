@@ -8,9 +8,9 @@ class DynamicMaterial;
 /* A definition of a mesh vertex */
 struct SimpleVertex
 {
-	Vector3 Pos;
-	Vector2 Tex;
-	Vector3 Normal;
+	Vector3 Pos = Vector3(0,0,0);
+	Vector2 Tex = Vector2(0,0);
+	Vector3 Normal = Vector3(0,0,0);
 };
 
 /* A definition of a submesh within a mesh object */

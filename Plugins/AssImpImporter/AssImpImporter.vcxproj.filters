@@ -42,6 +42,9 @@
     <ClInclude Include="..\..\SceneIO\CommonScene.h">
       <Filter>Header Files\SceneIO API</Filter>
     </ClInclude>
+    <ClInclude Include="AssimpImporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

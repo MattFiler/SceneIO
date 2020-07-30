@@ -1,10 +1,5 @@
 #pragma once
-#include "../ImporterPlugin.h"
-#include <fstream>
-#include <iostream>
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+#include "AssimpImporter.h"
 
 /* Register the plugin with the application */
 extern "C" __declspec(dllexport) PluginDefinition* RegisterPlugin()
@@ -18,61 +13,71 @@ extern "C" __declspec(dllexport) PluginDefinition* RegisterPlugin()
 extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath)
 {
 	Assimp::Importer importer;
-	const aiScene* pScene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
+	const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
+	if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) return nullptr;
 
-	DynamicMaterialManager* materialManager = new DynamicMaterialManager();
-	LoadedModel* thisModel = new LoadedModel();
-	thisModel->filepath = filePath;
-	for (UINT x = 0; x < pScene->mRootNode->mNumChildren; x++) {
-		aiVector3D scale;
-		aiQuaternion rotation;
-		aiVector3D translation;
-		pScene->mRootNode->mChildren[x]->mTransformation.Decompose(scale, rotation, translation);
-		for (int z = 0; z < pScene->mRootNode->mChildren[x]->mNumMeshes; z++) {
-			aiMesh* mesh = pScene->mMeshes[pScene->mRootNode->mChildren[x]->mMeshes[z]];
-			LoadedModelPart modelPart = LoadedModelPart();
+	AssimpImporter importFunctionality = AssimpImporter();
+	return importFunctionality.GetLoadedModel(scene);
+}
 
-			for (int i = 0; i < mesh->mNumVertices; i++) {
-				SimpleVertex thisVert = SimpleVertex();
+/* Produces a LoadedModel object from an AssImp scene */
+LoadedModel* AssimpImporter::GetLoadedModel(const aiScene* scene)
+{
+	thisModel = new LoadedModel(); //We don't clear up the old LoadedModel because this should be handled on the application side.
+	ProcessNode(scene->mRootNode, scene);
+	return thisModel;
+}
 
-				//TODO: transform this position by mTransformation matrix
-				thisVert.Pos.x = mesh->mVertices[i].x;
-				thisVert.Pos.y = mesh->mVertices[i].y;
-				thisVert.Pos.z = mesh->mVertices[i].z;
+/* Process a node in the AssImp scene */
+void AssimpImporter::ProcessNode(aiNode* node, const aiScene* scene) {
+	for (UINT i = 0; i < node->mNumMeshes; i++)
+	{
+		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+		thisModel->modelParts.push_back(ProcessMesh(mesh, scene));
+	}
 
-				if (mesh->HasTextureCoords(i)) {
-					thisVert.Tex.x = (float)mesh->mTextureCoords[0][i].x;
-					thisVert.Tex.y = (float)mesh->mTextureCoords[0][i].y;
-				}
+	for (UINT i = 0; i < node->mNumChildren; i++)
+	{
+		ProcessNode(node->mChildren[i], scene);
+	}
+}
 
-				if (mesh->HasNormals()) {
-					thisVert.Normal.x = (float)mesh->mNormals[i].x;
-					thisVert.Normal.y = (float)mesh->mNormals[i].y;
-					thisVert.Normal.z = (float)mesh->mNormals[i].z;
-				}
+/* Process a mesh from an AssImp node */
+LoadedModelPart AssimpImporter::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+{
+	LoadedModelPart modelPart = LoadedModelPart();
 
-				modelPart.compVertices.push_back(thisVert);
-			}
+	for (UINT i = 0; i < mesh->mNumVertices; i++)
+	{
+		SimpleVertex vertex;
 
-			for (int i = 0; i < mesh->mNumFaces; i++) {
-				for (int y = 0; y < mesh->mFaces[i].mNumIndices; y++) {
-					modelPart.compIndices.push_back((WORD)mesh->mFaces[i].mIndices[y]);
-				}
-			}
+		vertex.Pos.x = mesh->mVertices[i].x;
+		vertex.Pos.y = mesh->mVertices[i].y;
+		vertex.Pos.z = mesh->mVertices[i].z;
 
-			//TODO
-			if (mesh->mMaterialIndex >= 0) {
-				aiMaterial* mat = pScene->mMaterials[mesh->mMaterialIndex];
-				for (int p = 0; p < mat->mNumProperties; p++) {
-					aiMaterialProperty* prop = mat->mProperties[p];
-					//prop->
-				}
-			}
-			//modelPart.material = materialManager->GetMaterial(mesh->mMaterialIndex);
-			modelPart.material = materialManager->GetMaterial(0);
+		if (mesh->mTextureCoords[0])
+		{
+			vertex.Tex.x = (float)mesh->mTextureCoords[0][i].x;
+			vertex.Tex.y = (float)mesh->mTextureCoords[0][i].y;
+		}
 
-			thisModel->modelParts.push_back(modelPart);
+		if (mesh->HasNormals())
+		{
+			vertex.Normal.x = (float)mesh->mNormals[i].x;
+			vertex.Normal.y = (float)mesh->mNormals[i].y;
+			vertex.Normal.z = (float)mesh->mNormals[i].z;
+		}
+
+		modelPart.compVertices.push_back(vertex);
+	}
+	for (UINT i = 0; i < mesh->mNumFaces; i++)
+	{
+		for (UINT j = 0; j < mesh->mFaces[i].mNumIndices; j++) {
+			modelPart.compIndices.push_back(mesh->mFaces[i].mIndices[j]);
 		}
 	}
-	return thisModel;
+
+	modelPart.material = materialManager->GetMaterial(0);
+
+	return modelPart;
 }

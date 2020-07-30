@@ -163,6 +163,7 @@
     <ClInclude Include="..\..\SceneIO\DynamicMaterialManager.h" />
     <ClInclude Include="..\..\SceneIO\MaterialParameter.h" />
     <ClInclude Include="..\ImporterPlugin.h" />
+    <ClInclude Include="AssimpImporter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
