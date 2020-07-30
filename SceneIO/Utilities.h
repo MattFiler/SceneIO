@@ -269,13 +269,13 @@ public:
 	}
 
 	/* Load an image to texture from a given colour */
-	static Texture* LoadTexture(int* colourRGBA, int width = 50, int height = 50)
+	static Texture* LoadTexture(int* colourRGB, int width = 1, int height = 1)
 	{
 		Texture* thisTex = new Texture();
 		thisTex->dimensions = XMFLOAT2(width, height);
 		int imgLength = thisTex->dimensions.x * thisTex->dimensions.y * 4;
 		thisTex->textureBuffer = new char[imgLength];
-		char R = colourRGBA[0]; char G = colourRGBA[1]; char B = colourRGBA[2]; char A = colourRGBA[3];
+		char R = colourRGB[0]; char G = colourRGB[1]; char B = colourRGB[2]; char A = 255; //oops
 		for (int i = 0; i < width * height; i+=4) {
 			thisTex->textureBuffer[i] = B;
 			thisTex->textureBuffer[i+1] = G;
