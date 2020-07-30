@@ -17,7 +17,9 @@ extern "C" __declspec(dllexport) LoadedModel* LoadModel(std::string filePath)
 	if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) return nullptr;
 
 	AssimpImporter importFunctionality = AssimpImporter();
-	return importFunctionality.GetLoadedModel(scene);
+	LoadedModel* thisModel = importFunctionality.GetLoadedModel(scene);
+	thisModel->filepath = filePath;
+	return thisModel;
 }
 
 /* Produces a LoadedModel object from an AssImp scene */
@@ -30,13 +32,13 @@ LoadedModel* AssimpImporter::GetLoadedModel(const aiScene* scene)
 
 /* Process a node in the AssImp scene */
 void AssimpImporter::ProcessNode(aiNode* node, const aiScene* scene) {
-	for (UINT i = 0; i < node->mNumMeshes; i++)
+	for (int i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 		thisModel->modelParts.push_back(ProcessMesh(mesh, scene));
 	}
 
-	for (UINT i = 0; i < node->mNumChildren; i++)
+	for (int i = 0; i < node->mNumChildren; i++)
 	{
 		ProcessNode(node->mChildren[i], scene);
 	}
@@ -47,7 +49,7 @@ LoadedModelPart AssimpImporter::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 {
 	LoadedModelPart modelPart = LoadedModelPart();
 
-	for (UINT i = 0; i < mesh->mNumVertices; i++)
+	for (int i = 0; i < mesh->mNumVertices; i++)
 	{
 		SimpleVertex vertex;
 
@@ -70,9 +72,9 @@ LoadedModelPart AssimpImporter::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 
 		modelPart.compVertices.push_back(vertex);
 	}
-	for (UINT i = 0; i < mesh->mNumFaces; i++)
+	for (int i = 0; i < mesh->mNumFaces; i++)
 	{
-		for (UINT j = 0; j < mesh->mFaces[i].mNumIndices; j++) {
+		for (int j = 0; j < mesh->mFaces[i].mNumIndices; j++) {
 			modelPart.compIndices.push_back(mesh->mFaces[i].mIndices[j]);
 		}
 	}
