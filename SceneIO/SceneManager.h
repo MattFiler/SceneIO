@@ -36,6 +36,9 @@ private:
 	DynamicMaterial* env_mat = nullptr;
 	bool useClearColourFromEnvMat = true;
 
+	ImGui::FileBrowser textureSelectFileDialog;
+	int currentTextureSelectIndex = -1;
+
 	bool showControlsMenu = false;
 };
 

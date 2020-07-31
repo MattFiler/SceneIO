@@ -49,6 +49,10 @@ ModelManager::ModelManager()
 	for (int i = 0; i < sE.size(); i++) for (int x = 0; x < sE[i]->supportedExtensions.size(); x++) filetypes.push_back(sE[i]->supportedExtensions[x].c_str());
 	for (int i = 0; i < msE.size(); i++) for (int x = 0; x < msE[i]->supportedExtensions.size(); x++) filetypes.push_back(msE[i]->supportedExtensions[x].c_str());
 	sceneExporterFileDialog.SetTypeFilters(filetypes);
+
+	//Texture selection
+	textureSelectFileDialog = ImGui::FileBrowser::FileBrowser(ImGuiFileBrowserFlags_CloseOnEsc);
+	textureSelectFileDialog.SetTitle("Texture Selection");
 }
 
 /* Free all model instances */
@@ -122,7 +126,7 @@ void ModelManager::ModelManagerUI()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
 	modelImporterFileDialog.Display();
 	ImGui::PopStyleVar();
-	if (modelImporterFileDialog.HasSelected())
+	if (modelImporterFileDialog.IsOpened() && modelImporterFileDialog.HasSelected())
 	{
 		if (LoadModel(modelImporterFileDialog.GetSelected().string())) {
 			modelImporterFileDialog.ClearSelected();
@@ -140,7 +144,7 @@ void ModelManager::ModelManagerUI()
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
 		modelExporterFileDialog.Display();
 		ImGui::PopStyleVar();
-		if (modelExporterFileDialog.HasSelected())
+		if (modelExporterFileDialog.IsOpened() && modelExporterFileDialog.HasSelected())
 		{
 			if (SaveModel(modelExporterFileDialog.GetSelected().string())) {
 				modelExporterFileDialog.ClearSelected();
@@ -177,7 +181,7 @@ void ModelManager::ModelManagerUI()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
 	sceneImporterFileDialog.Display();
 	ImGui::PopStyleVar();
-	if (sceneImporterFileDialog.HasSelected())
+	if (sceneImporterFileDialog.IsOpened() && sceneImporterFileDialog.HasSelected())
 	{
 		if (LoadScene(sceneImporterFileDialog.GetSelected().string())) {
 			sceneImporterFileDialog.ClearSelected();
@@ -194,7 +198,7 @@ void ModelManager::ModelManagerUI()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
 	sceneExporterFileDialog.Display();
 	ImGui::PopStyleVar();
-	if (sceneExporterFileDialog.HasSelected())
+	if (sceneExporterFileDialog.IsOpened() && sceneExporterFileDialog.HasSelected())
 	{
 		if (SaveScene(sceneExporterFileDialog.GetSelected().string())) {
 			sceneExporterFileDialog.ClearSelected();
@@ -383,7 +387,14 @@ void ModelManager::MaterialDropdownUI(Model* model, int submeshID)
 			}
 			case DataTypes::TEXTURE_FILEPATH: {
 				DataTypeTextureFilepath* param = static_cast<DataTypeTextureFilepath*>(thisParam->value);
-				ImGui::InputText(inputLabel.c_str(), &param->value);
+				if (ImGui::Button((inputLabel + " Select").c_str())) {
+					textureSelectFileDialog.Open();
+					currentTextureSelectIndex = i;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button((inputLabel + " Reset").c_str())) {
+					static_cast<DataTypeTextureFilepath*>(thisParam->value)->value = "";
+				}
 				break;
 			}
 			case DataTypes::STRING: {
@@ -437,6 +448,14 @@ void ModelManager::MaterialDropdownUI(Model* model, int submeshID)
 		}
 
 		if (i == thisMaterial->GetParameterCount() - 1) ImGui::Separator();
+	}
+
+	//Filepicker for texture filepaths
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
+	textureSelectFileDialog.Display();
+	ImGui::PopStyleVar();
+	if (textureSelectFileDialog.IsOpened() && textureSelectFileDialog.HasSelected()) {
+		static_cast<DataTypeTextureFilepath*>(thisMaterial->GetParameter(currentTextureSelectIndex)->value)->value = textureSelectFileDialog.GetSelected().string();
 	}
 }
 

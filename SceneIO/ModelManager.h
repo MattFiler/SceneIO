@@ -65,4 +65,7 @@ private:
 
 	ImGui::FileBrowser sceneImporterFileDialog;
 	ImGui::FileBrowser sceneExporterFileDialog;
+
+	ImGui::FileBrowser textureSelectFileDialog;
+	int currentTextureSelectIndex = -1;
 };

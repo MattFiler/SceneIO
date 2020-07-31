@@ -67,6 +67,7 @@ void SharedModelBuffers::CreateBuffersFromLoadedModel(LoadedModel* modelRef) {
 /* Clear all buffers */
 SharedModelBuffers::~SharedModelBuffers()
 {
+	Debug::Log("Destroying SharedModelBuffer!");
 	Memory::SafeRelease(g_pVertexBuffer);
 	for (int i = 0; i < allModels.size(); i++) {
 		Memory::SafeDelete(allModels[i]);

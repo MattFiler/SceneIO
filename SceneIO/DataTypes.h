@@ -113,12 +113,17 @@ public:
 
 #ifndef SCENEIO_PLUGIN
 	ID3D11ShaderResourceView* GetTextureBindable() override {
-		if (internalTex == nullptr) internalTex = Utilities::LoadTexture(value);
-		if (internalTex == nullptr) internalTex = Utilities::LoadTexture(defaultColour);
-		if (internalTex == nullptr) return nullptr;
-		if (internalTex->texturePath != value) {
+		if (value == "" && !isUsingBaseColour) {
 			Memory::SafeDelete(internalTex);
-			internalTex = Utilities::LoadTexture(value);
+			internalTex = Utilities::LoadTexture(defaultColour);
+			isUsingBaseColour = true;
+		}
+		if ((internalTex == nullptr || isUsingBaseColour) && value != "") { 
+			if (internalTex == nullptr || internalTex->texturePath != value) {
+				Memory::SafeDelete(internalTex);
+				internalTex = Utilities::LoadTexture(value);
+				isUsingBaseColour = false;
+			}
 		}
 		if (internalTex == nullptr) return nullptr;
 		return internalTex->textureView;
@@ -128,6 +133,7 @@ public:
 private:
 	ID3D11Buffer* g_pConstantBuffer = nullptr;
 	Texture* internalTex = nullptr;
+	bool isUsingBaseColour = false;
 };
 
 /* Any following datatypes cannot be bound to our shader, and are used purely for the API */

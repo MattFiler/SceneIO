@@ -32,6 +32,9 @@ bool SceneManager::Init()
 	rgbClearColour->value.B = DirectX::Colors::CornflowerBlue.f[2];
 	Shared::environmentMaterial = env_mat;
 
+	textureSelectFileDialog = ImGui::FileBrowser::FileBrowser(ImGuiFileBrowserFlags_CloseOnEsc);
+	textureSelectFileDialog.SetTitle("Texture Selection");
+
 	return dxInit;
 }
 
@@ -128,7 +131,14 @@ bool SceneManager::Update(double dt)
 			}
 			case DataTypes::TEXTURE_FILEPATH: {
 				DataTypeTextureFilepath* param = static_cast<DataTypeTextureFilepath*>(thisParam->value);
-				ImGui::InputText(thisParam->name.c_str(), &param->value);
+				if (ImGui::Button((thisParam->name + " Select").c_str())) {
+					textureSelectFileDialog.Open();
+					currentTextureSelectIndex = i;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button((thisParam->name + " Reset").c_str())) {
+					static_cast<DataTypeTextureFilepath*>(thisParam->value)->value = "";
+				}
 				break;
 			}
 			case DataTypes::STRING: {
@@ -182,6 +192,14 @@ bool SceneManager::Update(double dt)
 		}
 	}
 	ImGui::End();
+
+	//Filepicker for texture filepaths
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
+	textureSelectFileDialog.Display();
+	ImGui::PopStyleVar();
+	if (textureSelectFileDialog.IsOpened() && textureSelectFileDialog.HasSelected()) {
+		static_cast<DataTypeTextureFilepath*>(Shared::materialManager->GetEnvironmentMaterial()->GetParameter(currentTextureSelectIndex)->value)->value = textureSelectFileDialog.GetSelected().string();
+	}
 
 	//Update current scene
 	if (currentSceneIndex != -1)
