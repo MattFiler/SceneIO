@@ -52,6 +52,11 @@ bool EditorScene::Update(double dt)
 	if (fovCheck != Shared::cameraFOV) Shared::mProjection = DirectX::XMMatrixPerspectiveFovLH(Shared::cameraFOV, Shared::m_renderWidth / (FLOAT)Shared::m_renderHeight, Shared::cameraNear, Shared::cameraFar);
 	fovCheck = Shared::cameraFOV;
 
+	int resTemp[] = { Shared::API_targetRenderWidth, Shared::API_targetRenderHeight };
+	ImGui::InputInt2("API Resolution", resTemp);
+	Shared::API_targetRenderWidth = resTemp[0];
+	Shared::API_targetRenderHeight = resTemp[1];
+
 	ImGui::Separator();
 	ImGui::SliderFloat("Sensitivity", &Shared::mouseCameraSensitivity, 0.0f, 1.0f);
 

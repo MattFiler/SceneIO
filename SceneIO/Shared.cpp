@@ -31,3 +31,6 @@ PluginManager* Shared::pluginManager = nullptr;
 
 ImGuizmo::OPERATION Shared::mCurrentGizmoOperation = ImGuizmo::ROTATE;
 ImGuizmo::MODE Shared::mCurrentGizmoMode = ImGuizmo::WORLD;
+
+int Shared::API_targetRenderWidth = 1920;
+int Shared::API_targetRenderHeight = 1080;

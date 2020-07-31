@@ -544,6 +544,7 @@ LoadedScene* ModelManager::GetSceneAsLoadedScene()
 		loadedModelPos.rotation = Utilities::Vec3FromDXVec3(models.at(x)->GetRotation());
 		sceneDefinition->modelDefinitions.push_back(loadedModelPos);
 	}
+	sceneDefinition->targetResolution = Vector2(Shared::API_targetRenderWidth, Shared::API_targetRenderHeight);
 	return sceneDefinition;
 }
 
@@ -554,6 +555,9 @@ bool ModelManager::SetSceneAsLoadedScene(LoadedScene* scene)
 	Shared::activeCamera->SetRotation(Utilities::DXVec3FromVec3(scene->camera.GetRotation()), scene->camera.IsRotationInRadians());
 	Shared::cameraFOV = scene->camera.GetFOV();
 	if (scene->environmentMat) Shared::environmentMaterial = scene->environmentMat;
+
+	Shared::API_targetRenderWidth = scene->targetResolution.x;
+	Shared::API_targetRenderHeight = scene->targetResolution.y;
 
 	for (int i = 0; i < models.size(); i++) {
 		GameObjectManager::RemoveObject(models.at(i));

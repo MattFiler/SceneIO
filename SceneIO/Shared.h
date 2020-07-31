@@ -69,4 +69,8 @@ public:
 	/* ImGuizmo */
 	static ImGuizmo::OPERATION mCurrentGizmoOperation;
 	static ImGuizmo::MODE mCurrentGizmoMode;
+
+	/* New stuff to get in the API only */
+	static int API_targetRenderWidth;
+	static int API_targetRenderHeight;
 };
