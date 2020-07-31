@@ -103,7 +103,7 @@ public:
 #ifndef SCENEIO_PLUGIN
 	~DataTypeTextureFilepath() {
 		Memory::SafeRelease(g_pConstantBuffer);
-		Memory::SafeDelete(internalTex);
+		if (internalTex != nullptr) internalTex->RemoveUsage();
 		//Should probably clear defaultColour here too.
 	}
 #endif

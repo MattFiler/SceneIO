@@ -21,11 +21,9 @@ public:
 		return useCount;
 	}
 	void AddUsage() {
-		Debug::Log("Logged new buffer usage.");
 		useCount++;
 	}
 	void RemoveUsage() {
-		Debug::Log("Removed log of buffer usage.");
 		useCount--;
 	}
 
