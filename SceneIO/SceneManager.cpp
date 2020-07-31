@@ -22,6 +22,7 @@ bool SceneManager::Init()
 
 	Shared::materialManager = new DynamicMaterialManager();
 	Shared::pluginManager = new PluginManager();
+	Shared::textureManager = new TextureManager();
 
 	if (Shared::materialManager->GetEnvironmentMaterial() == nullptr) Debug::Log("ERROR! No environment material template configured!");
 

@@ -66,6 +66,7 @@ ModelManager::~ModelManager()
 		Memory::SafeDelete(modelBuffers[i]);
 	}
 	modelBuffers.clear();
+	Shared::textureManager->UnloadAll();
 }
 
 /* Render controls UI */
@@ -110,6 +111,8 @@ void ModelManager::Update(double dt)
 	}
 	ModelTransformUI();
 	ModelMaterialUI();
+
+	Shared::textureManager->Update(dt);
 }
 
 /* Model manager core UI (list model instances, add new models, etc) */

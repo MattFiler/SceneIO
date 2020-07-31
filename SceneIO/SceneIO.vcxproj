@@ -46,6 +46,7 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SharedModelBuffers.cpp" />
     <ClCompile Include="SharedModelPart.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +73,7 @@
     <ClInclude Include="Memory.h" />
     <ClInclude Include="PluginManager.h" />
     <ClInclude Include="Shared.h" />
+    <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="DynamicMaterial.h" />
     <ClInclude Include="DynamicMaterialManager.h" />

@@ -188,9 +188,10 @@ void DebugCube::SetTexture(std::string filename)
 	setTex = false;
 	Debug::Log("Setting DebugCube texture to " + filename);
 
-	thisTexture = Utilities::LoadTexture(filename);
+	if (thisTexture != nullptr) thisTexture->RemoveUsage();
+	thisTexture = Shared::textureManager->LoadTexture(filename);
 	if (thisTexture != nullptr) {
-		materialTexture = thisTexture->textureView;
+		materialTexture = thisTexture->GetResourceView();
 	}
 	else {
 		materialTexture = nullptr;

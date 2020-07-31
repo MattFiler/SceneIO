@@ -159,6 +159,9 @@
     <ClCompile Include="imguizmo\ImCurveEdit.cpp">
       <Filter>Source Files\Libraries\ImGuizmo</Filter>
     </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>Source Files\Models/Materials</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imgui_impl_win32.h">
@@ -304,6 +307,9 @@
     </ClInclude>
     <ClInclude Include="imguizmo\ImCurveEdit.h">
       <Filter>Header Files\Libraries\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>Header Files\Models/Materials</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -26,6 +26,7 @@ class DynamicMaterialManager;
 class DynamicMaterial;
 class PluginManager;
 class Camera;
+class TextureManager;
 
 /* Shared values which are persistant throughout the application's lifetime */
 struct Shared 
@@ -65,6 +66,7 @@ public:
 	/* Engine Functionality */
 	static DynamicMaterialManager* materialManager;
 	static PluginManager* pluginManager;
+	static TextureManager* textureManager;
 
 	/* ImGuizmo */
 	static ImGuizmo::OPERATION mCurrentGizmoOperation;
