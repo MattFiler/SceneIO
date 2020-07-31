@@ -118,11 +118,11 @@ public:
 			internalTex = Shared::textureManager->LoadTexture(defaultColour);
 			isUsingBaseColour = true;
 		}
-		if ((internalTex == nullptr || isUsingBaseColour) && value != "") { 
-			if (internalTex == nullptr || internalTex->GetFilepath() != value) {
-				if (internalTex != nullptr) internalTex->RemoveUsage();
+		else
+		{
+			if (value != "" && (internalTex == nullptr || internalTex->GetFilepath() != value)) {
 				internalTex = Shared::textureManager->LoadTexture(value);
-				isUsingBaseColour = false;
+				isUsingBaseColour = false; 
 			}
 		}
 		if (internalTex == nullptr) return nullptr;
