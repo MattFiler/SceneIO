@@ -545,6 +545,7 @@ LoadedScene* ModelManager::GetSceneAsLoadedScene()
 		sceneDefinition->modelDefinitions.push_back(loadedModelPos);
 	}
 	sceneDefinition->targetResolution = Vector2(Shared::API_targetRenderWidth, Shared::API_targetRenderHeight);
+	sceneDefinition->editorResolution = Vector2(Shared::m_renderWidth, Shared::m_renderHeight);
 	return sceneDefinition;
 }
 

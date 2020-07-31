@@ -41,4 +41,5 @@ public:
 	SceneCamera camera = SceneCamera();                                                         //The camera parameters for the scene
 	DynamicMaterial* environmentMat = nullptr;                                                  //The scene's environment material with properties
 	Vector2 targetResolution = Vector2(0, 0);                                                   //The target resolution for the scene's render
+	Vector2 editorResolution = Vector2(0, 0);                                                   //The resolution of the render in editor (specifying this from DLL will not change the editor's resolution)
 };
